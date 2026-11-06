@@ -497,15 +497,15 @@ setTimeout(function(){
 {
  "imports":{
   "three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-  "OrbitControls":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/controls/OrbitControls.js",
-  "chess":"https://cdn.jsdelivr.net/npm/chess.js@1.4.0/dist/esm/chess.js"
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/",
+  "chess":"https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm"
  }
 }
 </script>
 
 <script type="module">
 import * as THREE from "three";
-import {OrbitControls} from "OrbitControls";
+import {OrbitControls} from "three/addons/controls/OrbitControls.js";
 import {Chess} from "chess";
 
 const chess=new Chess();
@@ -1005,4 +1005,205 @@ function executePlayerMove(from,to,promotion){
 
 // ============ معالجة النقر على القطع ============
 function onClick(event){
- if(!gameStarted||thinking||chess.isGameOve
+ if(!gameStarted||thinking||chess.isGameOver()||pendingPromotion)return;
+ if(chess.turn()!=="w")return;
+
+ const rect=renderer.domElement.getBoundingClientRect();
+
+ const pointer=new THREE.Vector2(
+  ((event.clientX-rect.left)/rect.width)*2-1,
+  -((event.clientY-rect.top)/rect.height)*2+1
+ );
+
+ const ray=new THREE.Raycaster();
+ ray.setFromCamera(pointer,camera);
+
+ // 1) محاولة اكتشاف قطعة
+ const pieceHits=ray.intersectObjects(pieces.children,true);
+ let clickedSquare=null;
+
+ if(pieceHits.length>0){
+  let obj=pieceHits[0].object;
+  while(obj&&!obj.userData.square){
+   obj=obj.parent;
+  }
+  if(obj)clickedSquare=obj.userData.square;
+ }
+
+ // 2) إن لم تُصب قطعة، تحقق من المربعات
+ if(!clickedSquare){
+  const squareHits=ray.intersectObjects(squares,false);
+  if(squareHits.length>0){
+   clickedSquare=squareHits[0].object.userData.square;
+  }
+ }
+
+ if(!clickedSquare)return;
+
+ // 3) منطق الاختيار/النقل
+ if(selected){
+  const moves=chess.moves({square:selected,verbose:true});
+  const move=moves.find(m=>m.to===clickedSquare);
+
+  if(move){
+   if(move.promotion){
+    pendingPromotion={from:selected,to:clickedSquare};
+    document.getElementById("promotion").style.display="block";
+    return;
+   }
+
+   saveMove();
+   executePlayerMove(selected,clickedSquare);
+   return;
+  }
+
+  // إعادة اختيار قطعة أخرى بيضاء
+  const targetPiece=chess.get(clickedSquare);
+  if(targetPiece&&targetPiece.color==="w"){
+   selected=clickedSquare;
+   showMoves(selected);
+   sound();
+   return;
+  }
+
+  // إلغاء الاختيار
+  selected=null;
+  resetColors();
+  return;
+ }
+
+ // لا يوجد اختيار - اختر قطعة بيضاء
+ const piece=chess.get(clickedSquare);
+ if(piece&&piece.color==="w"){
+  selected=clickedSquare;
+  showMoves(selected);
+  sound();
+ }
+}
+
+// ============ دوال التحكم العامة ============
+window.startGame=function(){
+ sound();
+ document.getElementById("menuScreen").style.display="none";
+ document.getElementById("gameScreen").style.display="block";
+ gameStarted=true;
+
+ if(!initialized){
+  makeBoard();
+  initialized=true;
+ }
+
+ window.newGame();
+
+ setTimeout(onResize,100);
+};
+
+window.backMenu=function(){
+ sound();
+ gameStarted=false;
+ thinking=false;
+ pendingPromotion=null;
+ selected=null;
+ document.getElementById("promotion").style.display="none";
+ document.getElementById("gameScreen").style.display="none";
+ document.getElementById("menuScreen").style.display="block";
+};
+
+window.newGame=function(){
+ sound();
+ chess.reset();
+ snapshots=[];
+ selected=null;
+ pendingPromotion=null;
+ thinking=false;
+
+ document.getElementById("promotion").style.display="none";
+ document.getElementById("moves").textContent="سجل الحركات سيظهر هنا";
+
+ resetColors();
+ draw();
+ updateStatus();
+};
+
+window.undoMove=function(){
+ if(!gameStarted||thinking||pendingPromotion)return;
+ if(snapshots.length===0){notice("لا توجد حركات للتراجع عنها");return;}
+
+ const snap=snapshots.pop();
+ try{
+  chess.load(snap.fen);
+ }catch(e){return;}
+
+ selected=null;
+ pendingPromotion=null;
+ document.getElementById("promotion").style.display="none";
+
+ resetColors();
+ draw();
+
+ document.getElementById("moves").textContent=
+  snap.history.length?snap.history.join("  "):"سجل الحركات سيظهر هنا";
+
+ updateStatus();
+ sound();
+};
+
+window.promote=function(piece){
+ if(!pendingPromotion)return;
+ sound();
+
+ const {from,to}=pendingPromotion;
+ pendingPromotion=null;
+
+ document.getElementById("promotion").style.display="none";
+
+ saveMove();
+ executePlayerMove(from,to,piece);
+};
+
+// ============ الحجم وحلقة العرض ============
+function onResize(){
+ const w=holder.clientWidth;
+ const h=holder.clientHeight;
+
+ if(w===0||h===0){
+  renderer.setSize(800,500);
+  camera.aspect=800/500;
+  camera.updateProjectionMatrix();
+  return;
+ }
+
+ camera.aspect=w/h;
+ camera.updateProjectionMatrix();
+ renderer.setSize(w,h);
+}
+
+function animate(){
+ requestAnimationFrame(animate);
+ controls.update();
+ renderer.render(scene,camera);
+}
+
+// ============ التهيئة ============
+renderer.setSize(800,500);
+window.addEventListener("resize",onResize);
+
+// استخدام pointerdown/up لاكتشاف النقرة دون التعارض مع سحب الكاميرا
+let downX=0,downY=0;
+renderer.domElement.addEventListener("pointerdown",(e)=>{
+ downX=e.clientX;
+ downY=e.clientY;
+});
+renderer.domElement.addEventListener("pointerup",(e)=>{
+ const dx=e.clientX-downX;
+ const dy=e.clientY-downY;
+ if(Math.sqrt(dx*dx+dy*dy)<10){
+  onClick(e);
+ }
+});
+
+animate();
+</script>
+
+</body>
+</html>
