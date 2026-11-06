@@ -531,10 +531,10 @@ function sound(){
  if(!document.getElementById("sound").checked)return;
 
  try{
-  const AudioContext=window.AudioContext||window.webkitAudioContext;
-  if(!AudioContext)return;
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)return;
 
-  const ctx=new AudioContext();
+  const ctx=new AC();
   const osc=ctx.createOscillator();
   const gain=ctx.createGain();
 
@@ -547,7 +547,7 @@ function sound(){
 
   osc.start();
   osc.stop(ctx.currentTime+.12);
-  osc.onended=()=>ctx.close();
+  osc.onended=()=>{try{ctx.close();}catch(e){}};
  }catch(e){}
 }
 
@@ -699,22 +699,18 @@ function monster(type,color){
   g.add(m);
  }
 
- // جسم الوحش
  sphere(0,.45,0,.34,.45,.32,main);
  sphere(0,.92,0,.34,.35,.32,main);
 
- // العيون
  for(const x of [-.14,.14]){
   sphere(x,.99,.28,.105,.12,.06,white);
   sphere(x,1,.33,.045,.06,.035,black);
  }
 
- // الأيدي
  for(const x of [-.38,.38]){
   sphere(x,.48,0,.12,.2,.13,main);
  }
 
- // شكل كل قطعة
  if(type==="k"){
   cone(-.23,1.35,0,.16,gold);
   cone(.23,1.35,0,.16,gold);
@@ -774,6 +770,9 @@ function draw(){
    pieces.add(obj);
   }
  }
+
+ // تحديث مصفوفات العالم لضمان دقة اكتشاف النقر
+ pieces.updateMatrixWorld(true);
 }
 
 function resetColors(){
@@ -789,6 +788,7 @@ function resetColors(){
 
 function showMoves(from){
  resetColors();
+ if(!from)return;
 
  const moves=chess.moves({
   square:from,
@@ -831,7 +831,10 @@ function updateStatus(){
 }
 
 function saveMove(){
- snapshots.push(chess.fen());
+ snapshots.push({
+  fen: chess.fen(),
+  history: [...chess.history()]
+ });
 }
 
 function makeMove(from,to,promotion="q"){
@@ -853,10 +856,10 @@ function makeMove(from,to,promotion="q"){
  }
 }
 
-// تقييم القطع
+// تقييم القطع (من منظور الأبيض: موجب = لصالح الأبيض)
 function evaluate(){
  if(chess.isCheckmate()){
-  return chess.turn()==="w"?100000:-100000;
+  return chess.turn()==="w"?-100000:100000;
  }
 
  if(chess.isDraw())return 0;
@@ -882,13 +885,16 @@ function evaluate(){
    );
 
    value+=center*2;
-   score+=p.color==="b"?value:-value;
+
+   // الأبيض موجب، الأسود سالب
+   score+=p.color==="w"?value:-value;
   });
  });
 
  return score;
 }
 
+// minimax: maximizing=true يعني دور الأبيض (يعظّم)، false يعني دور الأسود (يصغّر)
 function minimax(depth,alpha,beta,maximizing){
  if(depth===0||chess.isGameOver())return evaluate();
 
@@ -950,16 +956,17 @@ function computer(){
   chosen=pool[Math.floor(Math.random()*pool.length)];
 
  }else{
-  let best=-Infinity;
+  let best=Infinity; // الأسود يصغّر تقييم الأبيض
 
   for(const m of moves){
    chess.move(m);
 
-   const score=minimax(2,-Infinity,Infinity,false);
+   // بعد حركة الأسود، دور الأبيض (يعظّم)
+   const score=minimax(2,-Infinity,Infinity,true);
 
    chess.undo();
 
-   if(score>best){
+   if(score<best){
     best=score;
     chosen=m;
    }
@@ -990,24 +997,12 @@ function executePlayerMove(from,to,promotion){
  setTimeout(()=>{
   if(gameStarted&&!chess.isGameOver()){
    computer();
+   updateStatus();
   }
   thinking=false;
  },350);
 }
 
-// اختيار وتحريك القطع
+// ============ معالجة النقر على القطع ============
 function onClick(event){
- if(!gameStarted||thinking||chess.isGameOver()||pendingPromotion)return;
- if(chess.turn()!=="w")return;
-
- const rect=renderer.domElement.getBoundingClientRect();
-
- const pointer=new THREE.Vector2(
-  ((event.clientX-rect.left)/rect.width)*2-1,
-  -((event.clientY-rect.top)/rect.height)*2+1
- );
-
- const ray=new THREE.Raycaster();
- ray.setFromCamera(pointer,camera);
-
- const hits=ray.intersectObjec
+ if(!gameStarted||thinking||chess.isGameOve
