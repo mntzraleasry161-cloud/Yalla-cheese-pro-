@@ -6,9 +6,6 @@
 <title>Monster Chess 3D — المملكة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
-    /* ==========================================================================
-       CSS الخاصة بالواجهة الرئيسية
-       ========================================================================== */
     :root {
         --sky-top: #1e90ff;
         --sky-bottom: #87cefa;
@@ -21,63 +18,27 @@
         --font-main: 'Cairo', sans-serif;
     }
 
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
 
     body {
         font-family: var(--font-main);
         background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-bottom) 60%, #e0f7fa 100%);
-        height: 100dvh;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        color: white;
+        height: 100dvh; overflow: hidden; display: flex; flex-direction: column; position: relative; color: white;
     }
 
-    /* ================= الخلفية ================= */
     .bg-castle {
-        position: absolute;
-        bottom: 20%;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 25vw;
-        opacity: 0.15;
-        filter: blur(2px);
-        z-index: 0;
-        pointer-events: none;
+        position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%);
+        font-size: 25vw; opacity: 0.15; filter: blur(2px); z-index: 0; pointer-events: none;
     }
-
     .bg-floor {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 35%;
+        position: absolute; bottom: 0; width: 100%; height: 35%;
         background: repeating-linear-gradient(45deg, #333 0, #333 25px, #444 25px, #444 50px);
-        transform: perspective(500px) rotateX(60deg);
-        transform-origin: bottom;
-        z-index: 0;
+        transform: perspective(500px) rotateX(60deg); transform-origin: bottom; z-index: 0;
         box-shadow: inset 0 20px 50px rgba(0,0,0,0.8);
     }
-
-    .sky-sparkles {
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-        overflow: hidden;
-    }
+    .sky-sparkles { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
     .sky-sparkles::before, .sky-sparkles::after {
-        content: '';
-        position: absolute;
-        width: 3px; height: 3px;
-        border-radius: 50%;
-        background: #fff;
+        content: ''; position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff;
         box-shadow: 15vw 10vh 0 0 rgba(255,255,255,0.6), 30vw 25vh 0 0 rgba(255,255,255,0.4),
                     45vw 5vh 0 0 rgba(255,255,255,0.7), 60vw 15vh 0 0 rgba(255,255,255,0.5),
                     75vw 30vh 0 0 rgba(255,255,255,0.6), 88vw 8vh 0 0 rgba(255,255,255,0.4),
@@ -92,143 +53,89 @@
     }
     @keyframes twinkle { from { opacity: 0.4; } to { opacity: 1; } }
 
-    /* ================= الشريط العلوي ================= */
     .menu-top-bar {
-        position: relative;
-        z-index: 10;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: 15px;
+        position: relative; z-index: 10; display: flex; justify-content: space-between;
+        align-items: flex-start; padding: 15px;
     }
-
     .profile-box {
-        display: flex;
-        align-items: center;
+        display: flex; align-items: center;
         background: linear-gradient(135deg, #2a3b5c, #141e30);
-        border: 2px solid var(--gold);
-        border-radius: 15px;
-        padding: 5px 15px 5px 5px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 15px rgba(255,215,0,0.15);
-        cursor: pointer;
+        border: 2px solid var(--gold); border-radius: 15px; padding: 5px 15px 5px 5px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 15px rgba(255,215,0,0.15); cursor: pointer;
     }
-
     .avatar-frame {
-        width: 50px; height: 50px;
-        border-radius: 50%;
+        width: 50px; height: 50px; border-radius: 50%;
         background: radial-gradient(circle, #ffe4b5, #ffd700);
-        border: 2px solid #fff;
-        display: flex; justify-content: center; align-items: center;
-        font-size: 28px;
-        box-shadow: 0 0 10px var(--gold);
-        position: relative;
+        border: 2px solid #fff; display: flex; justify-content: center; align-items: center;
+        font-size: 28px; box-shadow: 0 0 10px var(--gold); position: relative;
     }
-    
     .level-badge {
-        position: absolute;
-        bottom: -5px; right: -5px;
-        background: #ffd700; color: #000;
-        font-size: 10px; font-weight: 900;
-        padding: 2px 6px; border-radius: 10px;
-        border: 1px solid #000;
+        position: absolute; bottom: -5px; right: -5px; background: #ffd700; color: #000;
+        font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 10px; border: 1px solid #000;
     }
-
-    .profile-info {
-        margin-right: 10px;
-        display: flex; flex-direction: column; justify-content: center;
-    }
+    .profile-info { margin-right: 10px; display: flex; flex-direction: column; justify-content: center; }
     .profile-name { font-size: 14px; font-weight: 700; text-shadow: 0 1px 2px #000; }
     .profile-stars { font-size: 12px; color: var(--gold); font-weight: 800; display: flex; align-items: center; gap: 3px; }
-
-    .resources {
-        display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end;
-    }
+    .resources { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
     .res-pill {
-        background: rgba(0,0,0,0.6);
-        border: 1px solid var(--gold-dark);
-        border-radius: 20px;
-        padding: 3px 8px 3px 3px;
-        display: flex; align-items: center; gap: 5px;
-        font-size: 12px; font-weight: 700;
-        box-shadow: inset 0 2px 5px rgba(255,255,255,0.2);
+        background: rgba(0,0,0,0.6); border: 1px solid var(--gold-dark); border-radius: 20px;
+        padding: 3px 8px 3px 3px; display: flex; align-items: center; gap: 5px;
+        font-size: 12px; font-weight: 700; box-shadow: inset 0 2px 5px rgba(255,255,255,0.2);
     }
-    .res-pill .icon {
-        width: 22px; height: 22px; border-radius: 50%;
-        display: flex; justify-content: center; align-items: center; font-size: 14px;
-    }
+    .res-pill .icon { width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 14px; }
     .res-pill.coin .icon { background: radial-gradient(circle, #ffd700, #b8860b); }
     .res-pill.gem .icon { background: radial-gradient(circle, #00ffff, #008b8b); }
-
     .btn-plus {
-        background: #00ff00; color: #000;
-        border: 2px solid #fff; border-radius: 50%;
-        width: 20px; height: 20px; font-weight: 900;
-        display: flex; justify-content: center; align-items: center;
-        font-size: 12px; cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        background: #00ff00; color: #000; border: 2px solid #fff; border-radius: 50%;
+        width: 20px; height: 20px; font-weight: 900; display: flex; justify-content: center;
+        align-items: center; font-size: 12px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     }
-
     .settings-btn {
-        background: rgba(0,0,0,0.6); border: 2px solid var(--gold);
-        border-radius: 50%; width: 40px; height: 40px;
-        display: flex; justify-content: center; align-items: center;
+        background: rgba(0,0,0,0.6); border: 2px solid var(--gold); border-radius: 50%;
+        width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
         font-size: 20px; color: var(--gold); cursor: pointer; transition: transform 0.15s;
     }
     .settings-btn:hover { transform: rotate(30deg); }
 
-    /* ================= الأزرار الجانبية ================= */
     .menu-side-panel { position: absolute; top: 20%; z-index: 10; display: flex; flex-direction: column; gap: 15px; }
     .menu-side-panel.left { left: 10px; }
     .menu-side-panel.right { right: 10px; }
-
     .side-btn {
-        background: linear-gradient(180deg, #2a3b5c, #141e30);
-        border: 2px solid var(--gold); border-radius: 15px;
-        width: 60px; height: 65px;
-        display: flex; flex-direction: column; justify-content: center; align-items: center;
-        cursor: pointer;
+        background: linear-gradient(180deg, #2a3b5c, #141e30); border: 2px solid var(--gold);
+        border-radius: 15px; width: 60px; height: 65px; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; cursor: pointer;
         box-shadow: 0 5px 10px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1);
         position: relative; transition: transform 0.1s;
     }
     .side-btn:active { transform: scale(0.95); }
     .side-btn span { font-size: 24px; }
     .side-btn small { font-size: 9px; font-weight: 700; margin-top: 2px; }
-
     .badge-red {
-        position: absolute; top: -5px; right: -5px;
-        background: #ff0000; color: #fff;
-        width: 18px; height: 18px; border-radius: 50%;
-        font-size: 10px; font-weight: 900;
+        position: absolute; top: -5px; right: -5px; background: #ff0000; color: #fff;
+        width: 18px; height: 18px; border-radius: 50%; font-size: 10px; font-weight: 900;
         display: flex; justify-content: center; align-items: center;
         border: 2px solid #fff; animation: pulse 1.5s infinite;
     }
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
 
     .chest-box {
-        background: linear-gradient(180deg, #2a3b5c, #141e30);
-        border: 2px solid var(--gold); border-radius: 15px;
-        width: 80px; padding: 8px;
-        display: flex; flex-direction: column; align-items: center; text-align: center;
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5), inset 0 2px 4px rgba(255,255,255,0.1);
-        cursor: pointer;
+        background: linear-gradient(180deg, #2a3b5c, #141e30); border: 2px solid var(--gold);
+        border-radius: 15px; width: 80px; padding: 8px; display: flex; flex-direction: column;
+        align-items: center; text-align: center;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5), inset 0 2px 4px rgba(255,255,255,0.1); cursor: pointer;
     }
     .chest-box span { font-size: 35px; margin-bottom: 5px; animation: float 2s infinite ease-in-out; }
     .chest-box small { font-size: 9px; color: var(--gold); font-weight: 800; }
     .chest-box .timer { font-size: 11px; font-weight: 900; margin-top: 2px; font-family: monospace; }
 
-    /* ================= المنتصف ================= */
     .menu-main-center {
-        position: relative; z-index: 10; flex: 1;
-        display: flex; flex-direction: column; justify-content: center; align-items: center;
-        padding: 0 20px; margin-top: -10px;
+        position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; padding: 0 20px; margin-top: -10px;
     }
-
     .logo-container { text-align: center; margin-bottom: 20px; position: relative; animation: logoFloat 4s ease-in-out infinite; }
     @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-
     .logo-crown {
-        font-size: clamp(40px, 10vw, 60px);
-        position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+        font-size: clamp(40px, 10vw, 60px); position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
         filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) drop-shadow(0 0 15px rgba(255,215,0,0.6));
         animation: crownGlow 2s ease-in-out infinite alternate;
     }
@@ -236,13 +143,11 @@
         from { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) drop-shadow(0 0 10px rgba(255,215,0,0.4)); }
         to { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) drop-shadow(0 0 25px rgba(255,215,0,0.9)); }
     }
-
     .logo-text {
         font-size: clamp(35px, 9vw, 55px); font-weight: 900; color: var(--gold);
         text-shadow: 0 2px 0 #b8860b, 0 4px 0 #8b6508, 0 6px 0 #5c4305, 0 8px 15px rgba(0,0,0,0.8), 0 0 30px rgba(255,215,0,0.5);
         letter-spacing: 2px; margin: 0; font-family: Arial, sans-serif;
     }
-
     .logo-ribbon {
         background: linear-gradient(180deg, #e63946, #a4161a); color: #fff;
         font-size: 12px; font-weight: 800; padding: 3px 20px; border-radius: 10px;
@@ -250,11 +155,10 @@
         box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
         border: 1px solid #780000; transform: rotate(-2deg);
     }
-
     .btn-main {
-        width: 100%; max-width: 350px; height: 80px; border-radius: 40px;
-        margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;
-        padding: 0 20px; cursor: pointer; position: relative; overflow: hidden;
+        width: 100%; max-width: 350px; height: 80px; border-radius: 40px; margin-bottom: 15px;
+        display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+        cursor: pointer; position: relative; overflow: hidden;
         box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 5px 10px rgba(255,255,255,0.4);
         border: 4px solid var(--gold); transition: transform 0.1s;
         font-family: var(--font-main); color: white;
@@ -262,7 +166,6 @@
     .btn-main:active { transform: translateY(5px); }
     .btn-main.online { background: linear-gradient(to bottom, #2193b0, #6dd5ed); }
     .btn-main.computer { background: linear-gradient(to bottom, #eb3349, #f45c43); }
-    
     .btn-main .icon-circle {
         width: 55px; height: 55px; background: rgba(0,0,0,0.2); border-radius: 50%;
         border: 2px solid #fff; display: flex; justify-content: center; align-items: center;
@@ -277,24 +180,20 @@
         border-radius: 40px 40px 0 0; pointer-events: none;
     }
 
-    /* ================= الشريط السفلي ================= */
     .menu-bottom-bar {
-        position: relative; z-index: 10; display: flex; justify-content: center; gap: 10px; padding: 15px;
-        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        position: relative; z-index: 10; display: flex; justify-content: center; gap: 10px;
+        padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
     }
     .bottom-btn {
         width: 60px; height: 60px; background: linear-gradient(180deg, #2a3b5c, #141e30);
-        border: 2px solid var(--gold); border-radius: 15px;
-        display: flex; flex-direction: column; justify-content: center; align-items: center;
-        cursor: pointer; box-shadow: 0 5px 10px rgba(0,0,0,0.5); transition: transform 0.1s;
+        border: 2px solid var(--gold); border-radius: 15px; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; cursor: pointer;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.5); transition: transform 0.1s;
     }
     .bottom-btn:active { transform: translateY(3px); }
     .bottom-btn span { font-size: 24px; }
     .bottom-btn small { font-size: 8px; font-weight: 800; margin-top: 2px; }
 
-    /* ==========================================================================
-       CSS للنوافذ المنبثقة
-       ========================================================================== */
     .modal-overlay {
         position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
         z-index: 200; display: flex; justify-content: center; align-items: center;
@@ -303,15 +202,13 @@
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-content {
         background: linear-gradient(135deg, #1e3c72, #2a5298);
-        border: 3px solid var(--gold); border-radius: 20px;
-        width: 100%; max-width: 420px; padding: 22px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 40px rgba(255,215,0,0.3);
+        border: 3px solid var(--gold); border-radius: 20px; width: 100%; max-width: 420px;
+        padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 40px rgba(255,215,0,0.3);
         transform: scale(0.9); transition: transform 0.3s; text-align: right;
         max-height: 85vh; overflow-y: auto;
     }
     .modal-overlay.active .modal-content { transform: scale(1); }
     .modal-content h2 { color: var(--gold); text-align: center; margin-bottom: 15px; text-shadow: 0 2px 4px #000; font-size: 20px; }
-    
     .modal-close {
         background: linear-gradient(180deg, #e63946, #a4161a); color: #fff;
         border: 2px solid #fff; padding: 10px 24px; border-radius: 20px;
@@ -319,13 +216,14 @@
         display: block; margin: 20px auto 0; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.1s;
     }
     .modal-close:active { transform: scale(0.95); }
-
     .diff-btn {
         width: 100%; height: 60px; border-radius: 30px; margin-bottom: 12px;
         display: flex; align-items: center; justify-content: center; cursor: pointer;
-        position: relative; overflow: hidden; box-shadow: 0 8px 15px rgba(0,0,0,0.4), inset 0 4px 8px rgba(255,255,255,0.3);
+        position: relative; overflow: hidden;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.4), inset 0 4px 8px rgba(255,255,255,0.3);
         border: 3px solid var(--gold); transition: transform 0.1s;
-        font-family: var(--font-main); font-size: 20px; font-weight: 900; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        font-family: var(--font-main); font-size: 20px; font-weight: 900; color: #fff;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     }
     .diff-btn:active { transform: translateY(4px); }
     .diff-btn.easy { background: linear-gradient(to bottom, #4caf50, #2e7d32); }
@@ -336,110 +234,76 @@
         background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
         border-radius: 30px 30px 0 0; pointer-events: none;
     }
-
     .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.15); font-weight: 700; }
     .setting-row:last-of-type { border-bottom: none; }
     input[type=checkbox] { width: 24px; height: 24px; accent-color: var(--gold); cursor: pointer; }
 
-    /* ==========================================================================
-       CSS الخاصة بشاشة اللعب
-       ========================================================================== */
     #gameScreen {
         display: none; position: fixed; inset: 0;
-        background: linear-gradient(to bottom, #0a1930 0%, #1e3c72 50%, #0a0a15 100%);
+        background: linear-gradient(to bottom, #1a0e06 0%, #2a1810 50%, #0a0503 100%);
         flex-direction: column; z-index: 50; overflow: hidden;
     }
     #gameScreen.active { display: flex; }
-
     .game-header {
         display: flex; justify-content: space-between; align-items: center; padding: 12px 15px;
         background: linear-gradient(180deg, rgba(0,0,0,0.7), transparent);
         border-bottom: 1px solid rgba(255,215,0,0.3); position: relative; z-index: 5;
     }
     .back-btn {
-        background: linear-gradient(180deg, #2a3b5c, #141e30); border: 2px solid var(--gold); color: var(--gold);
-        padding: 8px 16px; border-radius: 20px; font-family: var(--font-main); font-weight: 800; font-size: 13px;
-        cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        background: linear-gradient(180deg, #2a3b5c, #141e30); border: 2px solid var(--gold);
+        color: var(--gold); padding: 8px 16px; border-radius: 20px;
+        font-family: var(--font-main); font-weight: 800; font-size: 13px; cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
     .back-btn:active { transform: scale(0.95); }
     .game-title { color: var(--gold); font-weight: 900; font-size: 16px; text-shadow: 0 2px 4px #000; letter-spacing: 1px; }
     .game-level-select {
-        background: rgba(0,0,0,0.6); border: 2px solid var(--gold); border-radius: 20px; color: var(--gold);
-        padding: 6px 12px; font-family: var(--font-main); font-weight: 800; font-size: 12px; cursor: pointer;
+        background: rgba(0,0,0,0.6); border: 2px solid var(--gold); border-radius: 20px;
+        color: var(--gold); padding: 6px 12px; font-family: var(--font-main);
+        font-weight: 800; font-size: 12px; cursor: pointer;
     }
-
     #game { flex: 1; width: 100%; min-height: 0; touch-action: none; overflow: hidden; position: relative; }
     #game canvas { display: block; }
-
     .game-controls {
         padding: 12px 15px 18px; background: linear-gradient(0deg, rgba(0,0,0,0.85), transparent);
         border-top: 1px solid rgba(255,215,0,0.3); position: relative; z-index: 5;
     }
-    #status { color: #8ee7ff; font-weight: 900; font-size: 15px; text-align: center; margin-bottom: 10px; text-shadow: 0 0 10px rgba(142,231,255,0.5); min-height: 22px; }
+    #status { color: #ffd700; font-weight: 900; font-size: 15px; text-align: center; margin-bottom: 10px; text-shadow: 0 0 10px rgba(255,215,0,0.5); min-height: 22px; }
     .game-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
     .game-btn {
         background: linear-gradient(180deg, #2a3b5c, #141e30); border: 2px solid var(--gold); color: #fff;
-        padding: 10px 16px; border-radius: 20px; font-family: var(--font-main); font-weight: 800; font-size: 13px;
-        cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.1s;
+        padding: 10px 16px; border-radius: 20px; font-family: var(--font-main);
+        font-weight: 800; font-size: 13px; cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.1s;
     }
     .game-btn:active { transform: translateY(3px); }
     .game-btn.gold { background: linear-gradient(180deg, #ffd700, #b8860b); color: #3b2200; }
     .game-btn.red { background: linear-gradient(180deg, #e63946, #a4161a); }
-
     #moves { max-height: 50px; overflow-y: auto; color: #ccc; font-size: 11px; text-align: center; margin-top: 10px; padding: 6px; background: rgba(0,0,0,0.4); border-radius: 10px; word-wrap: break-word; }
     #promotion { display: none; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid var(--gold); border-radius: 15px; margin-top: 10px; text-align: center; }
     #promotion strong { display: block; margin-bottom: 8px; color: var(--gold); font-size: 13px; }
     #promotion .game-actions { gap: 6px; }
 
-    /* ==========================================================================
-       CSS نظام المكافآت (الإضافات الجديدة)
-       ========================================================================== */
     .reward-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
-    .reward-day {
-        background: rgba(0,0,0,0.4); border: 2px solid var(--gold-dark); border-radius: 12px;
-        padding: 10px 5px; text-align: center; position: relative; transition: all 0.3s;
-    }
+    .reward-day { background: rgba(0,0,0,0.4); border: 2px solid var(--gold-dark); border-radius: 12px; padding: 10px 5px; text-align: center; position: relative; transition: all 0.3s; }
     .reward-day.claimed { opacity: 0.5; border-color: #555; }
     .reward-day.current { border-color: #00ff00; box-shadow: 0 0 15px rgba(0,255,0,0.5); transform: scale(1.05); }
     .reward-day .day-num { font-size: 10px; font-weight: 800; color: #ccc; margin-bottom: 5px; }
     .reward-day .day-icon { font-size: 24px; margin-bottom: 5px; display: block; }
     .reward-day .day-val { font-size: 11px; font-weight: 900; color: var(--gold); }
-    .claim-btn {
-        background: linear-gradient(180deg, #00ff00, #008000); color: #000; border: none; border-radius: 10px;
-        padding: 5px 10px; font-weight: 900; font-size: 11px; cursor: pointer; margin-top: 5px; width: 100%;
-    }
+    .claim-btn { background: linear-gradient(180deg, #00ff00, #008000); color: #000; border: none; border-radius: 10px; padding: 5px 10px; font-weight: 900; font-size: 11px; cursor: pointer; margin-top: 5px; width: 100%; }
     .claim-btn:disabled { background: #555; color: #aaa; cursor: not-allowed; }
-
     .chest-anim-container { display: flex; justify-content: center; margin: 20px 0; }
     .chest-anim { font-size: 80px; animation: chestShake 0.5s infinite; }
-    @keyframes chestShake {
-        0% { transform: rotate(0deg); }
-        25% { transform: rotate(-10deg) scale(1.05); }
-        50% { transform: rotate(10deg) scale(1.05); }
-        75% { transform: rotate(-10deg) scale(1.05); }
-        100% { transform: rotate(0deg); }
-    }
+    @keyframes chestShake { 0% { transform: rotate(0deg); } 25% { transform: rotate(-10deg) scale(1.05); } 50% { transform: rotate(10deg) scale(1.05); } 75% { transform: rotate(-10deg) scale(1.05); } 100% { transform: rotate(0deg); } }
     .chest-anim.opened { animation: chestOpen 0.5s forwards; }
-    @keyframes chestOpen {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.5) rotate(10deg); opacity: 0.5; }
-        100% { transform: scale(2); opacity: 0; }
-    }
-
-    .achieve-row, .mission-row {
-        background: rgba(0,0,0,0.4); padding: 12px; border-radius: 12px; margin-bottom: 10px;
-        display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,215,0,0.2);
-    }
+    @keyframes chestOpen { 0% { transform: scale(1); } 50% { transform: scale(1.5) rotate(10deg); opacity: 0.5; } 100% { transform: scale(2); opacity: 0; } }
+    .achieve-row, .mission-row { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,215,0,0.2); }
     .achieve-row b, .mission-row b { font-size: 13px; }
     .achieve-row .prog, .mission-row .reward { color: var(--gold); font-weight: 900; font-size: 12px; }
-
-    .progress-bar {
-        width: 100%; height: 8px; background: rgba(255,255,255,0.2);
-        border-radius: 5px; margin-top: 5px; overflow: hidden;
-    }
+    .progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.2); border-radius: 5px; margin-top: 5px; overflow: hidden; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, #ffd700, #00ff00); border-radius: 5px; transition: width 0.3s; }
 
-    /* توست مشترك */
     #toast {
         position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
         background: linear-gradient(135deg, rgba(30,60,114,0.95), rgba(20,30,48,0.95)); color: var(--gold);
@@ -448,21 +312,15 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255,215,0,0.3); max-width: 90vw; text-align: center;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
     @media (max-width: 400px) {
-        .menu-side-panel.left { left: 5px; }
-        .menu-side-panel.right { right: 5px; }
-        .side-btn { width: 50px; height: 55px; }
-        .side-btn span { font-size: 20px; }
-        .chest-box { width: 65px; }
-        .chest-box span { font-size: 28px; }
+        .menu-side-panel.left { left: 5px; } .menu-side-panel.right { right: 5px; }
+        .side-btn { width: 50px; height: 55px; } .side-btn span { font-size: 20px; }
+        .chest-box { width: 65px; } .chest-box span { font-size: 28px; }
         .bottom-btn { width: 50px; height: 50px; }
-        .btn-main { height: 70px; }
-        .btn-main h3 { font-size: 20px; }
-        .profile-name { font-size: 12px; }
-        .res-pill span { font-size: 11px; }
+        .btn-main { height: 70px; } .btn-main h3 { font-size: 20px; }
+        .profile-name { font-size: 12px; } .res-pill span { font-size: 11px; }
         .game-title { font-size: 14px; }
     }
     @media (max-height: 700px) {
@@ -472,7 +330,6 @@
         .menu-main-center { margin-top: 0; }
     }
 
-    /* شاشة KOKTON */
     #splash {
         position: fixed; inset: 0; z-index: 99999; background: #000; display: flex; flex-direction: column;
         justify-content: center; align-items: center; overflow: hidden; opacity: 1; transition: opacity 1s ease;
@@ -506,9 +363,6 @@
 </head>
 <body>
 
-<!-- ==========================================================================
-     شاشة KOKTON
-     ========================================================================== -->
 <div id="splash">
     <div class="splash-vignette"></div>
     <div class="splash-rays"></div>
@@ -520,16 +374,11 @@
     <div class="splash-loader"><div></div></div>
 </div>
 
-<!-- ==========================================================================
-     شاشة القائمة الرئيسية
-     ========================================================================== -->
 <div id="menuScreen" style="display:flex;flex-direction:column;height:100%;position:relative;">
-
     <div class="bg-castle">🏰</div>
     <div class="bg-floor"></div>
     <div class="sky-sparkles"></div>
 
-    <!-- الشريط العلوي -->
     <header class="menu-top-bar">
         <div class="profile-box" onclick="showToast('الملف الشخصي')">
             <div class="avatar-frame">
@@ -541,7 +390,6 @@
                 <div class="profile-stars">⭐ <span id="ui-trophies">1250</span></div>
             </div>
         </div>
-
         <div class="resources">
             <div class="res-pill coin">
                 <div class="icon">🪙</div>
@@ -557,109 +405,64 @@
         </div>
     </header>
 
-    <!-- اللوحة اليسرى -->
     <div class="menu-side-panel left">
-        <div class="side-btn" onclick="openModal('daily-rewards')">
-            <span>🎁</span>
-            <small>مكافآت</small>
-            <div class="badge-red" id="daily-badge">!</div>
-        </div>
-        <div class="side-btn" onclick="openModal('achievements')">
-            <span>🏆</span>
-            <small>إنجازات</small>
-        </div>
-        <div class="side-btn" onclick="openModal('missions')">
-            <span>📅</span>
-            <small>مهام</small>
-        </div>
+        <div class="side-btn" onclick="openModal('daily-rewards')"><span>🎁</span><small>مكافآت</small><div class="badge-red" id="daily-badge">!</div></div>
+        <div class="side-btn" onclick="openModal('achievements')"><span>🏆</span><small>إنجازات</small></div>
+        <div class="side-btn" onclick="openModal('missions')"><span>📅</span><small>مهام</small></div>
     </div>
 
-    <!-- اللوحة اليمنى -->
     <div class="menu-side-panel right">
         <div class="chest-box" onclick="openModal('chest')">
-            <span>🧰</span>
-            <small>صندوق الأبطال</small>
+            <span>🧰</span><small>صندوق الأبطال</small>
             <div class="timer" id="chest-timer">جاهز!</div>
         </div>
     </div>
 
-    <!-- المنتصف -->
     <main class="menu-main-center">
         <div class="logo-container">
             <div class="logo-crown">👑</div>
             <h1 class="logo-text">MONSTER</h1>
             <div class="logo-ribbon">CHESS 3D</div>
         </div>
-
         <button class="btn-main online" onclick="showToast('🌐 جاري الاتصال بالخادم...')">
             <div class="icon-circle">🌐</div>
-            <div class="text-box">
-                <h3>اللعب أونلاين</h3>
-                <p>واجه لاعبين من جميع أنحاء العالم</p>
-            </div>
+            <div class="text-box"><h3>اللعب أونلاين</h3><p>واجه لاعبين من جميع أنحاء العالم</p></div>
             <div class="icon-circle" style="font-size:20px;">👥</div>
         </button>
-
         <button class="btn-main computer" onclick="openModal('difficulty')">
             <div class="icon-circle">🖥️</div>
-            <div class="text-box">
-                <h3>ضد الكمبيوتر</h3>
-                <p>العب مع الذكاء الاصطناعي</p>
-            </div>
+            <div class="text-box"><h3>ضد الكمبيوتر</h3><p>العب مع الذكاء الاصطناعي</p></div>
             <div class="icon-circle">🤖</div>
         </button>
     </main>
 
-    <!-- الشريط السفلي -->
     <footer class="menu-bottom-bar">
-        <div class="bottom-btn" onclick="openModal('store')">
-            <span>🏪</span>
-            <small>المتجر</small>
-        </div>
-        <div class="bottom-btn" onclick="showToast('🏆 الترتيب')">
-            <span>🏆</span>
-            <small>الترتيب</small>
-        </div>
-        <div class="bottom-btn" onclick="showToast('🥇 لوحة الشرف')">
-            <span>🥇</span>
-            <small>الشرف</small>
-        </div>
-        <div class="bottom-btn" onclick="showToast('📖 التعليمات')">
-            <span>📖</span>
-            <small>تعليمات</small>
-        </div>
-        <div class="bottom-btn" onclick="showToast('🔗 مشاركة')">
-            <span>🔗</span>
-            <small>مشاركة</small>
-        </div>
+        <div class="bottom-btn" onclick="openModal('store')"><span>🏪</span><small>المتجر</small></div>
+        <div class="bottom-btn" onclick="showToast('🏆 الترتيب')"><span>🏆</span><small>الترتيب</small></div>
+        <div class="bottom-btn" onclick="showToast('🥇 لوحة الشرف')"><span>🥇</span><small>الشرف</small></div>
+        <div class="bottom-btn" onclick="showToast('📖 التعليمات')"><span>📖</span><small>تعليمات</small></div>
+        <div class="bottom-btn" onclick="showToast('🔗 مشاركة')"><span>🔗</span><small>مشاركة</small></div>
     </footer>
 </div>
 
-<!-- ==========================================================================
-     شاشة اللعب
-     ========================================================================== -->
 <div id="gameScreen">
     <div class="game-header">
         <button class="back-btn" onclick="backMenu()">← رجوع</button>
-        <div class="game-title">👑 MONSTER CHESS</div>
+        <div class="game-title">♟️ MONSTER CHESS</div>
         <select class="game-level-select" id="level">
             <option value="easy">🟢 سهل</option>
             <option value="medium">🔵 متوسط</option>
             <option value="hard">🔴 صعب</option>
         </select>
     </div>
-
     <div id="game"></div>
-
     <div class="game-controls">
         <div id="status">دورك الآن - الأبيض</div>
-
         <div class="game-actions">
             <button class="game-btn gold" onclick="newGame()">🔄 جديد</button>
             <button class="game-btn" onclick="undoMove()">↩️ تراجع</button>
             <button class="game-btn red" onclick="backMenu()">🏠 القائمة</button>
         </div>
-
         <div id="promotion">
             <strong>👑 اختر ترقية البيدق</strong>
             <div class="game-actions">
@@ -669,14 +472,10 @@
                 <button class="game-btn gold" onclick="promote('n')">حصان</button>
             </div>
         </div>
-
         <div id="moves">سجل الحركات سيظهر هنا</div>
     </div>
 </div>
 
-<!-- ==========================================================================
-     النوافذ المنبثقة (اللعبة الأساسية)
-     ========================================================================== -->
 <div class="modal-overlay" id="modal-difficulty">
     <div class="modal-content">
         <h2>⚔️ اختر الصعوبة</h2>
@@ -690,94 +489,60 @@
 <div class="modal-overlay" id="modal-settings">
     <div class="modal-content">
         <h2>⚙️ الإعدادات</h2>
-        <div class="setting-row">
-            <span>🔊 المؤثرات الصوتية</span>
-            <input type="checkbox" id="soundSetting" checked>
-        </div>
-        <div class="setting-row">
-            <span>📳 الاهتزاز</span>
-            <input type="checkbox" id="hapticSetting">
-        </div>
+        <div class="setting-row"><span>🔊 المؤثرات الصوتية</span><input type="checkbox" id="soundSetting" checked></div>
+        <div class="setting-row"><span>📳 الاهتزاز</span><input type="checkbox" id="hapticSetting"></div>
         <button class="modal-close" onclick="closeModal('settings')">حفظ وإغلاق</button>
     </div>
 </div>
 
-<!-- ==========================================================================
-     النوافذ المنبثقة (نظام المكافآت)
-     ========================================================================== -->
-<!-- المكافآت اليومية -->
 <div class="modal-overlay" id="modal-daily-rewards">
     <div class="modal-content">
         <h2>🎁 المكافآت اليومية</h2>
         <p style="text-align:center; font-size:12px; margin-bottom:15px;">سجل دخولك كل يوم للحصول على جوائز أسطورية!</p>
-        <div class="reward-grid" id="rewardGrid">
-            <!-- يتم توليدها بالجافاسكربت -->
-        </div>
+        <div class="reward-grid" id="rewardGrid"></div>
         <button class="modal-close" onclick="closeModal('daily-rewards')">إغلاق</button>
     </div>
 </div>
 
-<!-- صندوق الأبطال -->
 <div class="modal-overlay" id="modal-chest">
     <div class="modal-content">
         <h2>🧰 صندوق الأبطال</h2>
         <p style="text-align:center; font-size:12px;">افتح الصندوق للحصول على جوائز عشوائية!</p>
-        <div class="chest-anim-container">
-            <div class="chest-anim" id="chestVisual">🎁</div>
-        </div>
+        <div class="chest-anim-container"><div class="chest-anim" id="chestVisual">🎁</div></div>
         <button class="btn-wood gold" id="openChestBtn" onclick="openChest()" style="width:100%; padding:15px; border-radius:15px; border:2px solid var(--gold); background:linear-gradient(to bottom, #d4a030, #8b6914); color:#2c1503; font-weight:900; font-size:16px; cursor:pointer; margin-bottom:12px;">افتح الصندوق (🪙 500)</button>
         <button class="modal-close" onclick="closeModal('chest')">إغلاق</button>
     </div>
 </div>
 
-<!-- الإنجازات -->
 <div class="modal-overlay" id="modal-achievements">
     <div class="modal-content">
         <h2>🏆 الإنجازات</h2>
-        <div id="achievementsList">
-            <!-- يتم توليدها بالجافاسكربت -->
-        </div>
+        <div id="achievementsList"></div>
         <button class="modal-close" onclick="closeModal('achievements')">إغلاق</button>
     </div>
 </div>
 
-<!-- المهام اليومية -->
 <div class="modal-overlay" id="modal-missions">
     <div class="modal-content">
         <h2>📅 المهام اليومية</h2>
-        <div id="missionsList">
-            <!-- يتم توليدها بالجافاسكربت -->
-        </div>
+        <div id="missionsList"></div>
         <button class="modal-close" onclick="closeModal('missions')">إغلاق</button>
     </div>
 </div>
 
-<!-- المتجر -->
 <div class="modal-overlay" id="modal-store">
     <div class="modal-content">
         <h2>🏪 المتجر</h2>
         <p style="text-align:center; margin-bottom: 15px; color:#cce;">عناصر أسطورية قادمة قريباً!</p>
-        <div class="achieve-row">
-            <b>🐲 تنين ذهبي</b>
-            <span class="prog">🪙 2500</span>
-        </div>
-        <div class="achieve-row">
-            <b>👹 غول الظلام</b>
-            <span class="prog">🪙 1800</span>
-        </div>
-        <div class="achieve-row">
-            <b>🧿 رقعة الملك</b>
-            <span class="prog">💎 60</span>
-        </div>
+        <div class="achieve-row"><b>🐲 تنين ذهبي</b><span class="prog">🪙 2500</span></div>
+        <div class="achieve-row"><b>👹 غول الظلام</b><span class="prog">🪙 1800</span></div>
+        <div class="achieve-row"><b>🧿 رقعة الملك</b><span class="prog">💎 60</span></div>
         <button class="modal-close" onclick="closeModal('store')">إغلاق</button>
     </div>
 </div>
 
 <div id="toast">رسالة</div>
 
-<!-- ==========================================================================
-     استيراد المكتبات
-     ========================================================================== -->
 <script type="importmap">
 {
  "imports":{
@@ -794,16 +559,11 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Chess } from "chess";
 
 /* ==========================================================================
-   نظام المكافآت والبيانات (أكثر من 500 سطر)
+   نظام المكافآت والبيانات
    ========================================================================== */
 let playerData = {
-    coins: 25750,
-    gems: 450,
-    trophies: 1250,
-    level: 12,
-    lastDailyClaim: "",
-    dailyStreak: 0,
-    chestReadyAt: 0,
+    coins: 25750, gems: 450, trophies: 1250, level: 12,
+    lastDailyClaim: "", dailyStreak: 0, chestReadyAt: 0,
     achievements: {
         win1: { progress: 0, target: 1, reward: 500, claimed: false },
         win5: { progress: 0, target: 5, reward: 2000, claimed: false },
@@ -822,7 +582,6 @@ function loadPlayerData() {
         try {
             const parsed = JSON.parse(saved);
             playerData = { ...playerData, ...parsed };
-            // Handle nested objects safely
             if (!parsed.achievements) playerData.achievements = { ...playerData.achievements };
             if (!parsed.missions) playerData.missions = { ...playerData.missions };
         } catch (e) { console.error("Error loading data", e); }
@@ -834,9 +593,7 @@ function loadPlayerData() {
     updateChestTimer();
 }
 
-function savePlayerData() {
-    localStorage.setItem('monsterChessData', JSON.stringify(playerData));
-}
+function savePlayerData() { localStorage.setItem('monsterChessData', JSON.stringify(playerData)); }
 
 function updateUI() {
     document.getElementById('ui-coins').textContent = playerData.coins.toLocaleString();
@@ -849,28 +606,20 @@ function addReward(type, amount, reason) {
     if (type === 'coin') playerData.coins += amount;
     if (type === 'gem') playerData.gems += amount;
     if (type === 'trophy') playerData.trophies += amount;
-    
-    updateUI();
-    savePlayerData();
+    updateUI(); savePlayerData();
     showToast(`🎉 حصلت على ${amount} ${type === 'coin' ? '🪙' : type === 'gem' ? '💎' : '⭐'} (${reason})`);
-    
-    // تأثير بصري بسيط
     const el = document.getElementById('ui-coins');
-    el.style.transform = 'scale(1.3)';
-    el.style.color = '#00ff00';
-    setTimeout(() => {
-        el.style.transform = 'scale(1)';
-        el.style.color = '';
-    }, 300);
+    el.style.transform = 'scale(1.3)'; el.style.color = '#00ff00';
+    setTimeout(() => { el.style.transform = 'scale(1)'; el.style.color = ''; }, 300);
 }
 
 function showToast(msg, duration = 2400) {
     const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.classList.add("show");
+    t.textContent = msg; t.classList.add("show");
     clearTimeout(window._toastTimer);
     window._toastTimer = setTimeout(() => t.classList.remove("show"), duration);
 }
+window.showToast = showToast;
 
 window.openModal = function(id){
     const m = document.getElementById('modal-' + id);
@@ -880,19 +629,14 @@ window.openModal = function(id){
     if(id === 'missions') renderMissions();
     if(id === 'chest') updateChestTimer();
 };
-
 window.closeModal = function(id){
     const m = document.getElementById('modal-' + id);
     if(m) m.classList.remove('active');
 };
-
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) overlay.classList.remove('active');
-    });
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); });
 });
 
-// --- المكافآت اليومية (Daily Rewards) ---
 const DAILY_REWARDS = [
     { day: 1, icon: '🪙', amount: 500, type: 'coin' },
     { day: 2, icon: '🪙', amount: 1000, type: 'coin' },
@@ -908,41 +652,30 @@ function renderDailyRewards() {
     grid.innerHTML = '';
     const today = new Date().toDateString();
     const canClaimToday = playerData.lastDailyClaim !== today;
-
     DAILY_REWARDS.forEach((rw, index) => {
         const isClaimed = index < playerData.dailyStreak;
         const isCurrent = index === playerData.dailyStreak && canClaimToday;
-        
         let statusClass = '';
         if (isClaimed) statusClass = 'claimed';
         if (isCurrent) statusClass = 'current';
-
         let btnHtml = '';
-        if (isClaimed) {
-            btnHtml = `<button class="claim-btn" disabled>تم ✓</button>`;
-        } else if (isCurrent) {
-            btnHtml = `<button class="claim-btn" onclick="claimDaily(${index})">استلام</button>`;
-        } else {
-            btnHtml = `<button class="claim-btn" disabled>مغلق</button>`;
-        }
-
+        if (isClaimed) btnHtml = `<button class="claim-btn" disabled>تم ✓</button>`;
+        else if (isCurrent) btnHtml = `<button class="claim-btn" onclick="claimDaily(${index})">استلام</button>`;
+        else btnHtml = `<button class="claim-btn" disabled>مغلق</button>`;
         grid.innerHTML += `
             <div class="reward-day ${statusClass}">
                 <div class="day-num">اليوم ${rw.day}</div>
                 <span class="day-icon">${rw.icon}</span>
                 <div class="day-val">${rw.amount}</div>
                 ${btnHtml}
-            </div>
-        `;
+            </div>`;
     });
-
     document.getElementById('daily-badge').style.display = canClaimToday ? 'flex' : 'none';
 }
 
 window.claimDaily = function(index) {
     const rw = DAILY_REWARDS[index];
     if(!rw) return;
-    
     playerData.dailyStreak++;
     playerData.lastDailyClaim = new Date().toDateString();
     addReward(rw.type, rw.amount, `المكافأة اليومية - اليوم ${rw.day}`);
@@ -951,73 +684,46 @@ window.claimDaily = function(index) {
     showToast(`🎁 تم استلام مكافأة اليوم ${rw.day}!`);
 };
 
-// --- صندوق الأبطال (Chest) ---
 function updateChestTimer() {
     const now = Date.now();
     const btn = document.getElementById('openChestBtn');
     const timerEl = document.getElementById('chest-timer');
-    
     if (now < playerData.chestReadyAt) {
         const diff = playerData.chestReadyAt - now;
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const secs = Math.floor((diff % (1000 * 60)) / 1000);
         timerEl.textContent = `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        btn.disabled = true;
-        btn.textContent = 'الرجاء الانتظار...';
-        btn.style.opacity = '0.5';
+        btn.disabled = true; btn.textContent = 'الرجاء الانتظار...'; btn.style.opacity = '0.5';
     } else {
         timerEl.textContent = 'جاهز!';
-        btn.disabled = false;
-        btn.textContent = 'افتح الصندوق (🪙 500)';
-        btn.style.opacity = '1';
+        btn.disabled = false; btn.textContent = 'افتح الصندوق (🪙 500)'; btn.style.opacity = '1';
     }
 }
 
 window.openChest = function() {
-    if (playerData.coins < 500) {
-        showToast('❌ لا تملك عملات كافية!');
-        return;
-    }
-    
-    // خصم السعر
-    playerData.coins -= 500;
-    updateUI();
-    savePlayerData();
-    
+    if (playerData.coins < 500) { showToast('❌ لا تملك عملات كافية!'); return; }
+    playerData.coins -= 500; updateUI(); savePlayerData();
     const chestEl = document.getElementById('chestVisual');
     chestEl.classList.add('opened');
     document.getElementById('openChestBtn').disabled = true;
-    
     setTimeout(() => {
-        // جائزة عشوائية
         const rand = Math.random();
         let rewardType, rewardAmount, icon;
-        
-        if (rand < 0.6) {
-            rewardType = 'coin'; rewardAmount = Math.floor(Math.random() * 1000) + 500; icon = '🪙';
-        } else if (rand < 0.9) {
-            rewardType = 'gem'; rewardAmount = Math.floor(Math.random() * 20) + 5; icon = '💎';
-        } else {
-            rewardType = 'trophy'; rewardAmount = Math.floor(Math.random() * 100) + 50; icon = '⭐';
-        }
-        
+        if (rand < 0.6) { rewardType = 'coin'; rewardAmount = Math.floor(Math.random() * 1000) + 500; icon = '🪙'; }
+        else if (rand < 0.9) { rewardType = 'gem'; rewardAmount = Math.floor(Math.random() * 20) + 5; icon = '💎'; }
+        else { rewardType = 'trophy'; rewardAmount = Math.floor(Math.random() * 100) + 50; icon = '⭐'; }
         addReward(rewardType, rewardAmount, 'صندوق الأبطال');
-        
-        // تصفير المؤقت (ساعة انتظار)
-        playerData.chestReadyAt = Date.now() + (60 * 60 * 1000); 
+        playerData.chestReadyAt = Date.now() + (60 * 60 * 1000);
         savePlayerData();
-        
         chestEl.classList.remove('opened');
         document.getElementById('openChestBtn').disabled = false;
         updateChestTimer();
-        
         showToast(`🎉 مبروك! حصلت على ${rewardAmount} ${icon} من الصندوق!`);
         closeModal('chest');
     }, 600);
 };
 
-// --- الإنجازات (Achievements) ---
 const ACHIEVEMENT_NAMES = {
     win1: '🐲 قاهر التنين (فوز أول)',
     win5: '👑 ملك الرقعة (5 انتصارات)',
@@ -1027,20 +733,14 @@ const ACHIEVEMENT_NAMES = {
 function renderAchievements() {
     const list = document.getElementById('achievementsList');
     list.innerHTML = '';
-    
     for (const key in playerData.achievements) {
         const a = playerData.achievements[key];
         const percent = Math.min(100, (a.progress / a.target) * 100);
         let btnHtml = '';
-        
         if (a.progress >= a.target) {
-            if (a.claimed) {
-                btnHtml = `<button class="claim-btn" disabled style="background:#555;">تم الاستلام</button>`;
-            } else {
-                btnHtml = `<button class="claim-btn" onclick="claimAchievement('${key}')" style="background:#ffd700; color:#000;">استلام 🪙${a.reward}</button>`;
-            }
+            if (a.claimed) btnHtml = `<button class="claim-btn" disabled style="background:#555;">تم الاستلام</button>`;
+            else btnHtml = `<button class="claim-btn" onclick="claimAchievement('${key}')" style="background:#ffd700; color:#000;">استلام 🪙${a.reward}</button>`;
         }
-        
         list.innerHTML += `
             <div class="achieve-row" style="flex-direction:column; align-items:stretch;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
@@ -1049,8 +749,7 @@ function renderAchievements() {
                 </div>
                 <div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
                 <div style="margin-top:5px; text-align:center;">${btnHtml}</div>
-            </div>
-        `;
+            </div>`;
     }
 }
 
@@ -1064,7 +763,6 @@ window.claimAchievement = function(key) {
     }
 };
 
-// --- المهام اليومية (Missions) ---
 const MISSION_NAMES = {
     play1: '🎮 العب مباراة واحدة',
     win1: '🏆 اربح مباراة واحدة',
@@ -1074,20 +772,14 @@ const MISSION_NAMES = {
 function renderMissions() {
     const list = document.getElementById('missionsList');
     list.innerHTML = '';
-    
     for (const key in playerData.missions) {
         const m = playerData.missions[key];
         const percent = Math.min(100, (m.progress / m.target) * 100);
         let btnHtml = '';
-        
         if (m.progress >= m.target) {
-            if (m.claimed) {
-                btnHtml = `<button class="claim-btn" disabled style="background:#555;">تم الاستلام</button>`;
-            } else {
-                btnHtml = `<button class="claim-btn" onclick="claimMission('${key}')" style="background:#00ff00; color:#000;">استلام 🪙${m.reward}</button>`;
-            }
+            if (m.claimed) btnHtml = `<button class="claim-btn" disabled style="background:#555;">تم الاستلام</button>`;
+            else btnHtml = `<button class="claim-btn" onclick="claimMission('${key}')" style="background:#00ff00; color:#000;">استلام 🪙${m.reward}</button>`;
         }
-        
         list.innerHTML += `
             <div class="mission-row" style="flex-direction:column; align-items:stretch;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
@@ -1096,8 +788,7 @@ function renderMissions() {
                 </div>
                 <div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
                 <div style="margin-top:5px; text-align:center;">${btnHtml}</div>
-            </div>
-        `;
+            </div>`;
     }
 }
 
@@ -1116,30 +807,25 @@ function updateMissionProgress(key, amount = 1) {
         const m = playerData.missions[key];
         if (m.progress < m.target && !m.claimed) {
             m.progress = Math.min(m.target, m.progress + amount);
-            savePlayerData();
-            renderMissions();
+            savePlayerData(); renderMissions();
         }
     }
 }
-
 function updateAchievementProgress(key, amount = 1) {
     if (playerData.achievements[key]) {
         const a = playerData.achievements[key];
         if (a.progress < a.target && !a.claimed) {
             a.progress = Math.min(a.target, a.progress + amount);
-            savePlayerData();
-            renderAchievements();
+            savePlayerData(); renderAchievements();
         }
     }
 }
 
-// بدء تشغيل نظام المكافآت
 loadPlayerData();
 setInterval(updateChestTimer, 1000);
 
-
 /* ==========================================================================
-   كود اللعبة (Three.js & Chess.js)
+   كود اللعبة (Three.js & Chess.js) - نسخة قطع الشطرنج الكلاسيكية 3D
    ========================================================================== */
 const chess = new Chess();
 let selected = null;
@@ -1154,500 +840,669 @@ let scene, camera, renderer, controls, board, pieces, squares, holder, sun;
 const files = "abcdefgh";
 
 function position(square){
- return { x: files.indexOf(square[0]) - 3.5, z: Number(square[1]) - 4.5 };
+    return { x: files.indexOf(square[0]) - 3.5, z: Number(square[1]) - 4.5 };
 }
 
-function isSoundOn(){
- const el = document.getElementById("soundSetting");
- return !el || el.checked;
-}
+function isSoundOn(){ const el = document.getElementById("soundSetting"); return !el || el.checked; }
 
 function sound(){
- if(!isSoundOn()) return;
- try{
-  const AC = window.AudioContext || window.webkitAudioContext;
-  if(!AC) return;
-  const ctx = new AC();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.frequency.value = 650;
-  gain.gain.setValueAtTime(.07, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .12);
-  osc.start();
-  osc.stop(ctx.currentTime + .12);
-  osc.onended = () => { try{ ctx.close(); }catch(e){} };
- }catch(e){}
+    if(!isSoundOn()) return;
+    try{
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if(!AC) return;
+        const ctx = new AC();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.frequency.value = 650;
+        gain.gain.setValueAtTime(.07, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .12);
+        osc.start(); osc.stop(ctx.currentTime + .12);
+        osc.onended = () => { try{ ctx.close(); }catch(e){} };
+    }catch(e){}
 }
 
+/* ===== تهيئة المشهد 3D بالكامل (خشبي) ===== */
 function initGame3D(){
- if(gameInitialized) return;
- gameInitialized = true;
- holder = document.getElementById("game");
+    if(gameInitialized) return;
+    gameInitialized = true;
+    holder = document.getElementById("game");
 
- scene = new THREE.Scene();
- scene.background = new THREE.Color(0x0a1930);
- scene.fog = new THREE.Fog(0x0a1930, 18, 35);
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a0e06);
+    scene.fog = new THREE.Fog(0x1a0e06, 20, 42);
 
- camera = new THREE.PerspectiveCamera(45, 1, .1, 100);
- camera.position.set(7, 9, 11);
+    camera = new THREE.PerspectiveCamera(45, 1, .1, 100);
+    camera.position.set(8, 10, 12);
 
- renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
- renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.7));
- renderer.shadowMap.enabled = true;
- renderer.shadowMap.type = THREE.PCFSoftShadowMap;
- renderer.outputColorSpace = THREE.SRGBColorSpace;
- holder.appendChild(renderer.domElement);
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.7));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    holder.appendChild(renderer.domElement);
 
- controls = new OrbitControls(camera, renderer.domElement);
- controls.target.set(0, 0, 0);
- controls.enableDamping = true;
- controls.enablePan = false;
- controls.minDistance = 8;
- controls.maxDistance = 16;
- controls.maxPolarAngle = Math.PI / 2.15;
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, .3, 0);
+    controls.enableDamping = true;
+    controls.enablePan = false;
+    controls.minDistance = 9;
+    controls.maxDistance = 18;
+    controls.maxPolarAngle = Math.PI / 2.15;
 
- scene.add(new THREE.HemisphereLight(0xffffff, 0x303050, 2));
+    // إضاءة دافئة
+    scene.add(new THREE.HemisphereLight(0xfff0d0, 0x201008, 1.8));
 
- sun = new THREE.DirectionalLight(0xfff3c4, 3);
- sun.position.set(5, 10, 7);
- sun.castShadow = true;
- sun.shadow.mapSize.set(1024, 1024);
- scene.add(sun);
+    sun = new THREE.DirectionalLight(0xfff0c0, 3.2);
+    sun.position.set(6, 12, 8);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(1024, 1024);
+    sun.shadow.camera.left = -7;
+    sun.shadow.camera.right = 7;
+    sun.shadow.camera.top = 7;
+    sun.shadow.camera.bottom = -7;
+    sun.shadow.camera.near = 1;
+    sun.shadow.camera.far = 30;
+    sun.shadow.bias = -0.0005;
+    scene.add(sun);
 
- const blueLight = new THREE.DirectionalLight(0x4a90e2, 1);
- blueLight.position.set(-5, 8, -7);
- scene.add(blueLight);
+    const fillLight = new THREE.DirectionalLight(0xffd0a0, 1.2);
+    fillLight.position.set(-6, 9, -8);
+    scene.add(fillLight);
 
- const floor = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshStandardMaterial({ color: 0x0a1020, roughness: .9 }));
- floor.rotation.x = -Math.PI / 2;
- floor.position.y = -.7;
- scene.add(floor);
+    const rimLight = new THREE.PointLight(0xffaa55, .6, 35);
+    rimLight.position.set(0, 8, 0);
+    scene.add(rimLight);
 
- const base = new THREE.Mesh(new THREE.BoxGeometry(8.7, .65, 8.7), new THREE.MeshStandardMaterial({ color: 0x1a2c4a, metalness: .7, roughness: .3 }));
- base.position.y = -.4;
- base.receiveShadow = true;
- scene.add(base);
+    // أرضية داكنة
+    const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(200, 200),
+        new THREE.MeshStandardMaterial({ color: 0x0a0503, roughness: .95 })
+    );
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -.85;
+    floor.receiveShadow = true;
+    scene.add(floor);
 
- const frame = new THREE.Mesh(new THREE.BoxGeometry(8.9, .1, 8.9), new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: .9, roughness: .2, emissive: 0x442200 }));
- frame.position.y = -.05;
- scene.add(frame);
+    // ========== القاعدة الخشبية الثابتة (تثبيت القاعدة) ==========
+    const baseMat = new THREE.MeshStandardMaterial({ color: 0x3d2412, roughness: .8, metalness: .05 });
+    const base = new THREE.Mesh(new THREE.BoxGeometry(9.8, .9, 9.8), baseMat);
+    base.position.y = -.45;
+    base.castShadow = true;
+    base.receiveShadow = true;
+    scene.add(base);
 
- board = new THREE.Group();
- pieces = new THREE.Group();
- scene.add(board);
- scene.add(pieces);
- squares = [];
+    // شريط حافة داكن على القاعدة
+    const edgeMat = new THREE.MeshStandardMaterial({ color: 0x2a1608, roughness: .85, metalness: .05 });
+    const edgeBand = new THREE.Mesh(new THREE.BoxGeometry(9.9, .12, 9.9), edgeMat);
+    edgeBand.position.y = -.07;
+    edgeBand.castShadow = true;
+    edgeBand.receiveShadow = true;
+    scene.add(edgeBand);
 
- makeBoard();
- animate();
- attachCanvasEvents();
+    // سطح الطاولة العلوي
+    const topMat = new THREE.MeshStandardMaterial({ color: 0x5c3a20, roughness: .65, metalness: .1 });
+    const tabletop = new THREE.Mesh(new THREE.BoxGeometry(9.5, .06, 9.5), topMat);
+    tabletop.position.y = .03;
+    tabletop.receiveShadow = true;
+    scene.add(tabletop);
+
+    // ========== الإطار الخشبي المزخرف حول الرقعة ==========
+    const railMat = new THREE.MeshStandardMaterial({ color: 0x6b4423, roughness: .55, metalness: .15 });
+    const railTopMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: .5, metalness: .2 });
+    const railH = .22;
+    const railThick = .32;
+    const halfBoard = 4;
+
+    // 4 حواف خشبية
+    const railF = new THREE.Mesh(new THREE.BoxGeometry(8 + railThick*2, railH, railThick), railMat);
+    railF.position.set(0, railH/2 + .06, halfBoard + railThick/2);
+    railF.castShadow = true; railF.receiveShadow = true; scene.add(railF);
+
+    const railB = new THREE.Mesh(new THREE.BoxGeometry(8 + railThick*2, railH, railThick), railMat);
+    railB.position.set(0, railH/2 + .06, -halfBoard - railThick/2);
+    railB.castShadow = true; railB.receiveShadow = true; scene.add(railB);
+
+    const railL = new THREE.Mesh(new THREE.BoxGeometry(railThick, railH, 8), railMat);
+    railL.position.set(-halfBoard - railThick/2, railH/2 + .06, 0);
+    railL.castShadow = true; railL.receiveShadow = true; scene.add(railL);
+
+    const railR = new THREE.Mesh(new THREE.BoxGeometry(railThick, railH, 8), railMat);
+    railR.position.set(halfBoard + railThick/2, railH/2 + .06, 0);
+    railR.castShadow = true; railR.receiveShadow = true; scene.add(railR);
+
+    // شريط علوي فاتح على الحواف
+    function addRailCap(x, z, w, d){
+        const cap = new THREE.Mesh(new THREE.BoxGeometry(w, .04, d), railTopMat);
+        cap.position.set(x, railH + .06, z);
+        cap.castShadow = true; cap.receiveShadow = true; scene.add(cap);
+    }
+    addRailCap(0, halfBoard + railThick/2, 8 + railThick*2, railThick);
+    addRailCap(0, -halfBoard - railThick/2, 8 + railThick*2, railThick);
+    addRailCap(-halfBoard - railThick/2, 0, railThick, 8);
+    addRailCap(halfBoard + railThick/2, 0, railThick, 8);
+
+    // أعمدة زوايا خشبية
+    const postMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: .4, metalness: .3 });
+    const knobMat = new THREE.MeshStandardMaterial({ color: 0xd4a857, roughness: .3, metalness: .6 });
+    const corners = [
+        [halfBoard + railThick/2, halfBoard + railThick/2],
+        [-halfBoard - railThick/2, halfBoard + railThick/2],
+        [halfBoard + railThick/2, -halfBoard - railThick/2],
+        [-halfBoard - railThick/2, -halfBoard - railThick/2],
+    ];
+    corners.forEach(([x, z]) => {
+        const post = new THREE.Mesh(new THREE.CylinderGeometry(.18, .21, .32, 12), postMat);
+        post.position.set(x, .16 + .06, z);
+        post.castShadow = true; post.receiveShadow = true; scene.add(post);
+
+        const knob = new THREE.Mesh(new THREE.SphereGeometry(.13, 12, 10), knobMat);
+        knob.position.set(x, .38 + .06, z);
+        knob.castShadow = true; scene.add(knob);
+    });
+
+    board = new THREE.Group();
+    pieces = new THREE.Group();
+    scene.add(board);
+    scene.add(pieces);
+    squares = [];
+
+    makeBoard();
+    animate();
+    attachCanvasEvents();
 }
 
+/* ===== لوحة الشطرنج الخشبية العادية ===== */
 function makeBoard(){
- for(let rank = 8; rank >= 1; rank--){
-  for(let f = 0; f < 8; f++){
-   const s = files[f] + rank;
-   const p = position(s);
-   const mat = new THREE.MeshStandardMaterial({ color: (rank + f) % 2 ? 0x8b5a3c : 0xe9d2a5, roughness: .75, metalness: .1 });
-   const mesh = new THREE.Mesh(new THREE.BoxGeometry(.99, .15, .99), mat);
-   mesh.position.set(p.x, -.035, p.z);
-   mesh.receiveShadow = true;
-   mesh.userData.square = s;
-   board.add(mesh);
-   squares.push(mesh);
-  }
- }
+    for(let rank = 8; rank >= 1; rank--){
+        for(let f = 0; f < 8; f++){
+            const s = files[f] + rank;
+            const p = position(s);
+            const isDark = (rank + f) % 2;
+            const mat = new THREE.MeshStandardMaterial({
+                color: isDark ? 0x8b5a3c : 0xf0d9b5,
+                roughness: .75, metalness: .1
+            });
+            const mesh = new THREE.Mesh(new THREE.BoxGeometry(.99, .15, .99), mat);
+            mesh.position.set(p.x, .15, p.z);
+            mesh.receiveShadow = true;
+            mesh.userData.square = s;
+            board.add(mesh);
+            squares.push(mesh);
+        }
+    }
 }
 
-function monster(type, color){
- const g = new THREE.Group();
- const main = new THREE.MeshStandardMaterial({ color: color === "w" ? 0x2ecc71 : 0x9b59b6, roughness: .35, metalness: .25, emissive: color === "w" ? 0x0a3a1a : 0x2a0a3a, emissiveIntensity: .3 });
- const gold = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: .9, roughness: .2, emissive: 0x442200, emissiveIntensity: .3 });
- const white = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x333333 });
- const black = new THREE.MeshStandardMaterial({ color: 0x111111 });
+/* ===== إنشاء قطع الشطرنج الكلاسيكية ثلاثية الأبعاد ===== */
+function chessPiece(type, color){
+    const g = new THREE.Group();
+    const isWhite = color === 'w';
 
- function sphere(x,y,z,sx,sy,sz,mat){ const m = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 16), mat); m.position.set(x, y, z); m.scale.set(sx, sy, sz); m.castShadow = true; g.add(m); }
- function cone(x,y,z,size,mat){ const m = new THREE.Mesh(new THREE.ConeGeometry(size, .4, 12), mat); m.position.set(x, y, z); m.castShadow = true; g.add(m); }
+    // مواد القطع: خشب فاتح (أبيض) / خشب داكن (أسود)
+    const mat = new THREE.MeshStandardMaterial({
+        color: isWhite ? 0xf5e8d0 : 0x2a1810,
+        roughness: .5, metalness: .15
+    });
+    const darkMat = new THREE.MeshStandardMaterial({
+        color: isWhite ? 0xd4b896 : 0x0f0805,
+        roughness: .6, metalness: .1
+    });
+    const accentMat = new THREE.MeshStandardMaterial({
+        color: isWhite ? 0xc9a56a : 0x6b4423,
+        roughness: .4, metalness: .35
+    });
 
- sphere(0, .45, 0, .34, .45, .32, main);
- sphere(0, .92, 0, .34, .35, .32, main);
- for(const x of [-.14, .14]){ sphere(x, .99, .28, .105, .12, .06, white); sphere(x, 1, .33, .045, .06, .035, black); }
- for(const x of [-.38, .38]){ sphere(x, .48, 0, .12, .2, .13, main); }
+    // ===== القاعدة (تثبيت القاعدة) =====
+    const base1 = new THREE.Mesh(new THREE.CylinderGeometry(.32, .36, .1, 24), mat);
+    base1.position.y = .05;
+    base1.castShadow = true; base1.receiveShadow = true;
+    g.add(base1);
 
- if(type === "k"){ cone(-.23, 1.35, 0, .16, gold); cone(.23, 1.35, 0, .16, gold); sphere(0, 1.38, 0, .32, .13, .3, gold); }
- if(type === "q"){ for(let i = -1; i <= 1; i++) cone(i * .2, 1.35, 0, .13, gold); sphere(0, 1.35, 0, .3, .1, .3, gold); }
- if(type === "r"){ const crown = new THREE.Mesh(new THREE.CylinderGeometry(.3, .38, .25, 8), gold); crown.position.y = 1.3; crown.castShadow = true; g.add(crown); }
- if(type === "b") cone(0, 1.4, 0, .16, gold);
- if(type === "n"){ sphere(0, 1.05, .3, .15, .2, .3, gold); cone(.1, 1.35, 0, .13, gold); }
- if(type === "p") sphere(0, 1.3, 0, .15, .16, .15, gold);
- return g;
+    const base2 = new THREE.Mesh(new THREE.CylinderGeometry(.26, .32, .06, 24), darkMat);
+    base2.position.y = .13;
+    base2.castShadow = true;
+    g.add(base2);
+
+    // ===== البيدق =====
+    if(type === 'p'){
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(.1, .22, .4, 20), mat);
+        body.position.y = .36; body.castShadow = true; g.add(body);
+
+        const collar = new THREE.Mesh(new THREE.TorusGeometry(.14, .03, 8, 20), accentMat);
+        collar.position.y = .56; collar.rotation.x = Math.PI/2; collar.castShadow = true; g.add(collar);
+
+        const head = new THREE.Mesh(new THREE.SphereGeometry(.17, 20, 16), mat);
+        head.position.y = .74; head.castShadow = true; g.add(head);
+    }
+    // ===== القلعة =====
+    else if(type === 'r'){
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(.2, .26, .55, 20), mat);
+        body.position.y = .44; body.castShadow = true; g.add(body);
+
+        const top = new THREE.Mesh(new THREE.CylinderGeometry(.28, .24, .22, 20), mat);
+        top.position.y = .82; top.castShadow = true; g.add(top);
+
+        for(let i = 0; i < 4; i++){
+            const angle = i * Math.PI/2 + Math.PI/4;
+            const crenel = new THREE.Mesh(new THREE.BoxGeometry(.1, .14, .1), mat);
+            crenel.position.set(Math.cos(angle) * .21, 1.0, Math.sin(angle) * .21);
+            crenel.castShadow = true; g.add(crenel);
+        }
+    }
+    // ===== الحصان =====
+    else if(type === 'n'){
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(.17, .26, .5, 20), mat);
+        body.position.y = .41; body.castShadow = true; g.add(body);
+
+        const neck = new THREE.Mesh(new THREE.CylinderGeometry(.13, .18, .38, 16), mat);
+        neck.position.set(.06, .76, 0);
+        neck.rotation.z = -.4;
+        neck.castShadow = true; g.add(neck);
+
+        const head = new THREE.Mesh(new THREE.BoxGeometry(.18, .26, .3), mat);
+        head.position.set(.16, .96, .02);
+        head.rotation.z = -.4;
+        head.castShadow = true; g.add(head);
+
+        const snout = new THREE.Mesh(new THREE.BoxGeometry(.12, .16, .18), mat);
+        snout.position.set(.26, .94, .14);
+        snout.rotation.z = -.4;
+        snout.castShadow = true; g.add(snout);
+
+        const mane = new THREE.Mesh(new THREE.BoxGeometry(.06, .2, .1), darkMat);
+        mane.position.set(.03, 1.0, -.06);
+        mane.rotation.z = -.4;
+        mane.castShadow = true; g.add(mane);
+
+        const ear = new THREE.Mesh(new THREE.ConeGeometry(.05, .12, 6), mat);
+        ear.position.set(.1, 1.12, -.02);
+        ear.castShadow = true; g.add(ear);
+    }
+    // ===== الفيل =====
+    else if(type === 'b'){
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(.13, .24, .5, 20), mat);
+        body.position.y = .41; body.castShadow = true; g.add(body);
+
+        const collar = new THREE.Mesh(new THREE.TorusGeometry(.15, .035, 8, 20), accentMat);
+        collar.position.y = .68; collar.rotation.x = Math.PI/2; collar.castShadow = true; g.add(collar);
+
+        const head = new THREE.Mesh(new THREE.SphereGeometry(.17, 20, 16), mat);
+        head.position.y = .88; head.scale.set(1, 1.3, 1);
+        head.castShadow = true; g.add(head);
+
+        const top = new THREE.Mesh(new THREE.SphereGeometry(.05, 12, 10), mat);
+        top.position.y = 1.15; top.castShadow = true; g.add(top);
+
+        const slit = new THREE.Mesh(new THREE.BoxGeometry(.02, .1, .08), darkMat);
+        slit.position.set(.15, .9, 0); g.add(slit);
+    }
+    // ===== الملكة =====
+    else if(type === 'q'){
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(.15, .28, .6, 20), mat);
+        body.position.y = .46; body.castShadow = true; g.add(body);
+
+        const collar = new THREE.Mesh(new THREE.TorusGeometry(.18, .04, 8, 20), accentMat);
+        collar.position.y = .78; collar.rotation.x = Math.PI/2; collar.castShadow = true; g.add(collar);
+
+        const crownBase = new THREE.Mesh(new THREE.CylinderGeometry(.22, .18, .16, 20), mat);
+        crownBase.position.y = .92; crownBase.castShadow = true; g.add(crownBase);
+
+        for(let i = 0; i < 8; i++){
+            const angle = i * Math.PI/4;
+            const point = new THREE.Mesh(new THREE.ConeGeometry(.04, .12, 6), accentMat);
+            point.position.set(Math.cos(angle) * .16, 1.06, Math.sin(angle) * .16);
+            point.castShadow = true; g.add(point);
+        }
+
+        const top = new THREE.Mesh(new THREE.SphereGeometry(.07, 16, 12), accentMat);
+        top.position.y = 1.16; top.castShadow = true; g.add(top);
+    }
+    // ===== الملك =====
+    else if(type === 'k'){
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(.15, .28, .65, 20), mat);
+        body.position.y = .48; body.castShadow = true; g.add(body);
+
+        const collar = new THREE.Mesh(new THREE.TorusGeometry(.18, .04, 8, 20), accentMat);
+        collar.position.y = .82; collar.rotation.x = Math.PI/2; collar.castShadow = true; g.add(collar);
+
+        const crownBase = new THREE.Mesh(new THREE.CylinderGeometry(.22, .18, .14, 20), mat);
+        crownBase.position.y = .94; crownBase.castShadow = true; g.add(crownBase);
+
+        const crossV = new THREE.Mesh(new THREE.BoxGeometry(.07, .26, .07), accentMat);
+        crossV.position.y = 1.16; crossV.castShadow = true; g.add(crossV);
+
+        const crossH = new THREE.Mesh(new THREE.BoxGeometry(.22, .07, .07), accentMat);
+        crossH.position.y = 1.18; crossH.castShadow = true; g.add(crossH);
+    }
+
+    return g;
 }
 
+/* ===== رسم القطع على اللوحة ===== */
 function draw(){
- pieces.clear();
- const state = chess.board();
- for(let r = 0; r < 8; r++){
-  for(let f = 0; f < 8; f++){
-   const p = state[r][f];
-   if(!p) continue;
-   const s = files[f] + (8 - r);
-   const pos = position(s);
-   const obj = monster(p.type, p.color);
-   obj.position.set(pos.x, .05, pos.z);
-   obj.userData.square = s;
-   obj.userData.color = p.color;
-   pieces.add(obj);
-  }
- }
- pieces.updateMatrixWorld(true);
+    pieces.clear();
+    const state = chess.board();
+    for(let r = 0; r < 8; r++){
+        for(let f = 0; f < 8; f++){
+            const p = state[r][f];
+            if(!p) continue;
+            const s = files[f] + (8 - r);
+            const pos = position(s);
+            const obj = chessPiece(p.type, p.color);
+            obj.position.set(pos.x, .15, pos.z);
+            obj.userData.square = s;
+            obj.userData.color = p.color;
+            pieces.add(obj);
+        }
+    }
+    pieces.updateMatrixWorld(true);
 }
 
 function resetColors(){
- squares.forEach(s => {
-  const rank = Number(s.userData.square[1]);
-  const f = files.indexOf(s.userData.square[0]);
-  s.material.color.setHex((rank + f) % 2 ? 0x8b5a3c : 0xe9d2a5);
- });
+    squares.forEach(s => {
+        const rank = Number(s.userData.square[1]);
+        const f = files.indexOf(s.userData.square[0]);
+        s.material.color.setHex((rank + f) % 2 ? 0x8b5a3c : 0xf0d9b5);
+    });
 }
 
 function showMoves(from){
- resetColors();
- if(!from) return;
- const moves = chess.moves({ square: from, verbose: true });
- moves.forEach(m => {
-  const sq = squares.find(x => x.userData.square === m.to);
-  if(sq) sq.material.color.setHex(0x39dc83);
- });
+    resetColors();
+    if(!from) return;
+    const moves = chess.moves({ square: from, verbose: true });
+    moves.forEach(m => {
+        const sq = squares.find(x => x.userData.square === m.to);
+        if(sq) sq.material.color.setHex(0x39dc83);
+    });
 }
 
 function updateStatus(){
- const status = document.getElementById("status");
- if(chess.isCheckmate()){
-  status.textContent = "🏆 كش مات! " + (chess.turn() === "w" ? "الأسود" : "الأبيض") + " فاز!";
-  return true;
- }
- if(chess.isStalemate()){
-  status.textContent = "🤝 تعادل بسبب الجمود!";
-  return true;
- }
- if(chess.isDraw()){
-  status.textContent = "🤝 المباراة انتهت بالتعادل";
-  return true;
- }
- if(chess.isCheck()){
-  status.textContent = "⚠️ كش! الملك مهدد";
-  return false;
- }
- status.textContent = chess.turn() === "w" ? "دورك الآن - الأبيض" : "🤖 الكمبيوتر يفكر...";
- return false;
+    const status = document.getElementById("status");
+    if(chess.isCheckmate()){
+        status.textContent = "🏆 كش مات! " + (chess.turn() === "w" ? "الأسود" : "الأبيض") + " فاز!";
+        return true;
+    }
+    if(chess.isStalemate()){ status.textContent = "🤝 تعادل بسبب الجمود!"; return true; }
+    if(chess.isDraw()){ status.textContent = "🤝 المباراة انتهت بالتعادل"; return true; }
+    if(chess.isCheck()){ status.textContent = "⚠️ كش! الملك مهدد"; return false; }
+    status.textContent = chess.turn() === "w" ? "دورك الآن - الأبيض" : "🤖 الكمبيوتر يفكر...";
+    return false;
 }
 
 function saveMove(){ snapshots.push({ fen: chess.fen(), history: [...chess.history()] }); }
 
 function makeMove(from, to, promotion = "q"){
- try{
-  const move = chess.move({ from, to, promotion });
-  if(!move) return false;
-  
-  // تتبع الأسر للمهام والإنجازات
-  if (move.captured && chess.turn() === 'b') {
-      playerCaptures++;
-      updateMissionProgress('capture3', 1);
-      updateAchievementProgress('capture10', 1);
-  }
-
-  draw();
-  resetColors();
-  selected = null;
-  document.getElementById("moves").textContent = chess.history().join("  ");
-  sound();
-  return true;
- }catch(e){ return false; }
+    try{
+        const move = chess.move({ from, to, promotion });
+        if(!move) return false;
+        if (move.captured && chess.turn() === 'b') {
+            playerCaptures++;
+            updateMissionProgress('capture3', 1);
+            updateAchievementProgress('capture10', 1);
+        }
+        draw();
+        resetColors();
+        selected = null;
+        document.getElementById("moves").textContent = chess.history().join("  ");
+        sound();
+        return true;
+    }catch(e){ return false; }
 }
 
 function evaluate(){
- if(chess.isCheckmate()) return chess.turn() === "w" ? -100000 : 100000;
- if(chess.isDraw()) return 0;
- const values = { p:100, n:320, b:330, r:500, q:900, k:20000 };
- let score = 0;
- chess.board().forEach((row, r) => {
-  row.forEach((p, f) => {
-   if(!p) return;
-   let value = values[p.type];
-   if(p.type === "p") value += (p.color === "b" ? r : 7 - r) * 4;
-   const center = 7 - (Math.abs(3.5 - f) + Math.abs(3.5 - r));
-   value += center * 2;
-   score += p.color === "w" ? value : -value;
-  });
- });
- return score;
+    if(chess.isCheckmate()) return chess.turn() === "w" ? -100000 : 100000;
+    if(chess.isDraw()) return 0;
+    const values = { p:100, n:320, b:330, r:500, q:900, k:20000 };
+    let score = 0;
+    chess.board().forEach((row, r) => {
+        row.forEach((p, f) => {
+            if(!p) return;
+            let value = values[p.type];
+            if(p.type === "p") value += (p.color === "b" ? r : 7 - r) * 4;
+            const center = 7 - (Math.abs(3.5 - f) + Math.abs(3.5 - r));
+            value += center * 2;
+            score += p.color === "w" ? value : -value;
+        });
+    });
+    return score;
 }
 
 function minimax(depth, alpha, beta, maximizing){
- if(depth === 0 || chess.isGameOver()) return evaluate();
- const moves = chess.moves();
- if(maximizing){
-  let best = -Infinity;
-  for(const m of moves){
-   chess.move(m);
-   best = Math.max(best, minimax(depth - 1, alpha, beta, false));
-   chess.undo();
-   alpha = Math.max(alpha, best);
-   if(beta <= alpha) break;
-  }
-  return best;
- }else{
-  let best = Infinity;
-  for(const m of moves){
-   chess.move(m);
-   best = Math.min(best, minimax(depth - 1, alpha, beta, true));
-   chess.undo();
-   beta = Math.min(beta, best);
-   if(beta <= alpha) break;
-  }
-  return best;
- }
+    if(depth === 0 || chess.isGameOver()) return evaluate();
+    const moves = chess.moves();
+    if(maximizing){
+        let best = -Infinity;
+        for(const m of moves){
+            chess.move(m);
+            best = Math.max(best, minimax(depth - 1, alpha, beta, false));
+            chess.undo();
+            alpha = Math.max(alpha, best);
+            if(beta <= alpha) break;
+        }
+        return best;
+    } else {
+        let best = Infinity;
+        for(const m of moves){
+            chess.move(m);
+            best = Math.min(best, minimax(depth - 1, alpha, beta, true));
+            chess.undo();
+            beta = Math.min(beta, best);
+            if(beta <= alpha) break;
+        }
+        return best;
+    }
 }
 
 function computer(){
- if(chess.isGameOver()) return;
- const moves = chess.moves();
- if(!moves.length) return;
-
- const level = document.getElementById("level").value;
- let chosen;
-
- if(level === "easy"){
-  const captures = moves.filter(m => m.includes("x"));
-  const pool = Math.random() < .5 && captures.length ? captures : moves;
-  chosen = pool[Math.floor(Math.random() * pool.length)];
- }else{
-  const depth = level === "medium" ? 1 : 2;
-  let best = Infinity;
-  for(const m of moves){
-   chess.move(m);
-   const score = minimax(depth, -Infinity, Infinity, true);
-   chess.undo();
-   if(score < best){
-    best = score;
-    chosen = m;
-   }
-  }
- }
-
- if(chosen){
-  chess.move(chosen);
-  draw();
-  document.getElementById("moves").textContent = chess.history().join("  ");
-  sound();
-  updateStatus();
- }
+    if(chess.isGameOver()) return;
+    const moves = chess.moves();
+    if(!moves.length) return;
+    const level = document.getElementById("level").value;
+    let chosen;
+    if(level === "easy"){
+        const captures = moves.filter(m => m.includes("x"));
+        const pool = Math.random() < .5 && captures.length ? captures : moves;
+        chosen = pool[Math.floor(Math.random() * pool.length)];
+    } else {
+        const depth = level === "medium" ? 1 : 2;
+        let best = Infinity;
+        for(const m of moves){
+            chess.move(m);
+            const score = minimax(depth, -Infinity, Infinity, true);
+            chess.undo();
+            if(score < best){ best = score; chosen = m; }
+        }
+    }
+    if(chosen){
+        chess.move(chosen);
+        draw();
+        document.getElementById("moves").textContent = chess.history().join("  ");
+        sound();
+        updateStatus();
+    }
 }
 
 function executePlayerMove(from, to, promotion){
- if(!makeMove(from, to, promotion)) return;
- document.getElementById("promotion").style.display = "none";
- if(updateStatus()) return;
-
- thinking = true;
- setTimeout(() => {
-  if(gameStarted && !chess.isGameOver()){
-   computer();
-   updateStatus();
-  }
-  thinking = false;
- }, 350);
+    if(!makeMove(from, to, promotion)) return;
+    document.getElementById("promotion").style.display = "none";
+    if(updateStatus()) return;
+    thinking = true;
+    setTimeout(() => {
+        if(gameStarted && !chess.isGameOver()){ computer(); updateStatus(); }
+        thinking = false;
+    }, 350);
 }
 
 function onClick(event){
- if(!gameStarted || thinking || chess.isGameOver() || pendingPromotion) return;
- if(chess.turn() !== "w") return;
+    if(!gameStarted || thinking || chess.isGameOver() || pendingPromotion) return;
+    if(chess.turn() !== "w") return;
 
- const rect = renderer.domElement.getBoundingClientRect();
- const pointer = new THREE.Vector2(
-  ((event.clientX - rect.left) / rect.width) * 2 - 1,
-  -((event.clientY - rect.top) / rect.height) * 2 + 1
- );
- const ray = new THREE.Raycaster();
- ray.setFromCamera(pointer, camera);
+    const rect = renderer.domElement.getBoundingClientRect();
+    const pointer = new THREE.Vector2(
+        ((event.clientX - rect.left) / rect.width) * 2 - 1,
+        -((event.clientY - rect.top) / rect.height) * 2 + 1
+    );
+    const ray = new THREE.Raycaster();
+    ray.setFromCamera(pointer, camera);
 
- const pieceHits = ray.intersectObjects(pieces.children, true);
- let clickedSquare = null;
+    const pieceHits = ray.intersectObjects(pieces.children, true);
+    let clickedSquare = null;
 
- if(pieceHits.length > 0){
-  let obj = pieceHits[0].object;
-  while(obj && !obj.userData.square){ obj = obj.parent; }
-  if(obj) clickedSquare = obj.userData.square;
- }
+    if(pieceHits.length > 0){
+        let obj = pieceHits[0].object;
+        while(obj && !obj.userData.square){ obj = obj.parent; }
+        if(obj) clickedSquare = obj.userData.square;
+    }
 
- if(!clickedSquare){
-  const squareHits = ray.intersectObjects(squares, false);
-  if(squareHits.length > 0) clickedSquare = squareHits[0].object.userData.square;
- }
+    if(!clickedSquare){
+        const squareHits = ray.intersectObjects(squares, false);
+        if(squareHits.length > 0) clickedSquare = squareHits[0].object.userData.square;
+    }
 
- if(!clickedSquare) return;
+    if(!clickedSquare) return;
 
- if(selected){
-  const moves = chess.moves({ square: selected, verbose: true });
-  const move = moves.find(m => m.to === clickedSquare);
-  if(move){
-   if(move.promotion){
-    pendingPromotion = { from: selected, to: clickedSquare };
-    document.getElementById("promotion").style.display = "block";
-    return;
-   }
-   saveMove();
-   executePlayerMove(selected, clickedSquare);
-   return;
-  }
-  const targetPiece = chess.get(clickedSquare);
-  if(targetPiece && targetPiece.color === "w"){
-   selected = clickedSquare;
-   showMoves(selected);
-   sound();
-   return;
-  }
-  selected = null;
-  resetColors();
-  return;
- }
+    if(selected){
+        const moves = chess.moves({ square: selected, verbose: true });
+        const move = moves.find(m => m.to === clickedSquare);
+        if(move){
+            if(move.promotion){
+                pendingPromotion = { from: selected, to: clickedSquare };
+                document.getElementById("promotion").style.display = "block";
+                return;
+            }
+            saveMove();
+            executePlayerMove(selected, clickedSquare);
+            return;
+        }
+        const targetPiece = chess.get(clickedSquare);
+        if(targetPiece && targetPiece.color === "w"){
+            selected = clickedSquare;
+            showMoves(selected);
+            sound();
+            return;
+        }
+        selected = null;
+        resetColors();
+        return;
+    }
 
- const piece = chess.get(clickedSquare);
- if(piece && piece.color === "w"){
-  selected = clickedSquare;
-  showMoves(selected);
-  sound();
- }
+    const piece = chess.get(clickedSquare);
+    if(piece && piece.color === "w"){
+        selected = clickedSquare;
+        showMoves(selected);
+        sound();
+    }
 }
 
 window.startGame = function(level){
- sound();
- closeModal('difficulty');
- 
- const levels = { easy: 'سهل', medium: 'متوسط', hard: 'صعب' };
- showToast('⚔️ جاري بدء المعركة - المستوى: ' + levels[level]);
+    sound();
+    closeModal('difficulty');
+    const levels = { easy: 'سهل', medium: 'متوسط', hard: 'صعب' };
+    showToast('♟️ جاري بدء المباراة - المستوى: ' + levels[level]);
 
- const menu = document.getElementById('menuScreen');
- const gameScreen = document.getElementById('gameScreen');
+    const menu = document.getElementById('menuScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    menu.style.display = 'none';
+    gameScreen.classList.add('active');
+    gameStarted = true;
 
- menu.style.display = 'none';
- gameScreen.classList.add('active');
- gameStarted = true;
+    if(level) document.getElementById('level').value = level;
 
- if(level) document.getElementById('level').value = level;
+    initGame3D();
+    window.newGame();
+    updateMissionProgress('play1', 1);
 
- initGame3D();
- window.newGame();
-
- // تحديث المهام والإنجازات عند اللعب
- updateMissionProgress('play1', 1);
-
- setTimeout(onResize, 50);
- setTimeout(onResize, 300);
- setTimeout(onResize, 600);
+    setTimeout(onResize, 50);
+    setTimeout(onResize, 300);
+    setTimeout(onResize, 600);
 };
 
 window.backMenu = function(){
- sound();
- gameStarted = false;
- thinking = false;
- pendingPromotion = null;
- selected = null;
-
- const promo = document.getElementById("promotion");
- if(promo) promo.style.display = "none";
-
- document.getElementById("gameScreen").classList.remove("active");
- document.getElementById("menuScreen").style.display = "flex";
+    sound();
+    gameStarted = false;
+    thinking = false;
+    pendingPromotion = null;
+    selected = null;
+    const promo = document.getElementById("promotion");
+    if(promo) promo.style.display = "none";
+    document.getElementById("gameScreen").classList.remove("active");
+    document.getElementById("menuScreen").style.display = "flex";
 };
 
 window.newGame = function(){
- sound();
- chess.reset();
- snapshots = [];
- selected = null;
- pendingPromotion = null;
- thinking = false;
- playerCaptures = 0;
-
- const promo = document.getElementById("promotion");
- if(promo) promo.style.display = "none";
-
- document.getElementById("moves").textContent = "سجل الحركات سيظهر هنا";
-
- resetColors();
- draw();
- updateStatus();
+    sound();
+    chess.reset();
+    snapshots = [];
+    selected = null;
+    pendingPromotion = null;
+    thinking = false;
+    playerCaptures = 0;
+    const promo = document.getElementById("promotion");
+    if(promo) promo.style.display = "none";
+    document.getElementById("moves").textContent = "سجل الحركات سيظهر هنا";
+    resetColors();
+    draw();
+    updateStatus();
 };
 
 window.undoMove = function(){
- if(!gameStarted || thinking || pendingPromotion) return;
- if(snapshots.length === 0){
-  showToast("لا توجد حركات للتراجع عنها");
-  return;
- }
- const snap = snapshots.pop();
- try{ chess.load(snap.fen); }catch(e){ return; }
- selected = null;
- pendingPromotion = null;
- document.getElementById("promotion").style.display = "none";
- resetColors();
- draw();
- document.getElementById("moves").textContent = snap.history.length ? snap.history.join("  ") : "سجل الحركات سيظهر هنا";
- updateStatus();
- sound();
+    if(!gameStarted || thinking || pendingPromotion) return;
+    if(snapshots.length === 0){ showToast("لا توجد حركات للتراجع عنها"); return; }
+    const snap = snapshots.pop();
+    try{ chess.load(snap.fen); }catch(e){ return; }
+    selected = null;
+    pendingPromotion = null;
+    document.getElementById("promotion").style.display = "none";
+    resetColors();
+    draw();
+    document.getElementById("moves").textContent = snap.history.length ? snap.history.join("  ") : "سجل الحركات سيظهر هنا";
+    updateStatus();
+    sound();
 };
 
 window.promote = function(piece){
- if(!pendingPromotion) return;
- sound();
- const { from, to } = pendingPromotion;
- pendingPromotion = null;
- document.getElementById("promotion").style.display = "none";
- saveMove();
- executePlayerMove(from, to, piece);
+    if(!pendingPromotion) return;
+    sound();
+    const { from, to } = pendingPromotion;
+    pendingPromotion = null;
+    document.getElementById("promotion").style.display = "none";
+    saveMove();
+    executePlayerMove(from, to, piece);
 };
 
 function onResize(){
- if(!holder || !renderer || !camera) return;
- const w = holder.clientWidth;
- const h = holder.clientHeight;
- if(w === 0 || h === 0) return;
- camera.aspect = w / h;
- camera.updateProjectionMatrix();
- renderer.setSize(w, h);
+    if(!holder || !renderer || !camera) return;
+    const w = holder.clientWidth;
+    const h = holder.clientHeight;
+    if(w === 0 || h === 0) return;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
 }
 
 function animate(){
- requestAnimationFrame(animate);
- if(controls) controls.update();
- if(renderer && scene && camera) renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+    if(controls) controls.update();
+    if(renderer && scene && camera) renderer.render(scene, camera);
 }
 
 function attachCanvasEvents(){
- if(!renderer) return;
- const canvas = renderer.domElement;
- let downX = 0, downY = 0;
- 
- canvas.addEventListener("pointerdown", (e) => { downX = e.clientX; downY = e.clientY; });
- canvas.addEventListener("pointerup", (e) => {
-  const dx = e.clientX - downX;
-  const dy = e.clientY - downY;
-  if(Math.sqrt(dx * dx + dy * dy) < 10){
-   onClick(e);
-  }
- });
+    if(!renderer) return;
+    const canvas = renderer.domElement;
+    let downX = 0, downY = 0;
+    canvas.addEventListener("pointerdown", (e) => { downX = e.clientX; downY = e.clientY; });
+    canvas.addEventListener("pointerup", (e) => {
+        const dx = e.clientX - downX;
+        const dy = e.clientY - downY;
+        if(Math.sqrt(dx * dx + dy * dy) < 10){ onClick(e); }
+    });
 }
 
-// إضافة حدث للكشف عن الفوز باللعبة لتحديث المهام
 const originalUpdateStatus = updateStatus;
 updateStatus = function() {
     const isOver = originalUpdateStatus();
     if (isOver) {
-        // إذا كنا في وضع اللعب ضد الكمبيوتر وانتهت اللعبة
-        if (chess.turn() === 'b') { // الأسود هو من خسر (أي الأبيض فاز)
+        if (chess.turn() === 'b') {
             updateMissionProgress('win1', 1);
             updateAchievementProgress('win1', 1);
             updateAchievementProgress('win5', 1);
@@ -1660,14 +1515,12 @@ updateStatus = function() {
 
 window.addEventListener("resize", onResize);
 
-/* إخفاء شاشة KOKTON */
 setTimeout(function(){
- var s = document.getElementById("splash");
- if(!s) return;
- s.classList.add("hide");
- setTimeout(function(){ s.remove(); }, 1000);
+    var s = document.getElementById("splash");
+    if(!s) return;
+    s.classList.add("hide");
+    setTimeout(function(){ s.remove(); }, 1000);
 }, 3600);
-
 </script>
 </body>
 </html>
