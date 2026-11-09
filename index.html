@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Monster Chess 3D</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/game-ui.css">
+<link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+
+<!-- ===== شاشة انترو شركة KOKTON ===== -->
+<div id="splash">
+  <div class="splash-vignette"></div>
+  <div class="splash-rays"></div>
+  <div class="company-wrap">
+    <div class="company">KOKTON</div>
+    <div class="company-shine"></div>
+  </div>
+  <div class="tagline">PRESENTS</div>
+  <div class="splash-loader"><div></div></div>
+</div>
+
+<header>
+  <h1>🐉 MONSTER CHESS 3D</h1>
+  <div class="subtitle">مملكة الوحوش الأسطورية ⚔️</div>
+</header>
+
+<!-- القائمة الرئيسية -->
+<div id="menuScreen">
+  <div class="section">
+    <div class="section-title">👑 أهلاً بك في مملكة الوحوش</div>
+    <div style="font-size:65px;margin:10px">🐉 ⚔️ 👹</div>
+    <p style="color:#d9c5e9;font-size:13px">
+      استعد للمعركة... اختر جيشك وابدأ المواجهة!
+    </p>
+    <button class="btn gold large" onclick="startGame()">⚔️ ابدأ المواجهة</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🎮 أوضاع اللعب</div>
+    <div class="buttons">
+      <button class="btn green" onclick="startGame()">🤖 ضد الكمبيوتر</button>
+      <button class="btn purple" onclick="comingSoon('اللعب أونلاين')">🌐 اللعب أونلاين</button>
+      <button class="btn orange" onclick="comingSoon('التحديات الكبرى')">🏆 التحديات الكبرى</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">✨ المملكة</div>
+    <div class="buttons">
+      <button class="btn gold small" onclick="openSettings()">⚙️ الإعدادات</button>
+      <button class="btn gold small" onclick="comingSoon('الإنجازات')">🏅 الإنجازات</button>
+      <button class="btn gold small" onclick="comingSoon('المهام اليومية')">📜 المهام</button>
+      <button class="btn purple small" onclick="comingSoon('المتجر')">🛒 المتجر</button>
+      <button class="btn blue small" onclick="comingSoon('الحساب الشخصي')">👤 حسابي</button>
+    </div>
+    <div id="notice"></div>
+  </div>
+</div>
+
+<!-- شاشة اللعب -->
+<div id="gameScreen">
+  <div class="game-panel">
+    <div class="buttons">
+      <select id="level">
+        <option value="easy">🟢 سهل</option>
+        <option value="hard">🔴 صعب</option>
+      </select>
+      <button class="btn gold small" onclick="newGame()">🔄 لعبة جديدة</button>
+      <button class="btn blue small" onclick="undoMove()">↩️ تراجع</button>
+      <button class="btn red small" onclick="backMenu()">🏠 الرئيسية</button>
+    </div>
+  </div>
+
+  <div id="game"></div>
+
+  <div class="game-panel">
+    <div id="status">دورك الآن - الأبيض</div>
+    <div id="promotion">
+      <strong>👑 اختر ترقية البيدق</strong>
+      <div class="buttons" style="margin-top:10px">
+        <button class="btn gold small" onclick="promote('q')">ملكة 👑</button>
+        <button class="btn gold small" onclick="promote('r')">قلعة 🏰</button>
+        <button class="btn gold small" onclick="promote('b')">فيل 🔮</button>
+        <button class="btn gold small" onclick="promote('n')">حصان 🐴</button>
+      </div>
+    </div>
+    <div id="moves">سجل الحركات سيظهر هنا</div>
+  </div>
+</div>
+
+<!-- الإعدادات -->
+<div id="settings">
+  <div class="modal">
+    <h2 style="color:#ffd66b">⚙️ الإعدادات</h2>
+    <div class="setting-row">
+      <span>🔊 أصوات النقر</span>
+      <input type="checkbox" id="sound" checked>
+    </div>
+    <div class="setting-row">
+      <span>✨ المؤثرات الصوتية</span>
+      <input type="checkbox" id="effects" checked>
+    </div>
+    <p style="color:#cdb6df;font-size:12px">يمكنك تغيير الإعدادات أثناء اللعب.</p>
+    <button class="btn green" onclick="closeSettings()">حفظ وإغلاق</button>
+  </div>
+</div>
+
+<!-- إخفاء شاشة الانترو (سكريبت مستقل يعمل حتى لو فشل تحميل Three.js) -->
+<script>
+setTimeout(function(){
+  var s = document.getElementById("splash");
+  if (!s) return;
+  s.classList.add("hide");
+  setTimeout(function(){ s.remove(); }, 1000);
+}, 3600);
+</script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/",
+    "chess": "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm"
+  }
+}
+</script>
+
+<script type="module" src="js/main.js"></script>
+
+</body>
+</html>
