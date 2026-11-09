@@ -7,37 +7,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
     :root {
-        /* Deep Navy family */
         --navy-deep: #0B1A2E;
         --navy: #132B45;
         --navy-light: #1E3A5F;
-        /* Charcoal family */
         --charcoal: #1A1A1E;
         --charcoal-light: #2A2C33;
         --charcoal-soft: #34363E;
-        /* Metallic grays */
         --metal: #5C6470;
         --metal-light: #8A919C;
         --metal-soft: #B4BAC4;
-        /* Champagne gold (muted) */
         --champagne: #C9A96A;
         --champagne-light: #D9C08E;
         --champagne-dark: #A8894F;
-        /* Silver */
         --silver: #C4C9D1;
         --silver-dark: #A8B0BB;
-        /* Ivory */
         --ivory: #F2EAD9;
         --ivory-dark: #E0D5BD;
         --ivory-soft: #EDE4D0;
-        /* Bronze */
         --bronze: #9C7A4E;
         --bronze-dark: #6E5435;
-        /* Muted coral accent */
         --coral: #B97C6E;
         --coral-dark: #8B5A4E;
         --white: #FFFFFF;
-
         --font-main: 'Cairo', sans-serif;
     }
 
@@ -49,251 +40,100 @@
         height: 100dvh; overflow: hidden; display: flex; flex-direction: column; position: relative; color: var(--ivory);
     }
 
-    .bg-castle {
-        position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%);
-        font-size: 25vw; opacity: 0.06; filter: blur(2px); z-index: 0; pointer-events: none;
-    }
-    .bg-floor {
-        position: absolute; bottom: 0; width: 100%; height: 35%;
-        background: repeating-linear-gradient(45deg, #0A0B10 0, #0A0B10 25px, #1A1A1E 25px, #1A1A1E 50px);
-        transform: perspective(500px) rotateX(60deg); transform-origin: bottom; z-index: 0;
-        box-shadow: inset 0 20px 50px rgba(0,0,0,0.85);
-    }
+    .bg-castle { position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%); font-size: 25vw; opacity: 0.06; filter: blur(2px); z-index: 0; pointer-events: none; }
+    .bg-floor { position: absolute; bottom: 0; width: 100%; height: 35%; background: repeating-linear-gradient(45deg, #0A0B10 0, #0A0B10 25px, #1A1A1E 25px, #1A1A1E 50px); transform: perspective(500px) rotateX(60deg); transform-origin: bottom; z-index: 0; box-shadow: inset 0 20px 50px rgba(0,0,0,0.85); }
     .sky-sparkles { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
-    .sky-sparkles::before, .sky-sparkles::after {
-        content: ''; position: absolute; width: 2px; height: 2px; border-radius: 50%; background: var(--silver);
-        box-shadow: 15vw 10vh 0 0 rgba(196,201,209,0.35), 30vw 25vh 0 0 rgba(196,201,209,0.2),
-                    45vw 5vh 0 0 rgba(196,201,209,0.4), 60vw 15vh 0 0 rgba(196,201,209,0.25),
-                    75vw 30vh 0 0 rgba(196,201,209,0.35), 88vw 8vh 0 0 rgba(196,201,209,0.2),
-                    20vw 35vh 0 0 rgba(196,201,209,0.3), 50vw 40vh 0 0 rgba(196,201,209,0.2);
-        animation: twinkle 4s ease-in-out infinite alternate;
-    }
-    .sky-sparkles::after {
-        animation-delay: -2s;
-        box-shadow: 10vw 20vh 0 0 rgba(196,201,209,0.3), 25vw 15vh 0 0 rgba(196,201,209,0.4),
-                    42vw 30vh 0 0 rgba(196,201,209,0.2), 58vw 10vh 0 0 rgba(196,201,209,0.35),
-                    72vw 22vh 0 0 rgba(196,201,209,0.25), 92vw 18vh 0 0 rgba(196,201,209,0.4);
-    }
+    .sky-sparkles::before, .sky-sparkles::after { content: ''; position: absolute; width: 2px; height: 2px; border-radius: 50%; background: var(--silver); box-shadow: 15vw 10vh 0 0 rgba(196,201,209,0.35), 30vw 25vh 0 0 rgba(196,201,209,0.2), 45vw 5vh 0 0 rgba(196,201,209,0.4), 60vw 15vh 0 0 rgba(196,201,209,0.25), 75vw 30vh 0 0 rgba(196,201,209,0.35), 88vw 8vh 0 0 rgba(196,201,209,0.2); animation: twinkle 4s ease-in-out infinite alternate; }
+    .sky-sparkles::after { animation-delay: -2s; box-shadow: 10vw 20vh 0 0 rgba(196,201,209,0.3), 25vw 15vh 0 0 rgba(196,201,209,0.4), 42vw 30vh 0 0 rgba(196,201,209,0.2), 58vw 10vh 0 0 rgba(196,201,209,0.35), 72vw 22vh 0 0 rgba(196,201,209,0.25), 92vw 18vh 0 0 rgba(196,201,209,0.4); }
     @keyframes twinkle { from { opacity: 0.3; } to { opacity: 0.7; } }
 
-    .menu-top-bar {
-        position: relative; z-index: 10; display: flex; justify-content: space-between;
-        align-items: flex-start; padding: 15px;
-    }
-    .profile-box {
-        display: flex; align-items: center;
-        background: linear-gradient(135deg, var(--charcoal-light), var(--charcoal));
-        border: 1.5px solid var(--champagne-dark); border-radius: 15px; padding: 5px 15px 5px 5px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5); cursor: pointer;
-    }
-    .avatar-frame {
-        width: 50px; height: 50px; border-radius: 50%;
-        background: radial-gradient(circle, var(--ivory), var(--ivory-dark));
-        border: 1.5px solid var(--silver); display: flex; justify-content: center; align-items: center;
-        font-size: 28px; box-shadow: 0 0 8px rgba(201,169,106,0.35); position: relative;
-    }
-    .level-badge {
-        position: absolute; bottom: -5px; right: -5px; background: linear-gradient(180deg, var(--champagne-light), var(--champagne-dark)); color: var(--charcoal);
-        font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 10px; border: 1px solid var(--charcoal);
-    }
+    .menu-top-bar { position: relative; z-index: 10; display: flex; justify-content: space-between; align-items: flex-start; padding: 15px; }
+    .profile-box { display: flex; align-items: center; background: linear-gradient(135deg, var(--charcoal-light), var(--charcoal)); border: 1.5px solid var(--champagne-dark); border-radius: 15px; padding: 5px 15px 5px 5px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); cursor: pointer; }
+    .avatar-frame { width: 50px; height: 50px; border-radius: 50%; background: radial-gradient(circle, var(--ivory), var(--ivory-dark)); border: 1.5px solid var(--silver); display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: 0 0 8px rgba(201,169,106,0.35); position: relative; }
+    .level-badge { position: absolute; bottom: -5px; right: -5px; background: linear-gradient(180deg, var(--champagne-light), var(--champagne-dark)); color: var(--charcoal); font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 10px; border: 1px solid var(--charcoal); }
     .profile-info { margin-right: 10px; display: flex; flex-direction: column; justify-content: center; }
     .profile-name { font-size: 14px; font-weight: 700; color: var(--ivory); text-shadow: 0 1px 2px #000; }
     .profile-stars { font-size: 12px; color: var(--champagne); font-weight: 800; display: flex; align-items: center; gap: 3px; }
     .resources { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
-    .res-pill {
-        background: rgba(10,15,25,0.85); border: 1px solid var(--metal); border-radius: 20px;
-        padding: 3px 8px 3px 3px; display: flex; align-items: center; gap: 5px;
-        font-size: 12px; font-weight: 700; color: var(--ivory); box-shadow: inset 0 1px 3px rgba(196,201,209,0.12);
-    }
+    .res-pill { background: rgba(10,15,25,0.85); border: 1px solid var(--metal); border-radius: 20px; padding: 3px 8px 3px 3px; display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--ivory); box-shadow: inset 0 1px 3px rgba(196,201,209,0.12); }
     .res-pill .icon { width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 14px; }
     .res-pill.coin .icon { background: radial-gradient(circle, var(--champagne-light), var(--champagne-dark)); }
     .res-pill.gem .icon { background: radial-gradient(circle, var(--silver), var(--metal)); }
-    .btn-plus {
-        background: linear-gradient(180deg, var(--champagne-light), var(--champagne-dark)); color: var(--charcoal); border: 1.5px solid var(--ivory); border-radius: 50%;
-        width: 20px; height: 20px; font-weight: 900; display: flex; justify-content: center;
-        align-items: center; font-size: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-    .settings-btn {
-        background: rgba(10,15,25,0.85); border: 1.5px solid var(--champagne); border-radius: 50%;
-        width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
-        font-size: 20px; color: var(--champagne); cursor: pointer; transition: transform 0.15s;
-    }
+    .btn-plus { background: linear-gradient(180deg, var(--champagne-light), var(--champagne-dark)); color: var(--charcoal); border: 1.5px solid var(--ivory); border-radius: 50%; width: 20px; height: 20px; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .settings-btn { background: rgba(10,15,25,0.85); border: 1.5px solid var(--champagne); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 20px; color: var(--champagne); cursor: pointer; transition: transform 0.15s; }
     .settings-btn:hover { transform: rotate(30deg); }
 
     .menu-side-panel { position: absolute; top: 20%; z-index: 10; display: flex; flex-direction: column; gap: 15px; }
     .menu-side-panel.left { left: 10px; }
     .menu-side-panel.right { right: 10px; }
-    .side-btn {
-        background: linear-gradient(180deg, var(--charcoal-light), var(--charcoal)); border: 1.5px solid var(--champagne-dark);
-        border-radius: 15px; width: 60px; height: 65px; display: flex; flex-direction: column;
-        justify-content: center; align-items: center; cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset 0 1px 3px rgba(196,201,209,0.1);
-        position: relative; transition: transform 0.1s;
-    }
+    .side-btn { background: linear-gradient(180deg, var(--charcoal-light), var(--charcoal)); border: 1.5px solid var(--champagne-dark); border-radius: 15px; width: 60px; height: 65px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset 0 1px 3px rgba(196,201,209,0.1); position: relative; transition: transform 0.1s; }
     .side-btn:active { transform: scale(0.95); }
     .side-btn span { font-size: 24px; }
     .side-btn small { font-size: 9px; font-weight: 700; margin-top: 2px; color: var(--ivory); }
-    .badge-red {
-        position: absolute; top: -5px; right: -5px; background: var(--coral); color: var(--ivory);
-        width: 18px; height: 18px; border-radius: 50%; font-size: 10px; font-weight: 900;
-        display: flex; justify-content: center; align-items: center;
-        border: 2px solid var(--charcoal); animation: pulse 2.2s infinite;
-    }
+    .badge-red { position: absolute; top: -5px; right: -5px; background: var(--coral); color: var(--ivory); width: 18px; height: 18px; border-radius: 50%; font-size: 10px; font-weight: 900; display: flex; justify-content: center; align-items: center; border: 2px solid var(--charcoal); animation: pulse 2.2s infinite; }
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 
-    .chest-box {
-        background: linear-gradient(180deg, var(--charcoal-light), var(--charcoal)); border: 1.5px solid var(--champagne-dark);
-        border-radius: 15px; width: 80px; padding: 8px; display: flex; flex-direction: column;
-        align-items: center; text-align: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 3px rgba(196,201,209,0.1); cursor: pointer;
-    }
+    .chest-box { background: linear-gradient(180deg, var(--charcoal-light), var(--charcoal)); border: 1.5px solid var(--champagne-dark); border-radius: 15px; width: 80px; padding: 8px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 3px rgba(196,201,209,0.1); cursor: pointer; }
     .chest-box span { font-size: 35px; margin-bottom: 5px; animation: float 3s infinite ease-in-out; }
     .chest-box small { font-size: 9px; color: var(--champagne); font-weight: 800; }
     .chest-box .timer { font-size: 11px; font-weight: 900; margin-top: 2px; font-family: monospace; color: var(--ivory); }
 
-    .menu-main-center {
-        position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column;
-        justify-content: center; align-items: center; padding: 0 20px; margin-top: -10px;
-    }
+    .menu-main-center { position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 20px; margin-top: -10px; }
     .logo-container { text-align: center; margin-bottom: 20px; position: relative; animation: logoFloat 5s ease-in-out infinite; }
     @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-    .logo-crown {
-        font-size: clamp(40px, 10vw, 60px); position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
-        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8)) drop-shadow(0 0 10px rgba(201,169,106,0.4));
-    }
-    .logo-text {
-        font-size: clamp(35px, 9vw, 55px); font-weight: 900; color: var(--champagne);
-        text-shadow: 0 2px 0 var(--champagne-dark), 0 4px 0 var(--bronze-dark), 0 6px 12px rgba(0,0,0,0.85);
-        letter-spacing: 2px; margin: 0; font-family: Arial, sans-serif;
-    }
-    .logo-ribbon {
-        background: linear-gradient(180deg, var(--bronze), var(--bronze-dark)); color: var(--ivory);
-        font-size: 12px; font-weight: 800; padding: 3px 20px; border-radius: 10px;
-        display: inline-block; margin-top: -5px;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15);
-        border: 1px solid var(--charcoal); transform: rotate(-2deg);
-    }
-    .btn-main {
-        width: 100%; max-width: 350px; height: 80px; border-radius: 40px; margin-bottom: 15px;
-        display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
-        cursor: pointer; position: relative; overflow: hidden;
-        box-shadow: 0 8px 18px rgba(0,0,0,0.55), inset 0 3px 6px rgba(255,255,255,0.15);
-        border: 3px solid var(--champagne-dark); transition: transform 0.1s;
-        font-family: var(--font-main); color: var(--ivory);
-    }
+    .logo-crown { font-size: clamp(40px, 10vw, 60px); position: absolute; top: -30px; left: 50%; transform: translateX(-50%); filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8)) drop-shadow(0 0 10px rgba(201,169,106,0.4)); }
+    .logo-text { font-size: clamp(35px, 9vw, 55px); font-weight: 900; color: var(--champagne); text-shadow: 0 2px 0 var(--champagne-dark), 0 4px 0 var(--bronze-dark), 0 6px 12px rgba(0,0,0,0.85); letter-spacing: 2px; margin: 0; font-family: Arial, sans-serif; }
+    .logo-ribbon { background: linear-gradient(180deg, var(--bronze), var(--bronze-dark)); color: var(--ivory); font-size: 12px; font-weight: 800; padding: 3px 20px; border-radius: 10px; display: inline-block; margin-top: -5px; box-shadow: 0 3px 8px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15); border: 1px solid var(--charcoal); transform: rotate(-2deg); }
+
+    .btn-main { width: 100%; max-width: 350px; height: 80px; border-radius: 40px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 8px 18px rgba(0,0,0,0.55), inset 0 3px 6px rgba(255,255,255,0.15); border: 3px solid var(--champagne-dark); transition: transform 0.1s; font-family: var(--font-main); color: var(--ivory); }
     .btn-main:active { transform: translateY(5px); }
     .btn-main.online { background: linear-gradient(180deg, #24446B, #12263D); }
     .btn-main.computer { background: linear-gradient(180deg, #6A3F35, #3F241E); }
-    .btn-main .icon-circle {
-        width: 55px; height: 55px; background: rgba(10,15,25,0.4); border-radius: 50%;
-        border: 1.5px solid var(--champagne); display: flex; justify-content: center; align-items: center;
-        font-size: 28px; box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
-    }
+    .btn-main .icon-circle { width: 55px; height: 55px; background: rgba(10,15,25,0.4); border-radius: 50%; border: 1.5px solid var(--champagne); display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: inset 0 0 8px rgba(0,0,0,0.5); }
     .btn-main .text-box { text-align: center; flex: 1; }
     .btn-main h3 { font-size: 24px; font-weight: 900; color: var(--ivory); text-shadow: 0 2px 4px rgba(0,0,0,0.8); margin-bottom: -5px; }
     .btn-main p { font-size: 11px; color: var(--silver); font-weight: 600; }
-    .btn-main::before {
-        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 40%;
-        background: linear-gradient(to bottom, rgba(255,255,255,0.12), transparent);
-        border-radius: 40px 40px 0 0; pointer-events: none;
-    }
+    .btn-main::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 40%; background: linear-gradient(to bottom, rgba(255,255,255,0.12), transparent); border-radius: 40px 40px 0 0; pointer-events: none; }
 
-    .menu-bottom-bar {
-        position: relative; z-index: 10; display: flex; justify-content: center; gap: 10px;
-        padding: 15px; background: linear-gradient(to top, rgba(10,15,25,0.85), transparent);
-    }
-    .bottom-btn {
-        width: 60px; height: 60px; background: linear-gradient(180deg, var(--charcoal-light), var(--charcoal));
-        border: 1.5px solid var(--champagne-dark); border-radius: 15px; display: flex; flex-direction: column;
-        justify-content: center; align-items: center; cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.1s;
-    }
+    .menu-bottom-bar { position: relative; z-index: 10; display: flex; justify-content: center; gap: 10px; padding: 15px; background: linear-gradient(to top, rgba(10,15,25,0.85), transparent); }
+    .bottom-btn { width: 60px; height: 60px; background: linear-gradient(180deg, var(--charcoal-light), var(--charcoal)); border: 1.5px solid var(--champagne-dark); border-radius: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.1s; }
     .bottom-btn:active { transform: translateY(3px); }
     .bottom-btn span { font-size: 24px; }
     .bottom-btn small { font-size: 8px; font-weight: 800; margin-top: 2px; color: var(--ivory); }
 
-    .modal-overlay {
-        position: fixed; inset: 0; background: rgba(5,8,15,0.88); backdrop-filter: blur(8px);
-        z-index: 200; display: flex; justify-content: center; align-items: center;
-        opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 15px;
-    }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(5,8,15,0.88); backdrop-filter: blur(8px); z-index: 200; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 15px; }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
-    .modal-content {
-        background: linear-gradient(160deg, var(--charcoal-light), var(--charcoal));
-        border: 2px solid var(--champagne-dark); border-radius: 20px; width: 100%; max-width: 420px;
-        padding: 22px; box-shadow: 0 12px 30px rgba(0,0,0,0.85), 0 0 25px rgba(201,169,106,0.15);
-        transform: scale(0.9); transition: transform 0.3s; text-align: right;
-        max-height: 85vh; overflow-y: auto;
-    }
+    .modal-content { background: linear-gradient(160deg, var(--charcoal-light), var(--charcoal)); border: 2px solid var(--champagne-dark); border-radius: 20px; width: 100%; max-width: 420px; padding: 22px; box-shadow: 0 12px 30px rgba(0,0,0,0.85), 0 0 25px rgba(201,169,106,0.15); transform: scale(0.9); transition: transform 0.3s; text-align: right; max-height: 85vh; overflow-y: auto; }
     .modal-overlay.active .modal-content { transform: scale(1); }
     .modal-content h2 { color: var(--champagne); text-align: center; margin-bottom: 15px; text-shadow: 0 2px 4px #000; font-size: 20px; }
-    .modal-close {
-        background: linear-gradient(180deg, var(--coral), var(--coral-dark)); color: var(--ivory);
-        border: 1.5px solid var(--ivory-dark); padding: 10px 24px; border-radius: 20px;
-        font-family: var(--font-main); font-weight: 800; font-size: 14px; cursor: pointer;
-        display: block; margin: 20px auto 0; box-shadow: 0 3px 8px rgba(0,0,0,0.5); transition: transform 0.1s;
-    }
+    .modal-close { background: linear-gradient(180deg, var(--coral), var(--coral-dark)); color: var(--ivory); border: 1.5px solid var(--ivory-dark); padding: 10px 24px; border-radius: 20px; font-family: var(--font-main); font-weight: 800; font-size: 14px; cursor: pointer; display: block; margin: 20px auto 0; box-shadow: 0 3px 8px rgba(0,0,0,0.5); transition: transform 0.1s; }
     .modal-close:active { transform: scale(0.95); }
-    .diff-btn {
-        width: 100%; height: 60px; border-radius: 30px; margin-bottom: 12px;
-        display: flex; align-items: center; justify-content: center; cursor: pointer;
-        position: relative; overflow: hidden;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.45), inset 0 3px 6px rgba(255,255,255,0.15);
-        border: 2.5px solid var(--champagne-dark); transition: transform 0.1s;
-        font-family: var(--font-main); font-size: 20px; font-weight: 900; color: var(--ivory);
-        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    }
+
+    .diff-btn { width: 100%; height: 60px; border-radius: 30px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 6px 12px rgba(0,0,0,0.45), inset 0 3px 6px rgba(255,255,255,0.15); border: 2.5px solid var(--champagne-dark); transition: transform 0.1s; font-family: var(--font-main); font-size: 20px; font-weight: 900; color: var(--ivory); text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
     .diff-btn:active { transform: translateY(4px); }
     .diff-btn.easy { background: linear-gradient(to bottom, #2E4A3E, #1A2E27); }
     .diff-btn.medium { background: linear-gradient(to bottom, #5C4A28, #3A2E19); }
     .diff-btn.hard { background: linear-gradient(to bottom, #6A3F35, #3F241E); }
-    .diff-btn::before {
-        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%;
-        background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
-        border-radius: 30px 30px 0 0; pointer-events: none;
-    }
+    .diff-btn::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%; background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent); border-radius: 30px 30px 0 0; pointer-events: none; }
+
     .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(196,201,209,0.15); font-weight: 700; color: var(--ivory); }
     .setting-row:last-of-type { border-bottom: none; }
     input[type=checkbox] { width: 24px; height: 24px; accent-color: var(--champagne-dark); cursor: pointer; }
+    input[type=color] { width: 40px; height: 30px; border: none; border-radius: 4px; cursor: pointer; background: transparent; }
 
-    #gameScreen {
-        display: none; position: fixed; inset: 0;
-        background: linear-gradient(to bottom, var(--navy-deep) 0%, var(--navy) 55%, var(--charcoal) 100%);
-        flex-direction: column; z-index: 50; overflow: hidden;
-    }
+    #gameScreen { display: none; position: fixed; inset: 0; background: linear-gradient(to bottom, var(--navy-deep) 0%, var(--navy) 55%, var(--charcoal) 100%); flex-direction: column; z-index: 50; overflow: hidden; }
     #gameScreen.active { display: flex; }
-    .game-header {
-        display: flex; justify-content: space-between; align-items: center; padding: 12px 15px;
-        background: linear-gradient(180deg, rgba(10,15,25,0.85), transparent);
-        border-bottom: 1px solid rgba(201,169,106,0.25); position: relative; z-index: 5;
-    }
-    .back-btn {
-        background: linear-gradient(180deg, var(--charcoal-light), var(--charcoal)); border: 1.5px solid var(--champagne-dark);
-        color: var(--champagne); padding: 8px 16px; border-radius: 20px;
-        font-family: var(--font-main); font-weight: 800; font-size: 13px; cursor: pointer;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.5);
-    }
+    .game-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: linear-gradient(180deg, rgba(10,15,25,0.85), transparent); border-bottom: 1px solid rgba(201,169,106,0.25); position: relative; z-index: 5; }
+    .back-btn { background: linear-gradient(180deg, var(--charcoal-light), var(--charcoal)); border: 1.5px solid var(--champagne-dark); color: var(--champagne); padding: 8px 16px; border-radius: 20px; font-family: var(--font-main); font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.5); }
     .back-btn:active { transform: scale(0.95); }
     .game-title { color: var(--champagne); font-weight: 900; font-size: 16px; text-shadow: 0 2px 4px #000; letter-spacing: 1px; }
-    .game-level-select {
-        background: rgba(10,15,25,0.85); border: 1.5px solid var(--champagne-dark); border-radius: 20px;
-        color: var(--champagne); padding: 6px 12px; font-family: var(--font-main);
-        font-weight: 800; font-size: 12px; cursor: pointer;
-    }
+    .game-level-select { background: rgba(10,15,25,0.85); border: 1.5px solid var(--champagne-dark); border-radius: 20px; color: var(--champagne); padding: 6px 12px; font-family: var(--font-main); font-weight: 800; font-size: 12px; cursor: pointer; }
     #game { flex: 1; width: 100%; min-height: 0; touch-action: none; overflow: hidden; position: relative; }
     #game canvas { display: block; }
-    .game-controls {
-        padding: 12px 15px 18px; background: linear-gradient(0deg, rgba(10,15,25,0.92), transparent);
-        border-top: 1px solid rgba(201,169,106,0.25); position: relative; z-index: 5;
-    }
+    .game-controls { padding: 12px 15px 18px; background: linear-gradient(0deg, rgba(10,15,25,0.92), transparent); border-top: 1px solid rgba(201,169,106,0.25); position: relative; z-index: 5; }
     #status { color: var(--champagne); font-weight: 900; font-size: 15px; text-align: center; margin-bottom: 10px; text-shadow: 0 1px 3px rgba(0,0,0,0.8); min-height: 22px; }
     .game-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-    .game-btn {
-        background: linear-gradient(180deg, var(--charcoal-light), var(--charcoal)); border: 1.5px solid var(--champagne-dark); color: var(--ivory);
-        padding: 10px 16px; border-radius: 20px; font-family: var(--font-main);
-        font-weight: 800; font-size: 13px; cursor: pointer;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.5); transition: transform 0.1s;
-    }
+    .game-btn { background: linear-gradient(180deg, var(--charcoal-light), var(--charcoal)); border: 1.5px solid var(--champagne-dark); color: var(--ivory); padding: 10px 16px; border-radius: 20px; font-family: var(--font-main); font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.5); transition: transform 0.1s; }
     .game-btn:active { transform: translateY(3px); }
     .game-btn.gold { background: linear-gradient(180deg, var(--champagne-light), var(--champagne-dark)); color: var(--charcoal); }
     .game-btn.red { background: linear-gradient(180deg, var(--coral), var(--coral-dark)); color: var(--ivory); }
@@ -322,15 +162,15 @@
     .progress-bar { width: 100%; height: 8px; background: rgba(196,201,209,0.15); border-radius: 5px; margin-top: 5px; overflow: hidden; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, var(--bronze), var(--champagne)); border-radius: 5px; transition: width 0.3s; }
 
-    #toast {
-        position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
-        background: linear-gradient(135deg, rgba(30,35,45,0.97), rgba(10,15,25,0.97)); color: var(--champagne);
-        padding: 12px 24px; border-radius: 20px; border: 1.5px solid var(--champagne-dark);
-        font-weight: 800; font-size: 13px; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 9999;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.75), 0 0 12px rgba(201,169,106,0.15); max-width: 90vw; text-align: center;
-    }
+    #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: linear-gradient(135deg, rgba(30,35,45,0.97), rgba(10,15,25,0.97)); color: var(--champagne); padding: 12px 24px; border-radius: 20px; border: 1.5px solid var(--champagne-dark); font-weight: 800; font-size: 13px; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,0.75), 0 0 12px rgba(201,169,106,0.15); max-width: 90vw; text-align: center; }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+    .preset-btn { background: var(--charcoal-light); border: 1px solid var(--champagne-dark); color: var(--ivory); padding: 8px; border-radius: 8px; font-size: 11px; cursor: pointer; text-align: center; transition: background 0.2s; }
+    .preset-btn:hover { background: var(--charcoal-soft); }
+    .color-pickers .setting-row { border-bottom: 1px solid rgba(196,201,209,0.1); padding: 8px 0; display: flex; justify-content: space-between; align-items: center; }
+    .camera-btn { background: var(--charcoal-light); border: 1px solid var(--silver-dark); color: var(--ivory); padding: 5px 10px; border-radius: 15px; font-size: 11px; cursor: pointer; transition: background 0.2s; }
+    .camera-btn:hover { background: var(--charcoal-soft); }
 
     @media (max-width: 400px) {
         .menu-side-panel.left { left: 5px; } .menu-side-panel.right { right: 5px; }
@@ -348,27 +188,14 @@
         .menu-main-center { margin-top: 0; }
     }
 
-    #splash {
-        position: fixed; inset: 0; z-index: 99999; background: #000; display: flex; flex-direction: column;
-        justify-content: center; align-items: center; overflow: hidden; opacity: 1; transition: opacity 1s ease;
-    }
+    #splash { position: fixed; inset: 0; z-index: 99999; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; opacity: 1; transition: opacity 1s ease; }
     #splash.hide { opacity: 0; pointer-events: none; }
     #splash .splash-vignette { position: absolute; inset: 0; background: radial-gradient(circle at center, #1A1A1E 0%, #0B1018 55%, #000 100%); }
-    #splash .splash-rays {
-        position: absolute; width: 150vmax; height: 150vmax;
-        background: conic-gradient(from 0deg, transparent 0deg, rgba(201,169,106,0.06) 15deg, transparent 30deg, transparent 90deg, rgba(201,169,106,0.04) 105deg, transparent 120deg, transparent 180deg, rgba(201,169,106,0.06) 195deg, transparent 210deg, transparent 270deg, rgba(201,169,106,0.04) 285deg, transparent 300deg);
-        opacity: 0; animation: raysIn 1.6s ease 0.3s forwards, spin 30s linear infinite;
-    }
+    #splash .splash-rays { position: absolute; width: 150vmax; height: 150vmax; background: conic-gradient(from 0deg, transparent 0deg, rgba(201,169,106,0.06) 15deg, transparent 30deg, transparent 90deg, rgba(201,169,106,0.04) 105deg, transparent 120deg, transparent 180deg, rgba(201,169,106,0.06) 195deg, transparent 210deg, transparent 270deg, rgba(201,169,106,0.04) 285deg, transparent 300deg); opacity: 0; animation: raysIn 1.6s ease 0.3s forwards, spin 30s linear infinite; }
     @keyframes raysIn { to { opacity: 1; } }
     @keyframes spin { to { transform: rotate(360deg); } }
     .company-wrap { position: relative; z-index: 2; display: flex; justify-content: center; }
-    #splash .company {
-        margin: 0; font-size: clamp(48px, 15vw, 120px); font-weight: 900; letter-spacing: 16px; padding: 0 10px;
-        background: linear-gradient(180deg, var(--ivory) 0%, var(--champagne-light) 30%, var(--champagne-dark) 50%, var(--champagne-light) 70%, var(--ivory) 100%);
-        -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
-        opacity: 0; transform: scale(0.4); filter: blur(14px) drop-shadow(0 0 25px rgba(201,169,106,0.4));
-        animation: companyIn 1.4s cubic-bezier(.2,.9,.3,1.1) 0.2s forwards;
-    }
+    #splash .company { margin: 0; font-size: clamp(48px, 15vw, 120px); font-weight: 900; letter-spacing: 16px; padding: 0 10px; background: linear-gradient(180deg, var(--ivory) 0%, var(--champagne-light) 30%, var(--champagne-dark) 50%, var(--champagne-light) 70%, var(--ivory) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; opacity: 0; transform: scale(0.4); filter: blur(14px) drop-shadow(0 0 25px rgba(201,169,106,0.4)); animation: companyIn 1.4s cubic-bezier(.2,.9,.3,1.1) 0.2s forwards; }
     @keyframes companyIn { 0% { opacity: 0; transform: scale(0.4); filter: blur(14px); } 60% { opacity: 1; transform: scale(1.08); filter: blur(0); } 100% { opacity: 1; transform: scale(1); filter: blur(0); } }
     .company-shine { position: absolute; top: 0; left: -100%; width: 55%; height: 100%; background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.35) 50%, transparent 80%); mix-blend-mode: overlay; pointer-events: none; animation: shine 3.2s ease 1.6s infinite; }
     @keyframes shine { 0% { left: -100%; } 40% { left: 150%; } 100% { left: 150%; } }
@@ -467,11 +294,14 @@
     <div class="game-header">
         <button class="back-btn" onclick="backMenu()">← رجوع</button>
         <div class="game-title">♟️ MONSTER CHESS</div>
-        <select class="game-level-select" id="level">
-            <option value="easy">سهل</option>
-            <option value="medium">متوسط</option>
-            <option value="hard">صعب</option>
-        </select>
+        <div style="display:flex; gap:5px;">
+            <button class="back-btn" style="padding: 8px 10px;" onclick="openModal('customizer')">🎨</button>
+            <select class="game-level-select" id="level">
+                <option value="easy">سهل</option>
+                <option value="medium">متوسط</option>
+                <option value="hard">صعب</option>
+            </select>
+        </div>
     </div>
     <div id="game"></div>
     <div class="game-controls">
@@ -491,6 +321,41 @@
             </div>
         </div>
         <div id="moves">سجل الحركات سيظهر هنا</div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-customizer">
+    <div class="modal-content" style="max-width: 450px;">
+        <h2>🎨 تخصيص الرقعة</h2>
+        <div class="preset-buttons" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:15px;">
+            <button class="preset-btn" onclick="applyPreset('marble-gold')">أسود رخامي مع ذهبي</button>
+            <button class="preset-btn" onclick="applyPreset('ivory-charcoal')">أبيض عاجي مع أسود</button>
+            <button class="preset-btn" onclick="applyPreset('emerald-gold')">أخضر زمردي مع ذهبي</button>
+            <button class="preset-btn" onclick="applyPreset('royal-blue-silver')">أزرق ملكي مع فضي</button>
+            <button class="preset-btn" onclick="applyPreset('wood-cream')">بني خشبي مع كريمي</button>
+            <button class="preset-btn" onclick="applyPreset('gray-marble-silver')">رخام رمادي مع فضي</button>
+            <button class="preset-btn" style="grid-column: 1 / -1;" onclick="applyPreset('wine-gold')">أحمر نبيذي مع ذهبي شامباني</button>
+        </div>
+        <div class="color-pickers">
+            <div class="setting-row"><span>المربعات الفاتحة</span><input type="color" id="color-light" value="#E8E1D1" oninput="updateColors()"></div>
+            <div class="setting-row"><span>المربعات الداكنة</span><input type="color" id="color-dark" value="#0B0B0F" oninput="updateColors()"></div>
+            <div class="setting-row"><span>الإطار الخارجي</span><input type="color" id="color-frame" value="#1A1A1E" oninput="updateColors()"></div>
+            <div class="setting-row"><span>الحواف والزخارف</span><input type="color" id="color-edge" value="#D4AF37" oninput="updateColors()"></div>
+            <div class="setting-row"><span>القاعدة السفلية</span><input type="color" id="color-base" value="#0B0B0F" oninput="updateColors()"></div>
+            <div class="setting-row"><span>الإضاءة</span><input type="color" id="color-light-light" value="#FFF8E7" oninput="updateColors()"></div>
+        </div>
+        <div style="margin-top: 15px;">
+            <strong style="display:block; text-align:center; margin-bottom:10px; color:var(--champagne);">زوايا الكاميرا</strong>
+            <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+                <button class="camera-btn" onclick="setCameraView('top')">علوي 90°</button>
+                <button class="camera-btn" onclick="setCameraView('front')">أمامي</button>
+                <button class="camera-btn" onclick="setCameraView('side')">جانبي</button>
+                <button class="camera-btn" onclick="setCameraView('45')">زاوية 45°</button>
+                <button class="camera-btn" onclick="setCameraView('isometric')">منظور Isometric</button>
+                <button class="camera-btn" onclick="setCameraView('close')">تقريب Zoom</button>
+            </div>
+        </div>
+        <button class="modal-close" onclick="closeModal('customizer')">إغلاق</button>
     </div>
 </div>
 
@@ -646,6 +511,17 @@ window.openModal = function(id){
     if(id === 'achievements') renderAchievements();
     if(id === 'missions') renderMissions();
     if(id === 'chest') updateChestTimer();
+    if(id === 'customizer') {
+        // Ensure current colors are reflected in inputs
+        if (materials.lightSquare) {
+            document.getElementById('color-light').value = '#' + materials.lightSquare.color.getHexString();
+            document.getElementById('color-dark').value = '#' + materials.darkSquare.color.getHexString();
+            document.getElementById('color-frame').value = '#' + materials.frame.color.getHexString();
+            document.getElementById('color-edge').value = '#' + materials.edge.color.getHexString();
+            document.getElementById('color-base').value = '#' + materials.base.color.getHexString();
+            if (sun) document.getElementById('color-light-light').value = '#' + sun.color.getHexString();
+        }
+    }
 };
 window.closeModal = function(id){
     const m = document.getElementById('modal-' + id);
@@ -843,7 +719,7 @@ loadPlayerData();
 setInterval(updateChestTimer, 1000);
 
 /* ==========================================================================
-   كود اللعبة (Three.js & Chess.js) — لوحة فاخرة واقعية
+   كود اللعبة (Three.js & Chess.js) — لوحة فاخرة قابلة للتخصيص
    ========================================================================== */
 const chess = new Chess();
 let selected = null;
@@ -854,8 +730,20 @@ let gameStarted = false;
 let gameInitialized = false;
 let playerCaptures = 0;
 
-let scene, camera, renderer, controls, board, pieces, squares, holder, sun;
+let scene, camera, renderer, controls, board, pieces, squares, holder, sun, fillLight;
 const files = "abcdefgh";
+
+const materials = {
+    lightSquare: null,
+    darkSquare: null,
+    frame: null,
+    edge: null,
+    base: null,
+    emblem: null,
+    pieceLight: new THREE.MeshStandardMaterial({ color: 0xF2EAD9, roughness: .5, metalness: .18 }),
+    pieceDark: new THREE.MeshStandardMaterial({ color: 0x22242A, roughness: .5, metalness: .18 }),
+    pieceAccent: new THREE.MeshStandardMaterial({ color: 0xC9A96A, roughness: .35, metalness: .7 })
+};
 
 function position(square){
     return { x: files.indexOf(square[0]) - 3.5, z: Number(square[1]) - 4.5 };
@@ -881,6 +769,44 @@ function sound(){
     }catch(e){}
 }
 
+/* ===== إنشاء نسيج ضوضاء عشوائي للخامات ===== */
+function createNoiseTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    const imgData = ctx.createImageData(256, 256);
+    for (let i = 0; i < imgData.data.length; i += 4) {
+        const v = Math.random() * 255;
+        imgData.data[i] = v;
+        imgData.data[i+1] = v;
+        imgData.data[i+2] = v;
+        imgData.data[i+3] = 255;
+    }
+    ctx.putImageData(imgData, 0, 0);
+    return new THREE.CanvasTexture(canvas);
+}
+const noiseTex = createNoiseTexture();
+
+/* ===== إنشاء رمز الحصان للزوايا ===== */
+function createKnightEmblem() {
+    const shape = new THREE.Shape();
+    shape.moveTo(0, 0.6);
+    shape.lineTo(0.3, 0.4);
+    shape.lineTo(0.25, 0.1);
+    shape.lineTo(0.4, -0.1);
+    shape.lineTo(0.3, -0.4);
+    shape.lineTo(-0.3, -0.4);
+    shape.lineTo(-0.3, 0.1);
+    shape.lineTo(-0.1, 0.5);
+    shape.lineTo(0, 0.6);
+    
+    const extrudeSettings = { depth: 0.1, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.02, bevelThickness: 0.02 };
+    const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    geo.scale(0.8, 0.8, 0.8);
+    return geo;
+}
+
 /* ===== تهيئة المشهد 3D ===== */
 function initGame3D(){
     if(gameInitialized) return;
@@ -892,7 +818,7 @@ function initGame3D(){
     scene.fog = new THREE.Fog(0x0B1A2E, 20, 44);
 
     camera = new THREE.PerspectiveCamera(45, 1, .1, 100);
-    camera.position.set(8, 10, 12);
+    camera.position.set(10, 10, 10);
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.7));
@@ -903,36 +829,47 @@ function initGame3D(){
     renderer.toneMappingExposure = 1.05;
     holder.appendChild(renderer.domElement);
 
+    // Environment Map for PBR reflections
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
+    const envScene = new THREE.Scene();
+    envScene.background = new THREE.Color(0x1A1A1E);
+    const envLight = new THREE.PointLight(0xffffff, 1);
+    envLight.position.set(10, 10, 10);
+    envScene.add(envLight);
+    const envMap = pmremGenerator.fromScene(envScene).texture;
+    scene.environment = envMap;
+
     controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, .3, 0);
+    controls.target.set(0, 0, 0);
     controls.enableDamping = true;
     controls.enablePan = false;
-    controls.minDistance = 9;
-    controls.maxDistance = 18;
+    controls.minDistance = 5;
+    controls.maxDistance = 25;
     controls.maxPolarAngle = Math.PI / 2.15;
 
-    // إضاءة دافئة محايدة، طبيعية
+    // إضاءة دافئة محايدة
     scene.add(new THREE.HemisphereLight(0xD9C08E, 0x0B1A2E, 1.35));
 
-    sun = new THREE.DirectionalLight(0xFFF0D0, 2.4);
-    sun.position.set(6, 12, 8);
+    sun = new THREE.DirectionalLight(0xFFF8E7, 2.4);
+    sun.position.set(8, 15, 10);
     sun.castShadow = true;
-    sun.shadow.mapSize.set(1024, 1024);
-    sun.shadow.camera.left = -7;
-    sun.shadow.camera.right = 7;
-    sun.shadow.camera.top = 7;
-    sun.shadow.camera.bottom = -7;
+    sun.shadow.mapSize.set(2048, 2048);
+    sun.shadow.camera.left = -8;
+    sun.shadow.camera.right = 8;
+    sun.shadow.camera.top = 8;
+    sun.shadow.camera.bottom = -8;
     sun.shadow.camera.near = 1;
-    sun.shadow.camera.far = 30;
+    sun.shadow.camera.far = 40;
     sun.shadow.bias = -0.0005;
     scene.add(sun);
 
-    const fillLight = new THREE.DirectionalLight(0xA8B0BB, 1.0);
-    fillLight.position.set(-6, 9, -8);
+    fillLight = new THREE.DirectionalLight(0xA8B0BB, 1.0);
+    fillLight.position.set(-8, 10, -10);
     scene.add(fillLight);
 
-    const rimLight = new THREE.PointLight(0x9C7A4E, .4, 35);
-    rimLight.position.set(0, 8, 0);
+    const rimLight = new THREE.PointLight(0x9C7A4E, .6, 40);
+    rimLight.position.set(0, 10, 0);
     scene.add(rimLight);
 
     // أرضية فحمية
@@ -941,134 +878,178 @@ function initGame3D(){
         new THREE.MeshStandardMaterial({ color: 0x0A0B10, roughness: .95 })
     );
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -.85;
+    floor.position.y = -1.2;
     floor.receiveShadow = true;
     scene.add(floor);
-
-    // ========== القاعدة الفحمية ==========
-    const baseMat = new THREE.MeshStandardMaterial({ color: 0x141519, roughness: .55, metalness: .3 });
-    const base = new THREE.Mesh(new THREE.BoxGeometry(9.8, .9, 9.8), baseMat);
-    base.position.y = -.45;
-    base.castShadow = true;
-    base.receiveShadow = true;
-    scene.add(base);
-
-    const edgeMat = new THREE.MeshStandardMaterial({ color: 0x050810, roughness: .5, metalness: .5 });
-    const edgeBand = new THREE.Mesh(new THREE.BoxGeometry(9.9, .12, 9.9), edgeMat);
-    edgeBand.position.y = -.07;
-    edgeBand.castShadow = true;
-    edgeBand.receiveShadow = true;
-    scene.add(edgeBand);
-
-    // سطح علوي كحلي
-    const topMat = new THREE.MeshStandardMaterial({ color: 0x132B45, roughness: .5, metalness: .25 });
-    const tabletop = new THREE.Mesh(new THREE.BoxGeometry(9.5, .06, 9.5), topMat);
-    tabletop.position.y = .03;
-    tabletop.receiveShadow = true;
-    scene.add(tabletop);
-
-    // ========== الإطار الخشبي الشامباني ==========
-    const railMat = new THREE.MeshStandardMaterial({ color: 0x2A2C33, roughness: .45, metalness: .45 });
-    const railTopMat = new THREE.MeshStandardMaterial({ color: 0xC9A96A, roughness: .35, metalness: .7 });
-    const railH = .22;
-    const railThick = .32;
-    const halfBoard = 4;
-
-    const railF = new THREE.Mesh(new THREE.BoxGeometry(8 + railThick*2, railH, railThick), railMat);
-    railF.position.set(0, railH/2 + .06, halfBoard + railThick/2);
-    railF.castShadow = true; railF.receiveShadow = true; scene.add(railF);
-
-    const railB = new THREE.Mesh(new THREE.BoxGeometry(8 + railThick*2, railH, railThick), railMat);
-    railB.position.set(0, railH/2 + .06, -halfBoard - railThick/2);
-    railB.castShadow = true; railB.receiveShadow = true; scene.add(railB);
-
-    const railL = new THREE.Mesh(new THREE.BoxGeometry(railThick, railH, 8), railMat);
-    railL.position.set(-halfBoard - railThick/2, railH/2 + .06, 0);
-    railL.castShadow = true; railL.receiveShadow = true; scene.add(railL);
-
-    const railR = new THREE.Mesh(new THREE.BoxGeometry(railThick, railH, 8), railMat);
-    railR.position.set(halfBoard + railThick/2, railH/2 + .06, 0);
-    railR.castShadow = true; railR.receiveShadow = true; scene.add(railR);
-
-    function addRailCap(x, z, w, d){
-        const cap = new THREE.Mesh(new THREE.BoxGeometry(w, .035, d), railTopMat);
-        cap.position.set(x, railH + .06, z);
-        cap.castShadow = true; cap.receiveShadow = true; scene.add(cap);
-    }
-    addRailCap(0, halfBoard + railThick/2, 8 + railThick*2, railThick);
-    addRailCap(0, -halfBoard - railThick/2, 8 + railThick*2, railThick);
-    addRailCap(-halfBoard - railThick/2, 0, railThick, 8);
-    addRailCap(halfBoard + railThick/2, 0, railThick, 8);
-
-    const postMat = new THREE.MeshStandardMaterial({ color: 0x141519, roughness: .35, metalness: .55 });
-    const knobMat = new THREE.MeshStandardMaterial({ color: 0xC9A96A, roughness: .3, metalness: .8 });
-    const corners = [
-        [halfBoard + railThick/2, halfBoard + railThick/2],
-        [-halfBoard - railThick/2, halfBoard + railThick/2],
-        [halfBoard + railThick/2, -halfBoard - railThick/2],
-        [-halfBoard - railThick/2, -halfBoard - railThick/2],
-    ];
-    corners.forEach(([x, z]) => {
-        const post = new THREE.Mesh(new THREE.CylinderGeometry(.18, .21, .32, 16), postMat);
-        post.position.set(x, .16 + .06, z);
-        post.castShadow = true; post.receiveShadow = true; scene.add(post);
-
-        const knob = new THREE.Mesh(new THREE.SphereGeometry(.13, 14, 12), knobMat);
-        knob.position.set(x, .38 + .06, z);
-        knob.castShadow = true; scene.add(knob);
-    });
-
-    board = new THREE.Group();
-    pieces = new THREE.Group();
-    scene.add(board);
-    scene.add(pieces);
-    squares = [];
 
     makeBoard();
     animate();
     attachCanvasEvents();
 }
 
-/* ===== لوحة الشطرنج: فحمي كحلي / عاجي كريمي ===== */
+/* ===== بناء الرقعة الفاخرة ===== */
 function makeBoard(){
+    if (board) scene.remove(board);
+    board = new THREE.Group();
+    scene.add(board);
+
+    const halfBoard = 4;
+    const frameSize = 5;
+    const baseSize = 5.5;
+
+    // --- Base Layer 1 (Bottom) ---
+    const baseMat = new THREE.MeshStandardMaterial({ color: 0x0B0B0F, roughness: 0.5, metalness: 0.3, roughnessMap: noiseTex, bumpMap: noiseTex, bumpScale: 0.01 });
+    const baseGeo = new THREE.BoxGeometry(baseSize * 2, 0.4, baseSize * 2);
+    const base = new THREE.Mesh(baseGeo, baseMat);
+    base.position.y = -0.8;
+    base.castShadow = true;
+    base.receiveShadow = true;
+    board.add(base);
+
+    // --- Base Layer 2 (Middle) ---
+    const base2Geo = new THREE.BoxGeometry(baseSize * 1.8, 0.4, baseSize * 1.8);
+    const base2 = new THREE.Mesh(base2Geo, baseMat);
+    base2.position.y = -0.4;
+    base2.castShadow = true;
+    base2.receiveShadow = true;
+    board.add(base2);
+
+    // --- Frame (Extruded) ---
+    const frameShape = new THREE.Shape();
+    frameShape.moveTo(-frameSize, -frameSize);
+    frameShape.lineTo(frameSize, -frameSize);
+    frameShape.lineTo(frameSize, frameSize);
+    frameShape.lineTo(-frameSize, frameSize);
+    frameShape.lineTo(-frameSize, -frameSize);
+
+    const holePath = new THREE.Path();
+    holePath.moveTo(-halfBoard, -halfBoard);
+    holePath.lineTo(-halfBoard, halfBoard);
+    holePath.lineTo(halfBoard, halfBoard);
+    holePath.lineTo(halfBoard, -halfBoard);
+    holePath.lineTo(-halfBoard, -halfBoard);
+    frameShape.holes.push(holePath);
+
+    const extrudeSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 4, steps: 2, bevelSize: 0.08, bevelThickness: 0.08 };
+    const frameGeo = new THREE.ExtrudeGeometry(frameShape, extrudeSettings);
+    const frameMat = new THREE.MeshStandardMaterial({ color: 0x1A1A1E, roughness: 0.3, metalness: 0.6, roughnessMap: noiseTex, bumpMap: noiseTex, bumpScale: 0.01 });
+    const frame = new THREE.Mesh(frameGeo, frameMat);
+    frame.rotation.x = -Math.PI / 2;
+    frame.position.y = 0;
+    frame.castShadow = true;
+    frame.receiveShadow = true;
+    board.add(frame);
+
+    // --- Edge/Decoration (Gold line) ---
+    const edgeShape = new THREE.Shape();
+    edgeShape.moveTo(-halfBoard - 0.1, -halfBoard - 0.1);
+    edgeShape.lineTo(halfBoard + 0.1, -halfBoard - 0.1);
+    edgeShape.lineTo(halfBoard + 0.1, halfBoard + 0.1);
+    edgeShape.lineTo(-halfBoard - 0.1, halfBoard + 0.1);
+    edgeShape.lineTo(-halfBoard - 0.1, -halfBoard - 0.1);
+
+    const edgeHole = new THREE.Path();
+    edgeHole.moveTo(-halfBoard, -halfBoard);
+    edgeHole.lineTo(-halfBoard, halfBoard);
+    edgeHole.lineTo(halfBoard, halfBoard);
+    edgeHole.lineTo(halfBoard, -halfBoard);
+    edgeHole.lineTo(-halfBoard, -halfBoard);
+    edgeShape.holes.push(edgeHole);
+
+    const edgeGeo = new THREE.ExtrudeGeometry(edgeShape, { depth: 0.45, bevelEnabled: false });
+    const edgeMat = new THREE.MeshStandardMaterial({ color: 0xD4AF37, roughness: 0.15, metalness: 0.9 });
+    const edge = new THREE.Mesh(edgeGeo, edgeMat);
+    edge.rotation.x = -Math.PI / 2;
+    edge.position.y = 0;
+    edge.castShadow = true;
+    board.add(edge);
+
+    // --- Squares ---
+    squares = [];
     for(let rank = 8; rank >= 1; rank--){
         for(let f = 0; f < 8; f++){
             const s = files[f] + rank;
             const p = position(s);
             const isDark = (rank + f) % 2;
-            const mat = new THREE.MeshStandardMaterial({
-                color: isDark ? 0x1E2A3D : 0xE8DEC8,
-                roughness: isDark ? .6 : .55,
-                metalness: isDark ? .2 : .08
+            
+            const sqMat = new THREE.MeshStandardMaterial({
+                color: isDark ? 0x0B0B0F : 0xE8E1D1,
+                roughness: isDark ? 0.25 : 0.2,
+                metalness: isDark ? 0.5 : 0.1,
+                roughnessMap: noiseTex,
+                bumpMap: noiseTex,
+                bumpScale: 0.02
             });
-            const mesh = new THREE.Mesh(new THREE.BoxGeometry(.99, .15, .99), mat);
+            
+            const mesh = new THREE.Mesh(new THREE.BoxGeometry(.98, .1, .98), sqMat);
             mesh.position.set(p.x, .15, p.z);
             mesh.receiveShadow = true;
             mesh.userData.square = s;
+            mesh.userData.isDark = isDark;
             board.add(mesh);
             squares.push(mesh);
         }
     }
+
+    // --- Corner Emblems (Knights) ---
+    const cornerPositions = [
+        { x: -frameSize + 0.5, z: -frameSize + 0.5, rot: 0 },
+        { x: frameSize - 0.5, z: -frameSize + 0.5, rot: Math.PI / 2 },
+        { x: frameSize - 0.5, z: frameSize - 0.5, rot: Math.PI },
+        { x: -frameSize + 0.5, z: frameSize - 0.5, rot: -Math.PI / 2 }
+    ];
+
+    cornerPositions.forEach(cp => {
+        const emblemGeo = createKnightEmblem();
+        const emblemMat = new THREE.MeshStandardMaterial({ color: 0xD4AF37, roughness: 0.2, metalness: 0.8 });
+        const emblem = new THREE.Mesh(emblemGeo, emblemMat);
+        emblem.position.set(cp.x, 0.2, cp.z);
+        emblem.rotation.y = cp.rot;
+        emblem.castShadow = true;
+        board.add(emblem);
+    });
+
+    // --- Edge Diamonds ---
+    const diamondPositions = [
+        { x: 0, z: -frameSize + 0.5, rot: 0 },
+        { x: 0, z: frameSize - 0.5, rot: 0 },
+        { x: -frameSize + 0.5, z: 0, rot: Math.PI / 2 },
+        { x: frameSize - 0.5, z: 0, rot: Math.PI / 2 }
+    ];
+    
+    diamondPositions.forEach(dp => {
+        const diamondGeo = new THREE.OctahedronGeometry(0.15);
+        const diamondMat = new THREE.MeshStandardMaterial({ color: 0xD4AF37, roughness: 0.2, metalness: 0.8 });
+        const diamond = new THREE.Mesh(diamondGeo, diamondMat);
+        diamond.position.set(dp.x, 0.3, dp.z);
+        diamond.rotation.y = dp.rot;
+        diamond.rotation.x = Math.PI / 4;
+        diamond.castShadow = true;
+        board.add(diamond);
+    });
+
+    // Store materials
+    materials.lightSquare = squares.find(s => !s.userData.isDark).material;
+    materials.darkSquare = squares.find(s => s.userData.isDark).material;
+    materials.frame = frameMat;
+    materials.edge = edgeMat;
+    materials.base = baseMat;
+    materials.emblem = board.children.find(c => c.type === 'Mesh' && c.geometry.type === 'ExtrudeGeometry' && c.material.metalness > 0.7)?.material;
+    
+    // Apply initial theme
+    updateColors();
 }
 
-/* ===== إنشاء قطع الشطرنج (عاجي / فحمي مع لمسات شامبانيا وبرونز) ===== */
+/* ===== إنشاء قطع الشطرنج ===== */
 function chessPiece(type, color){
     const g = new THREE.Group();
     const isWhite = color === 'w';
 
-    const mat = new THREE.MeshStandardMaterial({
-        color: isWhite ? 0xF2EAD9 : 0x22242A,
-        roughness: .5, metalness: .18
-    });
-    const darkMat = new THREE.MeshStandardMaterial({
-        color: isWhite ? 0xE0D5BD : 0x141519,
-        roughness: .6, metalness: .15
-    });
-    const accentMat = new THREE.MeshStandardMaterial({
-        color: isWhite ? 0xC9A96A : 0x9C7A4E,
-        roughness: .35, metalness: .7
-    });
+    const mat = isWhite ? materials.pieceLight : materials.pieceDark;
+    const darkMat = isWhite ? materials.pieceDark : materials.pieceLight;
+    const accentMat = materials.edge || new THREE.MeshStandardMaterial({ color: 0xC9A96A, roughness: .35, metalness: .7 });
 
+    // القاعدة
     const base1 = new THREE.Mesh(new THREE.CylinderGeometry(.32, .36, .1, 24), mat);
     base1.position.y = .05;
     base1.castShadow = true; base1.receiveShadow = true;
@@ -1209,9 +1190,11 @@ function draw(){
 
 function resetColors(){
     squares.forEach(s => {
-        const rank = Number(s.userData.square[1]);
-        const f = files.indexOf(s.userData.square[0]);
-        s.material.color.setHex((rank + f) % 2 ? 0x1E2A3D : 0xE8DEC8);
+        if (s.userData.isDark) {
+            s.material.color.set(document.getElementById('color-dark').value);
+        } else {
+            s.material.color.set(document.getElementById('color-light').value);
+        }
     });
 }
 
@@ -1221,7 +1204,7 @@ function showMoves(from){
     const moves = chess.moves({ square: from, verbose: true });
     moves.forEach(m => {
         const sq = squares.find(x => x.userData.square === m.to);
-        if(sq) sq.material.color.setHex(0xA8894F);
+        if(sq) sq.material.color.set(0xA8894F);
     });
 }
 
@@ -1520,6 +1503,111 @@ updateStatus = function() {
         }
     }
     return isOver;
+};
+
+/* ===== نظام تخصيص الألوان ===== */
+const presets = {
+    'marble-gold': { light: '#E8E1D1', dark: '#0B0B0F', frame: '#1A1A1E', edge: '#D4AF37', base: '#0B0B0F', lightColor: '#FFF8E7' },
+    'ivory-charcoal': { light: '#F5F5DC', dark: '#2E2E2E', frame: '#3A3A3A', edge: '#C9A96A', base: '#111111', lightColor: '#FFFFFF' },
+    'emerald-gold': { light: '#F0FFF0', dark: '#004B23', frame: '#0B1A2E', edge: '#D4AF37', base: '#003311', lightColor: '#F0FFF0' },
+    'royal-blue-silver': { light: '#F0F8FF', dark: '#1E3A8A', frame: '#0B1A2E', edge: '#C0C0C0', base: '#0B132B', lightColor: '#FFFFFF' },
+    'wood-cream': { light: '#FFE4B5', dark: '#8B4513', frame: '#A0522D', edge: '#C9A96A', base: '#3E2723', lightColor: '#FFE4B5' },
+    'gray-marble-silver': { light: '#D3D3D3', dark: '#696969', frame: '#2F4F4F', edge: '#C0C0C0', base: '#1A1A1E', lightColor: '#FFFFFF' },
+    'wine-gold': { light: '#F5DEB3', dark: '#722F37', frame: '#1A1A1E', edge: '#D4AF37', base: '#2B0000', lightColor: '#FFE4C4' }
+};
+
+window.applyPreset = function(name) {
+    const p = presets[name];
+    if (!p) return;
+    document.getElementById('color-light').value = p.light;
+    document.getElementById('color-dark').value = p.dark;
+    document.getElementById('color-frame').value = p.frame;
+    document.getElementById('color-edge').value = p.edge;
+    document.getElementById('color-base').value = p.base;
+    document.getElementById('color-light-light').value = p.lightColor;
+    updateColors();
+};
+
+window.updateColors = function() {
+    if (!materials.lightSquare) return;
+    
+    const lightColor = document.getElementById('color-light').value;
+    const darkColor = document.getElementById('color-dark').value;
+    const frameColor = document.getElementById('color-frame').value;
+    const edgeColor = document.getElementById('color-edge').value;
+    const baseColor = document.getElementById('color-base').value;
+    const lightLightColor = document.getElementById('color-light-light').value;
+
+    // Update board materials
+    materials.lightSquare.color.set(lightColor);
+    materials.darkSquare.color.set(darkColor);
+    materials.frame.color.set(frameColor);
+    materials.edge.color.set(edgeColor);
+    materials.base.color.set(baseColor);
+    if (materials.emblem) materials.emblem.color.set(edgeColor);
+    
+    // Update board squares directly
+    squares.forEach(sq => {
+        if (sq.userData.isDark) {
+            sq.material.color.set(darkColor);
+        } else {
+            sq.material.color.set(lightColor);
+        }
+    });
+
+    // Update pieces
+    materials.pieceLight.color.set(lightColor === '#FFFFFF' || lightColor === '#F0F8FF' || lightColor === '#F0FFF0' || lightColor === '#F5F5DC' ? '#F2EAD9' : lightColor);
+    materials.pieceDark.color.set(darkColor);
+    materials.pieceAccent.color.set(edgeColor);
+    
+    // Update lighting
+    if (sun) sun.color.set(lightLightColor);
+    if (fillLight) fillLight.color.set(lightLightColor);
+    
+    // Update scene background/fog to match
+    const bgColor = new THREE.Color(frameColor).multiplyScalar(0.15);
+    scene.background = bgColor;
+    scene.fog.color = bgColor;
+};
+
+/* ===== نظام زوايا الكاميرا ===== */
+const cameraViews = {
+    'top': { pos: [0, 15, 0.01], target: [0, 0, 0] },
+    'front': { pos: [0, 6, 14], target: [0, 0, 0] },
+    'side': { pos: [14, 6, 0], target: [0, 0, 0] },
+    '45': { pos: [10, 10, 10], target: [0, 0, 0] },
+    'isometric': { pos: [8, 12, 8], target: [0, 0, 0] },
+    'close': { pos: [4, 5, 4], target: [0, 0, 0] }
+};
+
+let cameraTween = null;
+
+window.setCameraView = function(view) {
+    const config = cameraViews[view];
+    if (!config) return;
+    
+    const startPos = camera.position.clone();
+    const startTarget = controls.target.clone();
+    const endPos = new THREE.Vector3(...config.pos);
+    const endTarget = new THREE.Vector3(...config.target);
+    
+    let t = 0;
+    if (cameraTween) cancelAnimationFrame(cameraTween);
+    
+    function animateCamera() {
+        t += 0.05;
+        if (t > 1) t = 1;
+        const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+        
+        camera.position.lerpVectors(startPos, endPos, ease);
+        controls.target.lerpVectors(startTarget, endTarget, ease);
+        controls.update();
+        
+        if (t < 1) {
+            cameraTween = requestAnimationFrame(animateCamera);
+        }
+    }
+    animateCamera();
 };
 
 window.addEventListener("resize", onResize);
