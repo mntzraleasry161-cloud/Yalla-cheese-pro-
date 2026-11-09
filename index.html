@@ -2,664 +2,1081 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Monster Chess 3D</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Monster Chess 3D — المملكة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    :root {
+        --sky-top: #1e90ff;
+        --sky-bottom: #87cefa;
+        --gold: #ffd700;
+        --gold-dark: #b8860b;
+        --gold-light: #fff8dc;
+        --blue-btn: #1e90ff;
+        --red-btn: #e63946;
+        --panel-bg: rgba(10, 20, 40, 0.85);
+        --font-main: 'Cairo', sans-serif;
+    }
 
-body{
- margin:0;
- background:radial-gradient(circle at top,#44205e,#160e29 65%,#090b18);
- color:white;
- font-family:Cairo,Arial,sans-serif;
- text-align:center;
- min-height:100vh;
-}
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+    }
 
-header{
- padding:20px 10px 12px;
- background:linear-gradient(135deg,#301647,#17132c);
- border-bottom:2px solid #d4af37;
- box-shadow:0 5px 25px #0009;
-}
+    body {
+        font-family: var(--font-main);
+        background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-bottom) 60%, #e0f7fa 100%);
+        height: 100dvh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        color: white;
+    }
 
-h1{
- margin:0;
- font-size:clamp(23px,6vw,38px);
- color:#ffd66b;
- text-shadow:0 0 15px #ffba35;
-}
+    /* ================= الخلفية ================= */
+    .bg-castle {
+        position: absolute;
+        bottom: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 25vw;
+        opacity: 0.15;
+        filter: blur(2px);
+        z-index: 0;
+        pointer-events: none;
+    }
 
-.subtitle{
- color:#d8b7f0;
- font-size:13px;
-}
+    .bg-floor {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 35%;
+        background: repeating-linear-gradient(
+            45deg,
+            #333 0,
+            #333 25px,
+            #444 25px,
+            #444 50px
+        );
+        transform: perspective(500px) rotateX(60deg);
+        transform-origin: bottom;
+        z-index: 0;
+        box-shadow: inset 0 20px 50px rgba(0,0,0,0.8);
+    }
 
-/* ===== قائمة اللاعب ===== */
-.player-bar{
- display:flex;
- align-items:center;
- gap:12px;
- max-width:700px;
- margin:16px auto 0;
- padding:10px 14px;
- border-radius:16px;
- background:linear-gradient(145deg,#ffffff12,#ffffff04);
- border:1px solid #a77bba33;
- cursor:pointer;
- transition:.2s;
-}
-.player-bar:hover{border-color:#d4af3766}
-.player-bar .avatar{
- width:44px;height:44px;border-radius:50%;
- display:grid;place-items:center;font-size:20px;
- background:linear-gradient(145deg,#8552c9,#3a1b57);
- border:2px solid #d4af37;
- box-shadow:0 0 14px #d4af3755;
-}
-.player-bar .pinfo{text-align:right;flex:1;line-height:1.2}
-.player-bar .pinfo b{font-size:13px;display:block}
-.player-bar .xpbar{width:100%;max-width:120px;height:4px;border-radius:9px;background:#ffffff1a;overflow:hidden;margin-top:4px}
-.player-bar .xpbar i{display:block;height:100%;width:64%;background:linear-gradient(90deg,#c18b16,#fff8d8);box-shadow:0 0 8px #ffd66b}
-.player-bar .coins{display:flex;flex-direction:column;gap:3px}
-.player-bar .coins span{font-size:10px;font-weight:800;color:#ffd66b;background:#ffffff0f;border:1px solid #ffd66b33;border-radius:8px;padding:1px 7px;white-space:nowrap}
+    /* ===== نجوم متلألئة في السماء ===== */
+    .sky-sparkles {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    .sky-sparkles::before,
+    .sky-sparkles::after {
+        content: '';
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow:
+            15vw 10vh 0 0 rgba(255,255,255,0.6),
+            30vw 25vh 0 0 rgba(255,255,255,0.4),
+            45vw 5vh 0 0 rgba(255,255,255,0.7),
+            60vw 15vh 0 0 rgba(255,255,255,0.5),
+            75vw 30vh 0 0 rgba(255,255,255,0.6),
+            88vw 8vh 0 0 rgba(255,255,255,0.4),
+            20vw 35vh 0 0 rgba(255,255,255,0.5),
+            50vw 40vh 0 0 rgba(255,255,255,0.3);
+        animation: twinkle 3s ease-in-out infinite alternate;
+    }
+    .sky-sparkles::after {
+        animation-delay: -1.5s;
+        box-shadow:
+            10vw 20vh 0 0 rgba(255,255,255,0.5),
+            25vw 15vh 0 0 rgba(255,255,255,0.7),
+            42vw 30vh 0 0 rgba(255,255,255,0.4),
+            58vw 10vh 0 0 rgba(255,255,255,0.6),
+            72vw 22vh 0 0 rgba(255,255,255,0.5),
+            92vw 18vh 0 0 rgba(255,255,255,0.7);
+    }
+    @keyframes twinkle {
+        from { opacity: 0.4; }
+        to { opacity: 1; }
+    }
 
-/* ===== الأقسام ===== */
-.section{
- width:min(95%,700px);
- margin:18px auto;
- padding:18px 14px;
- border:1px solid #a77bba66;
- border-radius:22px;
- background:linear-gradient(145deg,#ffffff12,#ffffff04);
- box-shadow:0 10px 35px #0007,inset 0 0 20px #9b59b622;
-}
+    /* ================= الشريط العلوي ================= */
+    .top-bar {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 15px;
+    }
 
-.section-title{
- color:#ffd66b;
- font-size:16px;
- font-weight:900;
- margin:6px 0 14px;
- text-shadow:0 0 10px #d4af37;
-}
+    .profile-box {
+        display: flex;
+        align-items: center;
+        background: linear-gradient(135deg, #2a3b5c, #141e30);
+        border: 2px solid var(--gold);
+        border-radius: 15px;
+        padding: 5px 15px 5px 5px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 15px rgba(255,215,0,0.15);
+    }
 
-/* ===== أزرار الأوضاع ===== */
-.mode-btn{
- width:100%;
- display:flex;
- align-items:center;
- gap:14px;
- padding:14px 18px;
- border-radius:16px;
- border:2px solid #f3d06e;
- background:linear-gradient(#ffe477,#c18b16 60%,#80530a);
- color:#3b2200;
- font-family:inherit;
- font-weight:900;
- cursor:pointer;
- transition:.15s;
- box-shadow:inset 0 3px 5px #ffffff66,inset 0 -5px 8px #0007,0 6px 12px #0008;
- margin-bottom:10px;
- text-align:right;
-}
-.mode-btn:hover{filter:brightness(1.1)}
-.mode-btn:active{transform:translateY(3px);box-shadow:inset 0 3px 10px #000a}
-.mode-btn .icon{font-size:28px;filter:drop-shadow(0 0 6px #00000044)}
-.mode-btn .text{flex:1;line-height:1.35}
-.mode-btn .text b{display:block;font-size:15px}
-.mode-btn .text small{display:block;font-size:11px;font-weight:600;opacity:.75}
+    .avatar-frame {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffe4b5, #ffd700);
+        border: 2px solid #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        box-shadow: 0 0 10px var(--gold);
+        position: relative;
+    }
+    
+    .level-badge {
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        background: #ffd700;
+        color: #000;
+        font-size: 10px;
+        font-weight: 900;
+        padding: 2px 6px;
+        border-radius: 10px;
+        border: 1px solid #000;
+    }
 
-.mode-btn.secondary{
- background:linear-gradient(#c37ad7,#7435a4,#38145d);
- color:#fff;
-}
-.mode-btn.blue{
- background:linear-gradient(#55baff,#2377b9,#12416e);
- color:#fff;
-}
-.mode-btn.green{
- background:linear-gradient(#42e99a,#17945b,#07502f);
- color:#fff;
-}
+    .profile-info {
+        margin-right: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 
-/* ===== شبكة المملكة ===== */
-.kingdom-grid{
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(88px,1fr));
- gap:10px;
-}
-.kingdom-tile{
- display:flex;
- flex-direction:column;
- align-items:center;
- gap:6px;
- padding:14px 6px;
- border-radius:16px;
- background:linear-gradient(150deg,#ffffff0d,#ffffff02);
- border:1px solid #a77bba2e;
- color:#fff;
- font-family:inherit;
- font-size:11.5px;
- font-weight:700;
- cursor:pointer;
- transition:.2s;
-}
-.kingdom-tile span{font-size:24px}
-.kingdom-tile:hover{border-color:#d4af3766;transform:translateY(-3px);background:#ffffff12}
+    .profile-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        text-shadow: 0 1px 2px #000;
+    }
 
-/* ===== شاشة اللعب ===== */
-#gameScreen{display:none}
+    .profile-stars {
+        font-size: 12px;
+        color: var(--gold);
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
 
-#game{
- width:100%;
- height:55vh;
- min-height:340px;
- max-height:620px;
- touch-action:none;
- overflow:hidden;
- border-radius:15px;
-}
+    .resources {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
 
-#game canvas{display:block}
+    .res-pill {
+        background: rgba(0,0,0,0.6);
+        border: 1px solid var(--gold-dark);
+        border-radius: 20px;
+        padding: 3px 8px 3px 3px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+        box-shadow: inset 0 2px 5px rgba(255,255,255,0.2);
+    }
 
-.game-panel{
- width:min(96%,800px);
- margin:15px auto;
- padding:13px;
- background:#211632;
- border:1px solid #a77bba77;
- border-radius:18px;
-}
+    .res-pill .icon {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+    }
 
-#status{
- color:#8ee7ff;
- font-weight:900;
- font-size:16px;
- margin:10px;
-}
+    .res-pill.coin .icon { background: radial-gradient(circle, #ffd700, #b8860b); }
+    .res-pill.gem .icon { background: radial-gradient(circle, #00ffff, #008b8b); }
 
-#moves{
- max-height:65px;
- overflow:auto;
- color:#ddd;
- font-size:12px;
- overflow-wrap:anywhere;
- margin-top:12px;
-}
+    .btn-plus {
+        background: #00ff00;
+        color: #000;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-weight: 900;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
 
-select{
- background:#302044;
- color:white;
- border:1px solid #d4af37;
- border-radius:10px;
- padding:10px;
- font-family:inherit;
- font-weight:bold;
-}
+    .settings-btn {
+        background: rgba(0,0,0,0.6);
+        border: 2px solid var(--gold);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        color: var(--gold);
+        cursor: pointer;
+        transition: transform 0.15s;
+    }
+    .settings-btn:hover { transform: rotate(30deg); }
 
-.btn{
- position:relative;
- overflow:hidden;
- cursor:pointer;
- border:2px solid #f3d06e;
- border-radius:13px;
- min-width:135px;
- padding:13px 18px;
- color:white;
- font-family:inherit;
- font-weight:900;
- font-size:15px;
- text-shadow:0 2px 4px #0009;
- box-shadow:inset 0 3px 5px #ffffff66,inset 0 -5px 8px #0007,0 6px 12px #0008;
- transition:.15s;
-}
-.btn:before{
- content:"";
- position:absolute;
- top:0;
- left:10%;
- width:80%;
- height:45%;
- background:linear-gradient(#ffffff55,transparent);
- border-radius:0 0 50% 50%;
- pointer-events:none;
-}
-.btn:active{transform:translateY(4px);box-shadow:inset 0 3px 8px #0009}
+    /* ================= الأزرار الجانبية ================= */
+    .side-panel {
+        position: absolute;
+        top: 20%;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
 
-.gold{background:linear-gradient(#ffe477,#c18b16,#80530a);color:#3b2200}
-.green{background:linear-gradient(#42e99a,#17945b,#07502f)}
-.purple{background:linear-gradient(#c37ad7,#7435a4,#38145d)}
-.blue{background:linear-gradient(#55baff,#2377b9,#12416e)}
-.red{background:linear-gradient(#ff6868,#c52727,#750c0c)}
+    .side-panel.left { left: 10px; }
+    .side-panel.right { right: 10px; }
 
-.small{min-width:110px;font-size:13px;padding:10px}
+    .side-btn {
+        background: linear-gradient(180deg, #2a3b5c, #141e30);
+        border: 2px solid var(--gold);
+        border-radius: 15px;
+        width: 60px;
+        height: 65px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1);
+        position: relative;
+        transition: transform 0.1s;
+    }
 
-.buttons{
- display:flex;
- flex-wrap:wrap;
- justify-content:center;
- gap:12px;
-}
+    .side-btn:active { transform: scale(0.95); }
+    .side-btn span { font-size: 24px; }
+    .side-btn small { font-size: 9px; color: #fff; font-weight: 700; margin-top: 2px; }
 
-#promotion{
- display:none;
- padding:12px;
- background:#37244d;
- border-radius:12px;
- margin:10px;
-}
+    .badge-red {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #ff0000;
+        color: #fff;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        font-size: 10px;
+        font-weight: 900;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid #fff;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.15); }
+    }
 
-/* ===== النوافذ المنبثقة ===== */
-#settings,
-#difficultyModal{
- display:none;
- position:fixed;
- inset:0;
- z-index:100;
- background:#000b;
- justify-content:center;
- align-items:center;
- padding:15px;
- backdrop-filter:blur(6px);
-}
-#settings.show,
-#difficultyModal.show{display:flex}
+    .chest-box {
+        background: linear-gradient(180deg, #2a3b5c, #141e30);
+        border: 2px solid var(--gold);
+        border-radius: 15px;
+        width: 80px;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5), inset 0 2px 4px rgba(255,255,255,0.1);
+        cursor: pointer;
+    }
 
-.modal{
- width:min(95%,420px);
- background:linear-gradient(145deg,#49245e,#1a102b);
- border:2px solid #d4af37;
- border-radius:20px;
- padding:22px;
- box-shadow:0 0 35px #000;
- text-align:right;
-}
+    .chest-box span { font-size: 35px; margin-bottom: 5px; animation: float 2s infinite ease-in-out; }
+    .chest-box small { font-size: 9px; color: var(--gold); font-weight: 800; }
+    .chest-box .timer { font-size: 11px; font-weight: 900; color: #fff; margin-top: 2px; font-family: monospace; }
 
-.modal h2{
- color:#ffd66b;
- margin:0 0 16px;
- text-align:center;
- font-size:20px;
-}
+    /* ================= المنتصف ================= */
+    .main-center {
+        position: relative;
+        z-index: 10;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0 20px;
+        margin-top: -10px;
+    }
 
-.setting-row{
- display:flex;
- justify-content:space-between;
- align-items:center;
- padding:12px 0;
- border-bottom:1px solid #ffffff22;
-}
-.setting-row:last-of-type{border-bottom:none}
+    .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        animation: logoFloat 4s ease-in-out infinite;
+    }
+    @keyframes logoFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
+    }
 
-input[type=checkbox]{width:22px;height:22px;accent-color:#d4af37}
+    .logo-crown {
+        font-size: clamp(40px, 10vw, 60px);
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) drop-shadow(0 0 15px rgba(255,215,0,0.6));
+        animation: crownGlow 2s ease-in-out infinite alternate;
+    }
+    @keyframes crownGlow {
+        from { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) drop-shadow(0 0 10px rgba(255,215,0,0.4)); }
+        to { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) drop-shadow(0 0 25px rgba(255,215,0,0.9)); }
+    }
 
-.diff-option{
- width:100%;
- display:flex;
- align-items:center;
- gap:12px;
- padding:14px 16px;
- margin-bottom:10px;
- border-radius:14px;
- border:2px solid #d4af37;
- background:linear-gradient(145deg,#3f1f57,#1a1030);
- color:#fff;
- font-family:inherit;
- font-weight:700;
- font-size:14px;
- cursor:pointer;
- transition:.15s;
- text-align:right;
-}
-.diff-option:hover{filter:brightness(1.15);transform:translateX(-4px)}
-.diff-option .ic{font-size:22px}
+    .logo-text {
+        font-size: clamp(35px, 9vw, 55px);
+        font-weight: 900;
+        color: var(--gold);
+        text-shadow: 
+            0 2px 0 #b8860b,
+            0 4px 0 #8b6508,
+            0 6px 0 #5c4305,
+            0 8px 15px rgba(0,0,0,0.8),
+            0 0 30px rgba(255,215,0,0.5);
+        letter-spacing: 2px;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
 
-/* ===== إشعار Toast ===== */
-#notice{
- position:fixed;
- left:50%;
- bottom:28px;
- transform:translate(-50%,20px);
- background:linear-gradient(145deg,#3f1f57,#1a1030);
- border:1px solid #d4af37;
- color:#ffd66b;
- padding:12px 22px;
- border-radius:999px;
- font-size:13px;
- font-weight:800;
- box-shadow:0 10px 30px #000a;
- opacity:0;
- pointer-events:none;
- transition:.3s;
- z-index:99;
- white-space:nowrap;
- max-width:90vw;
- overflow:hidden;
- text-overflow:ellipsis;
-}
-#notice.show{opacity:1;transform:translate(-50%,0)}
+    .logo-ribbon {
+        background: linear-gradient(180deg, #e63946, #a4161a);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 800;
+        padding: 3px 20px;
+        border-radius: 10px;
+        display: inline-block;
+        margin-top: -5px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
+        border: 1px solid #780000;
+        transform: rotate(-2deg);
+    }
 
-.footer{
- color:#a995b9;
- font-size:11px;
- padding:15px;
- text-align:center;
-}
+    .btn-main {
+        width: 100%;
+        max-width: 350px;
+        height: 80px;
+        border-radius: 40px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 5px 10px rgba(255,255,255,0.4);
+        border: 4px solid var(--gold);
+        transition: transform 0.1s;
+        font-family: var(--font-main);
+        color: white;
+    }
 
-/* ===== شاشة KOKTON ===== */
-#splash{
- position:fixed;
- inset:0;
- z-index:9999;
- background:#000;
- display:flex;
- flex-direction:column;
- justify-content:center;
- align-items:center;
- overflow:hidden;
- opacity:1;
- transition:opacity 1s ease;
-}
-#splash.hide{opacity:0;pointer-events:none}
+    .btn-main:active { transform: translateY(5px); }
 
-#splash .splash-vignette{
- position:absolute;
- inset:0;
- background:radial-gradient(circle at center,#2a1245 0%,#0a0512 55%,#000 100%);
-}
-#splash .splash-rays{
- position:absolute;
- width:150vmax;
- height:150vmax;
- background:conic-gradient(from 0deg,
-   transparent 0deg,
-   rgba(255,214,107,0.12) 15deg,
-   transparent 30deg,
-   transparent 90deg,
-   rgba(255,214,107,0.09) 105deg,
-   transparent 120deg,
-   transparent 180deg,
-   rgba(255,214,107,0.12) 195deg,
-   transparent 210deg,
-   transparent 270deg,
-   rgba(255,214,107,0.09) 285deg,
-   transparent 300deg);
- opacity:0;
- animation:raysIn 1.6s ease 0.3s forwards, spin 22s linear infinite;
-}
-@keyframes raysIn{to{opacity:1}}
-@keyframes spin{to{transform:rotate(360deg)}}
+    .btn-main.online {
+        background: linear-gradient(to bottom, #2193b0, #6dd5ed);
+    }
 
-.company-wrap{
- position:relative;
- z-index:2;
- display:flex;
- justify-content:center;
-}
+    .btn-main.computer {
+        background: linear-gradient(to bottom, #eb3349, #f45c43);
+    }
 
-#splash .company{
- margin:0;
- font-size:clamp(48px,15vw,120px);
- font-weight:900;
- letter-spacing:16px;
- padding:0 10px;
- background:linear-gradient(180deg,#fff8d8 0%,#ffd66b 30%,#8a5c04 50%,#ffd66b 70%,#fff8d8 100%);
- -webkit-background-clip:text;
- background-clip:text;
- -webkit-text-fill-color:transparent;
- color:transparent;
- opacity:0;
- transform:scale(0.4);
- filter:blur(14px) drop-shadow(0 0 30px #ffba35aa) drop-shadow(0 0 60px #d4af3766);
- animation:companyIn 1.4s cubic-bezier(.2,.9,.3,1.1) 0.2s forwards;
-}
-@keyframes companyIn{
- 0%  {opacity:0; transform:scale(0.4); filter:blur(14px);}
- 60% {opacity:1; transform:scale(1.08); filter:blur(0);}
- 100%{opacity:1; transform:scale(1);   filter:blur(0);}
-}
+    .btn-main .icon-circle {
+        width: 55px;
+        height: 55px;
+        background: rgba(0,0,0,0.2);
+        border-radius: 50%;
+        border: 2px solid #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
 
-.company-shine{
- position:absolute;
- top:0;
- left:-100%;
- width:55%;
- height:100%;
- background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,0.9) 50%,transparent 80%);
- mix-blend-mode:overlay;
- pointer-events:none;
- animation:shine 2.6s ease 1.6s infinite;
-}
-@keyframes shine{
- 0%  {left:-100%;}
- 40% {left:150%;}
- 100%{left:150%;}
-}
+    .btn-main .text-box {
+        text-align: center;
+        flex: 1;
+    }
 
-#splash .tagline{
- margin-top:22px;
- color:#e8d4ff;
- font-size:clamp(11px,3vw,16px);
- font-weight:700;
- letter-spacing:14px;
- opacity:0;
- transform:translateY(10px);
- z-index:2;
- animation:tagIn 0.9s ease 1.4s forwards;
-}
-@keyframes tagIn{to{opacity:1; transform:translateY(0);}}
+    .btn-main h3 {
+        font-size: 24px;
+        font-weight: 900;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        margin-bottom: -5px;
+    }
 
-.splash-loader{
- margin-top:38px;
- width:180px;
- height:3px;
- background:rgba(255,255,255,0.1);
- border-radius:2px;
- overflow:hidden;
- z-index:2;
- opacity:0;
- animation:tagIn 0.6s ease 1.8s forwards;
-}
-.splash-loader > div{
- width:0;
- height:100%;
- background:linear-gradient(90deg,#ffd66b,#fff8d8);
- box-shadow:0 0 10px #ffd66b;
- animation:load 1.4s ease 1.9s forwards;
-}
-@keyframes load{to{width:100%;}}
+    .btn-main p {
+        font-size: 11px;
+        color: rgba(255,255,255,0.9);
+        font-weight: 600;
+    }
+
+    .btn-main::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 40%;
+        background: linear-gradient(to bottom, rgba(255,255,255,0.6), transparent);
+        border-radius: 40px 40px 0 0;
+        pointer-events: none;
+    }
+
+    /* ================= الشريط السفلي ================= */
+    .bottom-bar {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    }
+
+    .bottom-btn {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(180deg, #2a3b5c, #141e30);
+        border: 2px solid var(--gold);
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+        transition: transform 0.1s;
+    }
+    .bottom-btn:active { transform: translateY(3px); }
+
+    .bottom-btn span { font-size: 24px; }
+    .bottom-btn small { font-size: 8px; font-weight: 800; color: #fff; margin-top: 2px; }
+
+    /* ================= النوافذ المنبثقة ================= */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.85);
+        backdrop-filter: blur(8px);
+        z-index: 200;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        padding: 15px;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .modal-content {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        border: 3px solid var(--gold);
+        border-radius: 20px;
+        width: 100%;
+        max-width: 420px;
+        padding: 22px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 40px rgba(255,215,0,0.3);
+        transform: scale(0.9);
+        transition: transform 0.3s;
+        text-align: right;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    .modal-overlay.active .modal-content { transform: scale(1); }
+
+    .modal-content h2 {
+        color: var(--gold);
+        text-align: center;
+        margin-bottom: 15px;
+        text-shadow: 0 2px 4px #000;
+        font-size: 20px;
+    }
+
+    .modal-close {
+        background: linear-gradient(180deg, #e63946, #a4161a);
+        color: #fff;
+        border: 2px solid #fff;
+        padding: 10px 24px;
+        border-radius: 20px;
+        font-family: var(--font-main);
+        font-weight: 800;
+        font-size: 14px;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto 0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        transition: transform 0.1s;
+    }
+    .modal-close:active { transform: scale(0.95); }
+
+    .diff-btn {
+        width: 100%;
+        height: 60px;
+        border-radius: 30px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.4), inset 0 4px 8px rgba(255,255,255,0.3);
+        border: 3px solid var(--gold);
+        transition: transform 0.1s;
+        font-family: var(--font-main);
+        font-size: 20px;
+        font-weight: 900;
+        color: #fff;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+    .diff-btn:active { transform: translateY(4px); }
+    .diff-btn.easy { background: linear-gradient(to bottom, #4caf50, #2e7d32); }
+    .diff-btn.medium { background: linear-gradient(to bottom, #f39c12, #c87f0a); }
+    .diff-btn.hard { background: linear-gradient(to bottom, #e63946, #a4161a); }
+
+    .diff-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 45%;
+        background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+        border-radius: 30px 30px 0 0;
+        pointer-events: none;
+    }
+
+    .setting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+        font-weight: 700;
+    }
+    .setting-row:last-of-type { border-bottom: none; }
+
+    input[type=checkbox] {
+        width: 24px;
+        height: 24px;
+        accent-color: var(--gold);
+        cursor: pointer;
+    }
+
+    .achieve-row, .mission-row {
+        background: rgba(0,0,0,0.4);
+        padding: 12px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid rgba(255,215,0,0.2);
+    }
+    .achieve-row b, .mission-row b { font-size: 13px; }
+    .achieve-row .prog, .mission-row .reward {
+        color: var(--gold);
+        font-weight: 900;
+        font-size: 12px;
+    }
+
+    /* ================= لعبة الشطرنج ================= */
+    #gameScreen {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(to bottom, #0a1930 0%, #1e3c72 50%, #0a0a15 100%);
+        flex-direction: column;
+        z-index: 50;
+        overflow: hidden;
+    }
+
+    #gameScreen.active { display: flex; }
+
+    .game-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        background: linear-gradient(180deg, rgba(0,0,0,0.7), transparent);
+        border-bottom: 1px solid rgba(255,215,0,0.3);
+        position: relative;
+        z-index: 5;
+    }
+
+    .back-btn {
+        background: linear-gradient(180deg, #2a3b5c, #141e30);
+        border: 2px solid var(--gold);
+        color: var(--gold);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-family: var(--font-main);
+        font-weight: 800;
+        font-size: 13px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .back-btn:active { transform: scale(0.95); }
+
+    .game-title {
+        color: var(--gold);
+        font-weight: 900;
+        font-size: 16px;
+        text-shadow: 0 2px 4px #000, 0 0 15px rgba(255,215,0,0.5);
+        letter-spacing: 1px;
+    }
+
+    .game-level-select {
+        background: rgba(0,0,0,0.6);
+        border: 2px solid var(--gold);
+        border-radius: 20px;
+        color: var(--gold);
+        padding: 6px 12px;
+        font-family: var(--font-main);
+        font-weight: 800;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    #game {
+        flex: 1;
+        width: 100%;
+        min-height: 0;
+        touch-action: none;
+        overflow: hidden;
+        position: relative;
+    }
+
+    #game canvas { display: block; }
+
+    .game-controls {
+        padding: 12px 15px 18px;
+        background: linear-gradient(0deg, rgba(0,0,0,0.85), transparent);
+        border-top: 1px solid rgba(255,215,0,0.3);
+        position: relative;
+        z-index: 5;
+    }
+
+    #status {
+        color: #8ee7ff;
+        font-weight: 900;
+        font-size: 15px;
+        text-align: center;
+        margin-bottom: 10px;
+        text-shadow: 0 0 10px rgba(142,231,255,0.5);
+        min-height: 22px;
+    }
+
+    .game-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .game-btn {
+        background: linear-gradient(180deg, #2a3b5c, #141e30);
+        border: 2px solid var(--gold);
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 20px;
+        font-family: var(--font-main);
+        font-weight: 800;
+        font-size: 13px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        transition: transform 0.1s;
+    }
+    .game-btn:active { transform: translateY(3px); }
+    .game-btn.gold {
+        background: linear-gradient(180deg, #ffd700, #b8860b);
+        color: #3b2200;
+    }
+    .game-btn.red {
+        background: linear-gradient(180deg, #e63946, #a4161a);
+    }
+
+    #moves {
+        max-height: 50px;
+        overflow-y: auto;
+        color: #ccc;
+        font-size: 11px;
+        text-align: center;
+        margin-top: 10px;
+        padding: 6px;
+        background: rgba(0,0,0,0.4);
+        border-radius: 10px;
+        word-wrap: break-word;
+    }
+
+    #promotion {
+        display: none;
+        padding: 10px;
+        background: rgba(0,0,0,0.7);
+        border: 2px solid var(--gold);
+        border-radius: 15px;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    #promotion strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--gold);
+        font-size: 13px;
+    }
+
+    #promotion .game-actions { gap: 6px; }
+
+    /* ================= توست ================= */
+    #toast {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: linear-gradient(135deg, rgba(30,60,114,0.95), rgba(20,30,48,0.95));
+        color: var(--gold);
+        padding: 12px 24px;
+        border-radius: 20px;
+        border: 2px solid var(--gold);
+        font-weight: 800;
+        font-size: 13px;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s;
+        z-index: 999;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255,215,0,0.3);
+        max-width: 90vw;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 400px) {
+        .side-panel.left { left: 5px; }
+        .side-panel.right { right: 5px; }
+        .side-btn { width: 50px; height: 55px; }
+        .side-btn span { font-size: 20px; }
+        .side-btn small { font-size: 8px; }
+        .chest-box { width: 65px; }
+        .chest-box span { font-size: 28px; }
+        .bottom-btn { width: 50px; height: 50px; }
+        .bottom-btn span { font-size: 20px; }
+        .btn-main { height: 70px; }
+        .btn-main h3 { font-size: 20px; }
+        .profile-name { font-size: 12px; }
+        .res-pill span { font-size: 11px; }
+        .game-title { font-size: 14px; }
+    }
+
+    @media (max-height: 700px) {
+        .logo-container { margin-bottom: 10px; }
+        .btn-main { height: 65px; margin-bottom: 10px; }
+        .btn-main h3 { font-size: 20px; }
+        .main-center { margin-top: 0; }
+    }
 </style>
 </head>
-
 <body>
 
-<!-- ===== شاشة KOKTON ===== -->
-<div id="splash">
- <div class="splash-vignette"></div>
- <div class="splash-rays"></div>
-
- <div class="company-wrap">
-   <div class="company">KOKTON</div>
-   <div class="company-shine"></div>
- </div>
-
- <div class="tagline">PRESENTS</div>
- <div class="splash-loader"><div></div></div>
-</div>
+<!-- ===== خلفية القلعة ===== -->
+<div class="bg-castle">🏰</div>
+<div class="bg-floor"></div>
+<div class="sky-sparkles"></div>
 
 <!-- ===== القائمة الرئيسية ===== -->
-<div id="menuScreen">
+<div id="menuScreen" style="display:flex;flex-direction:column;height:100%;position:relative;">
 
-<header>
-<h1>🐉 MONSTER CHESS 3D</h1>
-<div class="subtitle">مملكة الوحوش الأسطورية ⚔️</div>
-</header>
+    <!-- الشريط العلوي -->
+    <header class="top-bar">
+        <div class="profile-box" onclick="showToast('الملف الشخصي')">
+            <div class="avatar-frame">
+                🦁
+                <div class="level-badge">12</div>
+            </div>
+            <div class="profile-info">
+                <div class="profile-name">منتظر احمد</div>
+                <div class="profile-stars">⭐ 1250</div>
+            </div>
+        </div>
 
-<!-- حساب اللاعب -->
-<div class="player-bar" onclick="comingSoon('الملف الشخصي')">
- <div class="avatar">👑</div>
- <div class="pinfo">
-   <b>قائد المملكة</b>
-   <div class="xpbar"><i></i></div>
- </div>
- <div class="coins">
-   <span>🪙 1,250</span>
-   <span>💎 40</span>
- </div>
-</div>
+        <div class="resources">
+            <div class="res-pill coin">
+                <div class="icon">🪙</div>
+                <span>25,750</span>
+                <div class="btn-plus">+</div>
+            </div>
+            <div class="res-pill gem">
+                <div class="icon">💎</div>
+                <span>450</span>
+                <div class="btn-plus">+</div>
+            </div>
+            <div class="settings-btn" onclick="openModal('settings')">⚙️</div>
+        </div>
+    </header>
 
-<!-- أوضاع اللعب -->
-<div class="section">
- <div class="section-title">🎮 أوضاع اللعب</div>
+    <!-- اللوحة اليسرى -->
+    <div class="side-panel left">
+        <div class="side-btn" onclick="showToast('🎁 المكافآت اليومية')">
+            <span>🎁</span>
+            <small>مكافآت</small>
+            <div class="badge-red">!</div>
+        </div>
+        <div class="side-btn" onclick="openModal('achievements')">
+            <span>🏆</span>
+            <small>إنجازات</small>
+        </div>
+        <div class="side-btn" onclick="openModal('missions')">
+            <span>📅</span>
+            <small>مهام</small>
+        </div>
+    </div>
 
- <button class="mode-btn" onclick="openDifficulty()">
-   <span class="icon">🤖</span>
-   <span class="text">
-     <b>ضد الكمبيوتر</b>
-     <small>واجه الذكاء الاصطناعي</small>
-   </span>
- </button>
+    <!-- اللوحة اليمنى -->
+    <div class="side-panel right">
+        <div class="chest-box" onclick="showToast('🎁 افتح الصندوق!')">
+            <span>🧰</span>
+            <small>صندوق الأبطال</small>
+            <div class="timer">23:59:42</div>
+        </div>
+    </div>
 
- <button class="mode-btn secondary" onclick="comingSoon('اللعب أونلاين')">
-   <span class="icon">🌐</span>
-   <span class="text">
-     <b>اللعب أونلاين</b>
-     <small>تحدَّ لاعبين حقيقيين</small>
-   </span>
- </button>
+    <!-- المنتصف -->
+    <main class="main-center">
+        <div class="logo-container">
+            <div class="logo-crown">👑</div>
+            <h1 class="logo-text">MONSTER</h1>
+            <div class="logo-ribbon">CHESS 3D</div>
+        </div>
 
- <button class="mode-btn blue" onclick="comingSoon('الألغاز')">
-   <span class="icon">🧩</span>
-   <span class="text">
-     <b>الألغاز</b>
-     <small>حلّ ألغاز الشطرنج</small>
-   </span>
- </button>
+        <button class="btn-main online" onclick="showToast('🌐 جاري الاتصال بالخادم...')">
+            <div class="icon-circle">🌐</div>
+            <div class="text-box">
+                <h3>اللعب أونلاين</h3>
+                <p>واجه لاعبين من جميع أنحاء العالم</p>
+            </div>
+            <div class="icon-circle" style="font-size:20px;">👥</div>
+        </button>
 
- <button class="mode-btn green" onclick="comingSoon('البطولات')">
-   <span class="icon">🏆</span>
-   <span class="text">
-     <b>البطولات</b>
-     <small>تحديات وجوائز أسطورية</small>
-   </span>
- </button>
-</div>
+        <button class="btn-main computer" onclick="openModal('difficulty')">
+            <div class="icon-circle">🖥️</div>
+            <div class="text-box">
+                <h3>ضد الكمبيوتر</h3>
+                <p>العب مع الذكاء الاصطناعي</p>
+            </div>
+            <div class="icon-circle">🤖</div>
+        </button>
+    </main>
 
-<!-- المملكة -->
-<div class="section">
- <div class="section-title">✨ المملكة</div>
- <div class="kingdom-grid">
-   <button class="kingdom-tile" onclick="comingSoon('المتجر')"><span>🛒</span>المتجر</button>
-   <button class="kingdom-tile" onclick="comingSoon('الترتيب')"><span>🏅</span>الترتيب</button>
-   <button class="kingdom-tile" onclick="comingSoon('الإنجازات')"><span>🎖️</span>الإنجازات</button>
-   <button class="kingdom-tile" onclick="comingSoon('المهام')"><span>📜</span>المهام</button>
-   <button class="kingdom-tile" onclick="comingSoon('الملف الشخصي')"><span>👤</span>ملفي</button>
-   <button class="kingdom-tile" onclick="openSettings()"><span>⚙️</span>الإعدادات</button>
- </div>
-</div>
-
-<div class="footer">صُنع بـ ❤️ في مملكة KOKTON · جميع الحقوق محفوظة © 2025</div>
+    <!-- الشريط السفلي -->
+    <footer class="bottom-bar">
+        <div class="bottom-btn" onclick="openModal('store')">
+            <span>🏪</span>
+            <small>المتجر</small>
+        </div>
+        <div class="bottom-btn" onclick="showToast('🏆 الترتيب')">
+            <span>🏆</span>
+            <small>الترتيب</small>
+        </div>
+        <div class="bottom-btn" onclick="showToast('🥇 لوحة الشرف')">
+            <span>🥇</span>
+            <small>الشرف</small>
+        </div>
+        <div class="bottom-btn" onclick="showToast('📖 التعليمات')">
+            <span>📖</span>
+            <small>تعليمات</small>
+        </div>
+        <div class="bottom-btn" onclick="showToast('🔗 مشاركة')">
+            <span>🔗</span>
+            <small>مشاركة</small>
+        </div>
+    </footer>
 </div>
 
 <!-- ===== شاشة اللعب ===== -->
 <div id="gameScreen">
+    <div class="game-header">
+        <button class="back-btn" onclick="backMenu()">← رجوع</button>
+        <div class="game-title">👑 MONSTER CHESS</div>
+        <select class="game-level-select" id="level">
+            <option value="easy">🟢 سهل</option>
+            <option value="medium">🔵 متوسط</option>
+            <option value="hard">🔴 صعب</option>
+        </select>
+    </div>
 
-<div class="game-panel">
- <div class="buttons">
-   <select id="level">
-     <option value="easy">🟢 سهل</option>
-     <option value="medium">🔵 متوسط</option>
-     <option value="hard">🔴 صعب</option>
-   </select>
+    <div id="game"></div>
 
-   <button class="btn gold small" onclick="newGame()">🔄 لعبة جديدة</button>
-   <button class="btn blue small" onclick="undoMove()">↩️ تراجع</button>
-   <button class="btn red small" onclick="backMenu()">🏠 الرئيسية</button>
- </div>
+    <div class="game-controls">
+        <div id="status">دورك الآن - الأبيض</div>
+
+        <div class="game-actions">
+            <button class="game-btn gold" onclick="newGame()">🔄 جديد</button>
+            <button class="game-btn" onclick="undoMove()">↩️ تراجع</button>
+            <button class="game-btn red" onclick="backMenu()">🏠 القائمة</button>
+        </div>
+
+        <div id="promotion">
+            <strong>👑 اختر ترقية البيدق</strong>
+            <div class="game-actions">
+                <button class="game-btn gold" onclick="promote('q')">ملكة</button>
+                <button class="game-btn gold" onclick="promote('r')">قلعة</button>
+                <button class="game-btn gold" onclick="promote('b')">فيل</button>
+                <button class="game-btn gold" onclick="promote('n')">حصان</button>
+            </div>
+        </div>
+
+        <div id="moves">سجل الحركات سيظهر هنا</div>
+    </div>
 </div>
 
-<div id="game"></div>
-
-<div class="game-panel">
- <div id="status">دورك الآن - الأبيض</div>
-
- <div id="promotion">
-   <strong>👑 اختر ترقية البيدق</strong>
-   <div class="buttons" style="margin-top:10px">
-     <button class="btn gold small" onclick="promote('q')">ملكة 👑</button>
-     <button class="btn gold small" onclick="promote('r')">قلعة 🏰</button>
-     <button class="btn gold small" onclick="promote('b')">فيل 🔮</button>
-     <button class="btn gold small" onclick="promote('n')">حصان 🐴</button>
-   </div>
- </div>
-
- <div id="moves">سجل الحركات سيظهر هنا</div>
-</div>
-
-</div>
-
-<!-- ===== نافذة اختيار الصعوبة ===== -->
-<div id="difficultyModal">
- <div class="modal">
-   <h2>⚔️ اختر مستوى الصعوبة</h2>
-
-   <button class="diff-option" onclick="pickDifficulty('easy')">
-     <span class="ic">🟢</span>
-     <span>سهل — للمبتدئين</span>
-   </button>
-
-   <button class="diff-option" onclick="pickDifficulty('medium')">
-     <span class="ic">🔵</span>
-     <span>متوسط — مواجهة متوازنة</span>
-   </button>
-
-   <button class="diff-option" onclick="pickDifficulty('hard')">
-     <span class="ic">🔴</span>
-     <span>صعب — للأساطير فقط</span>
-   </button>
-
-   <div class="buttons" style="margin-top:14px">
-     <button class="btn small" onclick="closeDifficulty()">إلغاء</button>
-   </div>
- </div>
+<!-- ===== نافذة الصعوبة ===== -->
+<div class="modal-overlay" id="modal-difficulty">
+    <div class="modal-content">
+        <h2>⚔️ اختر الصعوبة</h2>
+        <button class="diff-btn easy" onclick="startGame('easy')">🟢 سهل</button>
+        <button class="diff-btn medium" onclick="startGame('medium')">🔵 متوسط</button>
+        <button class="diff-btn hard" onclick="startGame('hard')">🔴 صعب</button>
+        <button class="modal-close" onclick="closeModal('difficulty')">إلغاء</button>
+    </div>
 </div>
 
 <!-- ===== الإعدادات ===== -->
-<div id="settings">
- <div class="modal">
-   <h2>⚙️ الإعدادات</h2>
-
-   <div class="setting-row">
-     <span>🔊 أصوات النقر</span>
-     <input type="checkbox" id="sound" checked>
-   </div>
-
-   <div class="setting-row">
-     <span>✨ مؤثرات الحركة</span>
-     <input type="checkbox" id="effects" checked>
-   </div>
-
-   <div class="buttons" style="margin-top:18px">
-     <button class="btn green small" onclick="closeSettings()">حفظ وإغلاق</button>
-   </div>
- </div>
+<div class="modal-overlay" id="modal-settings">
+    <div class="modal-content">
+        <h2>⚙️ الإعدادات</h2>
+        <div class="setting-row">
+            <span>🔊 المؤثرات الصوتية</span>
+            <input type="checkbox" id="soundSetting" checked>
+        </div>
+        <div class="setting-row">
+            <span>🎵 الموسيقى</span>
+            <input type="checkbox" id="musicSetting" checked>
+        </div>
+        <div class="setting-row">
+            <span>📳 الاهتزاز</span>
+            <input type="checkbox" id="hapticSetting">
+        </div>
+        <button class="modal-close" onclick="closeModal('settings')">حفظ وإغلاق</button>
+    </div>
 </div>
 
-<!-- ===== إشعار Toast ===== -->
-<div id="notice"></div>
+<!-- ===== الإنجازات ===== -->
+<div class="modal-overlay" id="modal-achievements">
+    <div class="modal-content">
+        <h2>🏆 الإنجازات</h2>
+        <div class="achieve-row">
+            <b>🐲 قاهر التنين</b>
+            <span class="prog">4/10</span>
+        </div>
+        <div class="achieve-row">
+            <b>👑 ملك الرقعة</b>
+            <span class="prog">17/25</span>
+        </div>
+        <div class="achieve-row">
+            <b>⚡ البرق</b>
+            <span class="prog">3/3 ✓</span>
+        </div>
+        <div class="achieve-row">
+            <b>🛡️ الذي لا يُهزم</b>
+            <span class="prog">1/5</span>
+        </div>
+        <button class="modal-close" onclick="closeModal('achievements')">إغلاق</button>
+    </div>
+</div>
 
-<!-- إخفاء شاشة الانترو -->
-<script>
-setTimeout(function(){
- var s = document.getElementById("splash");
- if(!s) return;
- s.classList.add("hide");
- setTimeout(function(){s.remove();}, 1000);
-}, 3600);
-</script>
+<!-- ===== المهام ===== -->
+<div class="modal-overlay" id="modal-missions">
+    <div class="modal-content">
+        <h2>📅 المهام اليومية</h2>
+        <div class="mission-row">
+            <b>العب مباراة واحدة</b>
+            <span class="reward">🪙 100</span>
+        </div>
+        <div class="mission-row">
+            <b>افز مباراتين</b>
+            <span class="reward">💎 5</span>
+        </div>
+        <div class="mission-row">
+            <b>نفّذ 10 حركات ترقية</b>
+            <span class="reward">🪙 250</span>
+        </div>
+        <button class="modal-close" onclick="closeModal('missions')">إغلاق</button>
+    </div>
+</div>
 
-<!-- استيراد المكتبات -->
+<!-- ===== المتجر ===== -->
+<div class="modal-overlay" id="modal-store">
+    <div class="modal-content">
+        <h2>🏪 المتجر</h2>
+        <p style="text-align:center; margin-bottom: 15px; color:#cce;">عناصر أسطورية قادمة قريباً!</p>
+        <div class="achieve-row">
+            <b>🐲 تنين ذهبي</b>
+            <span class="prog">🪙 2500</span>
+        </div>
+        <div class="achieve-row">
+            <b>👹 غول الظلام</b>
+            <span class="prog">🪙 1800</span>
+        </div>
+        <div class="achieve-row">
+            <b>🧿 رقعة الملك</b>
+            <span class="prog">💎 60</span>
+        </div>
+        <button class="modal-close" onclick="closeModal('store')">إغلاق</button>
+    </div>
+</div>
+
+<!-- ===== توست ===== -->
+<div id="toast">رسالة</div>
+
+<!-- ===== استيراد المكتبات ===== -->
 <script type="importmap">
 {
  "imports":{
@@ -675,16 +1092,16 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Chess } from "chess";
 
-/* ============ حالة اللعبة ============ */
+/* ============ الحالة العامة ============ */
 const chess = new Chess();
-const holder = document.getElementById("game");
-
 let selected = null;
 let thinking = false;
 let pendingPromotion = null;
 let snapshots = [];
 let gameStarted = false;
-let initialized = false;
+let gameInitialized = false;
+
+let scene, camera, renderer, controls, board, pieces, squares, holder, sun;
 
 const files = "abcdefgh";
 
@@ -696,8 +1113,13 @@ function position(square){
  };
 }
 
+function isSoundOn(){
+ const el = document.getElementById("soundSetting");
+ return !el || el.checked;
+}
+
 function sound(){
- if(!document.getElementById("sound").checked) return;
+ if(!isSoundOn()) return;
  try{
   const AC = window.AudioContext || window.webkitAudioContext;
   if(!AC) return;
@@ -716,94 +1138,122 @@ function sound(){
 }
 
 function notice(msg){
- const t = document.getElementById("notice");
+ const t = document.getElementById("toast");
  t.textContent = msg;
  t.classList.add("show");
  clearTimeout(t._timer);
  t._timer = setTimeout(() => t.classList.remove("show"), 2600);
 }
 
-/* ============ نافذة الإعدادات والصعوبة ============ */
-window.openSettings = function(){
+/* ============ نوافذ منبثقة ============ */
+window.openModal = function(id){
  sound();
- document.getElementById("settings").classList.add("show");
+ document.getElementById('modal-' + id).classList.add('active');
 };
-window.closeSettings = function(){
+window.closeModal = function(id){
  sound();
- document.getElementById("settings").classList.remove("show");
+ document.getElementById('modal-' + id).classList.remove('active');
 };
-window.openDifficulty = function(){
- sound();
- document.getElementById("difficultyModal").classList.add("show");
-};
-window.closeDifficulty = function(){
- sound();
- document.getElementById("difficultyModal").classList.remove("show");
-};
-window.pickDifficulty = function(level){
- closeDifficulty();
- window.startGame(level);
-};
+window.showToast = function(msg){ sound(); notice(msg); };
 
-window.comingSoon = function(name){
- sound();
- notice("✨ " + name + " — قريباً في تحديث جديد!");
-};
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+ overlay.addEventListener('click', (e) => {
+  if (e.target === overlay) overlay.classList.remove('active');
+ });
+});
 
-/* ============ إعداد three.js ============ */
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x151126);
+/* ============ تهيئة three.js (lazy) ============ */
+function initGame3D(){
+ if(gameInitialized) return;
+ gameInitialized = true;
 
-const camera = new THREE.PerspectiveCamera(45, 1, .1, 100);
-camera.position.set(7, 9, 11);
+ holder = document.getElementById("game");
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.7));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-holder.appendChild(renderer.domElement);
+ scene = new THREE.Scene();
+ scene.background = new THREE.Color(0x0a1930);
+ scene.fog = new THREE.Fog(0x0a1930, 18, 35);
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0, 0);
-controls.enableDamping = true;
-controls.enablePan = false;
-controls.minDistance = 8;
-controls.maxDistance = 16;
-controls.maxPolarAngle = Math.PI / 2.15;
+ camera = new THREE.PerspectiveCamera(45, 1, .1, 100);
+ camera.position.set(7, 9, 11);
 
-scene.add(new THREE.HemisphereLight(0xffffff, 0x303040, 2));
+ renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+ renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.7));
+ renderer.shadowMap.enabled = true;
+ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+ renderer.outputColorSpace = THREE.SRGBColorSpace;
+ holder.appendChild(renderer.domElement);
 
-const sun = new THREE.DirectionalLight(0xffffff, 3);
-sun.position.set(5, 10, 7);
-sun.castShadow = true;
-sun.shadow.mapSize.set(1024, 1024);
-scene.add(sun);
+ controls = new OrbitControls(camera, renderer.domElement);
+ controls.target.set(0, 0, 0);
+ controls.enableDamping = true;
+ controls.enablePan = false;
+ controls.minDistance = 8;
+ controls.maxDistance = 16;
+ controls.maxPolarAngle = Math.PI / 2.15;
 
-const floor = new THREE.Mesh(
- new THREE.PlaneGeometry(200, 200),
- new THREE.MeshStandardMaterial({ color: 0x101020 })
-);
-floor.rotation.x = -Math.PI / 2;
-floor.position.y = -.7;
-scene.add(floor);
+ scene.add(new THREE.HemisphereLight(0xffffff, 0x303050, 2));
 
-/* قاعدة الشطرنج */
-const base = new THREE.Mesh(
- new THREE.BoxGeometry(8.7, .65, 8.7),
- new THREE.MeshStandardMaterial({ color: 0x29213e, metalness: .5, roughness: .35 })
-);
-base.position.y = -.4;
-base.receiveShadow = true;
-scene.add(base);
+ sun = new THREE.DirectionalLight(0xfff3c4, 3);
+ sun.position.set(5, 10, 7);
+ sun.castShadow = true;
+ sun.shadow.mapSize.set(1024, 1024);
+ scene.add(sun);
 
-const board = new THREE.Group();
-scene.add(board);
+ // إضاءة زرقاء للمساعدة
+ const blueLight = new THREE.DirectionalLight(0x4a90e2, 1);
+ blueLight.position.set(-5, 8, -7);
+ scene.add(blueLight);
 
-const pieces = new THREE.Group();
-scene.add(pieces);
+ // إضاءة ذهبية خلفية
+ const goldLight = new THREE.PointLight(0xffd700, 1.2, 25);
+ goldLight.position.set(0, 6, -6);
+ scene.add(goldLight);
 
-const squares = [];
+ const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(200, 200),
+  new THREE.MeshStandardMaterial({ color: 0x0a1020, roughness: .9 })
+ );
+ floor.rotation.x = -Math.PI / 2;
+ floor.position.y = -.7;
+ scene.add(floor);
+
+ // قاعدة الشطرنج
+ const base = new THREE.Mesh(
+  new THREE.BoxGeometry(8.7, .65, 8.7),
+  new THREE.MeshStandardMaterial({
+   color: 0x1a2c4a,
+   metalness: .7,
+   roughness: .3
+  })
+ );
+ base.position.y = -.4;
+ base.receiveShadow = true;
+ scene.add(base);
+
+ // إطار ذهبي حول القاعدة
+ const frame = new THREE.Mesh(
+  new THREE.BoxGeometry(8.9, .1, 8.9),
+  new THREE.MeshStandardMaterial({
+   color: 0xffd700,
+   metalness: .9,
+   roughness: .2,
+   emissive: 0x442200
+  })
+ );
+ frame.position.y = -.05;
+ scene.add(frame);
+
+ board = new THREE.Group();
+ scene.add(board);
+
+ pieces = new THREE.Group();
+ scene.add(pieces);
+
+ squares = [];
+
+ makeBoard();
+ animate();
+}
 
 /* ============ إنشاء الرقعة ============ */
 function makeBoard(){
@@ -812,8 +1262,9 @@ function makeBoard(){
    const s = files[f] + rank;
    const p = position(s);
    const mat = new THREE.MeshStandardMaterial({
-    color: (rank + f) % 2 ? 0x936343 : 0xe9d2a5,
-    roughness: .8
+    color: (rank + f) % 2 ? 0x8b5a3c : 0xe9d2a5,
+    roughness: .75,
+    metalness: .1
    });
    const mesh = new THREE.Mesh(new THREE.BoxGeometry(.99, .15, .99), mat);
    mesh.position.set(p.x, -.035, p.z);
@@ -828,13 +1279,25 @@ function makeBoard(){
 /* ============ تصميم الوحوش ============ */
 function monster(type, color){
  const g = new THREE.Group();
+
  const main = new THREE.MeshStandardMaterial({
-  color: color === "w" ? 0x28bca7 : 0x8552c9,
-  roughness: .4, metalness: .1
+  color: color === "w" ? 0x2ecc71 : 0x9b59b6,
+  roughness: .35,
+  metalness: .25,
+  emissive: color === "w" ? 0x0a3a1a : 0x2a0a3a,
+  emissiveIntensity: .3
  });
- const gold = new THREE.MeshStandardMaterial({ color: 0xffc857, metalness: .6, roughness: .3 });
- const white = new THREE.MeshStandardMaterial({ color: 0xffffff });
- const black = new THREE.MeshStandardMaterial({ color: 0x151515 });
+
+ const gold = new THREE.MeshStandardMaterial({
+  color: 0xffd700,
+  metalness: .9,
+  roughness: .2,
+  emissive: 0x442200,
+  emissiveIntensity: .3
+ });
+
+ const white = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x333333 });
+ const black = new THREE.MeshStandardMaterial({ color: 0x111111 });
 
  function sphere(x,y,z,sx,sy,sz,mat){
   const m = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 16), mat);
@@ -910,7 +1373,7 @@ function resetColors(){
  squares.forEach(s => {
   const rank = Number(s.userData.square[1]);
   const f = files.indexOf(s.userData.square[0]);
-  s.material.color.setHex((rank + f) % 2 ? 0x936343 : 0xe9d2a5);
+  s.material.color.setHex((rank + f) % 2 ? 0x8b5a3c : 0xe9d2a5);
  });
 }
 
@@ -1121,25 +1584,28 @@ function onClick(event){
  }
 }
 
-/* ============ دوال التحكم العامة ============ */
+/* ============ التحكم العام ============ */
 window.startGame = function(level){
  sound();
- closeDifficulty();
- if(level){
-  document.getElementById("level").value = level;
- }
+ closeModal('difficulty');
 
- document.getElementById("menuScreen").style.display = "none";
- document.getElementById("gameScreen").style.display = "block";
+ const menu = document.getElementById('menuScreen');
+ const gameScreen = document.getElementById('gameScreen');
+
+ menu.style.display = 'none';
+ gameScreen.classList.add('active');
  gameStarted = true;
 
- if(!initialized){
-  makeBoard();
-  initialized = true;
- }
+ if(level) document.getElementById('level').value = level;
+
+ initGame3D();
 
  window.newGame();
- setTimeout(onResize, 100);
+
+ // ضبط الحجم بعد ظهور الشاشة
+ setTimeout(onResize, 50);
+ setTimeout(onResize, 300);
+ setTimeout(onResize, 600);
 };
 
 window.backMenu = function(){
@@ -1148,9 +1614,12 @@ window.backMenu = function(){
  thinking = false;
  pendingPromotion = null;
  selected = null;
- document.getElementById("promotion").style.display = "none";
- document.getElementById("gameScreen").style.display = "none";
- document.getElementById("menuScreen").style.display = "block";
+
+ const promo = document.getElementById("promotion");
+ if(promo) promo.style.display = "none";
+
+ document.getElementById("gameScreen").classList.remove("active");
+ document.getElementById("menuScreen").style.display = "flex";
 };
 
 window.newGame = function(){
@@ -1160,8 +1629,12 @@ window.newGame = function(){
  selected = null;
  pendingPromotion = null;
  thinking = false;
- document.getElementById("promotion").style.display = "none";
+
+ const promo = document.getElementById("promotion");
+ if(promo) promo.style.display = "none";
+
  document.getElementById("moves").textContent = "سجل الحركات سيظهر هنا";
+
  resetColors();
  draw();
  updateStatus();
@@ -1197,14 +1670,18 @@ window.promote = function(piece){
 
 /* ============ الحجم وحلقة العرض ============ */
 function onResize(){
+ if(!holder || !renderer || !camera) return;
+
  const w = holder.clientWidth;
  const h = holder.clientHeight;
+
  if(w === 0 || h === 0){
   renderer.setSize(800, 500);
   camera.aspect = 800 / 500;
   camera.updateProjectionMatrix();
   return;
  }
+
  camera.aspect = w / h;
  camera.updateProjectionMatrix();
  renderer.setSize(w, h);
@@ -1212,28 +1689,54 @@ function onResize(){
 
 function animate(){
  requestAnimationFrame(animate);
- controls.update();
- renderer.render(scene, camera);
+ if(controls) controls.update();
+ if(renderer && scene && camera) renderer.render(scene, camera);
 }
 
-/* ============ التهيئة ============ */
-renderer.setSize(800, 500);
+/* ============ ربط النقرات ============ */
+// setup pointer events after init - store callback and attach when ready
+function attachCanvasEvents(){
+ if(!renderer) return;
+ const canvas = renderer.domElement;
+ let downX = 0, downY = 0;
+ canvas.addEventListener("pointerdown", (e) => {
+  downX = e.clientX;
+  downY = e.clientY;
+ });
+ canvas.addEventListener("pointerup", (e) => {
+  const dx = e.clientX - downX;
+  const dy = e.clientY - downY;
+  if(Math.sqrt(dx * dx + dy * dy) < 10){
+   onClick(e);
+  }
+ });
+}
+
+// attach events on first init
+const originalInit = initGame3D;
+initGame3D = function(){
+ if(gameInitialized) return;
+ originalInit();
+ attachCanvasEvents();
+};
+
 window.addEventListener("resize", onResize);
 
-let downX = 0, downY = 0;
-renderer.domElement.addEventListener("pointerdown", (e) => {
- downX = e.clientX;
- downY = e.clientY;
-});
-renderer.domElement.addEventListener("pointerup", (e) => {
- const dx = e.clientX - downX;
- const dy = e.clientY - downY;
- if(Math.sqrt(dx * dx + dy * dy) < 10){
-  onClick(e);
- }
-});
+/* ============ إخفاء شاشة KOKTON ============ */
+// handled at top of file if splash exists
+</script>
 
-animate();
+<script>
+// KOKTON splash hide (non-module to run immediately)
+(function(){
+ const splash = document.getElementById('splash');
+ if(splash){
+  setTimeout(() => {
+   splash.classList.add('hide');
+   setTimeout(() => splash.remove(), 1000);
+  }, 3600);
+ }
+})();
 </script>
 
 </body>
