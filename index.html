@@ -154,9 +154,47 @@
     #splash .tagline{margin-top:22px;color:var(--silver);font-size:14px;font-weight:700;letter-spacing:14px;opacity:0;animation:tagIn .9s ease 1.4s forwards}
     @keyframes tagIn{to{opacity:1}}
     @media (max-width:400px){.btn-main h3{font-size:19px}.game-title{font-size:12px}.preset-grid{gap:5px}.preset-btn .preset-name{font-size:8px}}
+
+    #bg3d{
+        position:fixed;inset:0;z-index:0;pointer-events:none;
+        background:linear-gradient(180deg,#08141f 0%,#050a12 60%,#02040a 100%);
+    }
+    #bg3d canvas{display:block;width:100%!important;height:100%!important;}
+    #bgVignette{
+        position:fixed;inset:0;z-index:1;pointer-events:none;
+        background:
+            radial-gradient(ellipse 118% 74% at 50% 44%,
+                rgba(0,0,0,0) 30%,
+                rgba(2,6,14,.30) 68%,
+                rgba(0,0,0,.72) 100%),
+            linear-gradient(to bottom,
+                rgba(3,6,12,.42) 0%,
+                rgba(0,0,0,0) 20%,
+                rgba(0,0,0,0) 74%,
+                rgba(2,4,9,.72) 100%);
+        mix-blend-mode:multiply;
+    }
+    #bgGrain{
+        position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.028;
+        background-image:
+            repeating-radial-gradient(circle at 17% 32%, #fff 0 1px, transparent 1px 3px),
+            repeating-radial-gradient(circle at 73% 61%, #fff 0 1px, transparent 1px 3px);
+        background-size:180px 180px, 240px 240px;
+        animation:bgGrainShift 1.6s steps(3) infinite;
+    }
+    @keyframes bgGrainShift{
+        0%{transform:translate(0,0)}
+        33%{transform:translate(-1px,1px)}
+        66%{transform:translate(1px,-1px)}
+        100%{transform:translate(0,0)}
+    }
 </style>
 </head>
 <body>
+
+<div id="bg3d"></div>
+<div id="bgVignette"></div>
+<div id="bgGrain"></div>
 
 <div id="splash">
     <div class="splash-vignette"></div>
@@ -165,9 +203,6 @@
 </div>
 
 <div id="menuScreen" style="display:flex;flex-direction:column;height:100%;position:relative;">
-    <div class="bg-castle">🏰</div>
-    <div class="bg-floor"></div>
-    <div class="sky-sparkles"></div>
 
     <header class="menu-top-bar">
         <div class="profile-box" onclick="showToast('الملف الشخصي')">
@@ -348,9 +383,6 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Chess } from "chess";
 
-/* ==========================================================================
-   [1] حالة عامة — يجب تعريفها قبل أي استدعاء
-   ========================================================================== */
 const DEFAULT_CUSTOM = {
     lightSquare:'#E8DEC8', darkSquare:'#1E2A3D',
     frame:'#2A2C33', accent:'#C9A96A',
@@ -373,7 +405,6 @@ let playerData = {
     }
 };
 
-// Game globals
 let gameStarted = false;
 let gameInitialized = false;
 let gameOverHandled = false;
@@ -385,16 +416,12 @@ const sceneMaterials = {
     post:null, knob:null, hemi:null, fill:null, sun:null
 };
 
-// Chess globals
 const chess = new Chess();
 let selected = null, thinking = false, pendingPromotion = null;
 let snapshots = [], playerCaptures = 0;
 
 const files = "abcdefgh";
 
-/* ==========================================================================
-   [2] أدوات مساعدة
-   ========================================================================== */
 function position(sq){ return { x: files.indexOf(sq[0]) - 3.5, z: Number(sq[1]) - 4.5 }; }
 function isSoundOn(){ const el = document.getElementById("soundSetting"); return !el || el.checked; }
 function sound(){
@@ -414,9 +441,6 @@ function sound(){
     }catch(e){}
 }
 
-/* ==========================================================================
-   [3] نظام البيانات والمكافآت
-   ========================================================================== */
 function loadPlayerData(){
     const saved = localStorage.getItem('monsterChessData');
     if(saved){
@@ -485,7 +509,6 @@ document.querySelectorAll('.modal-overlay').forEach(o => {
     o.addEventListener('click', e => { if(e.target === o) o.classList.remove('active'); });
 });
 
-/* مكافآت يومية */
 const DAILY_REWARDS = [
     {day:1,icon:'🪙',amount:500,type:'coin'},{day:2,icon:'🪙',amount:1000,type:'coin'},
     {day:3,icon:'💎',amount:10,type:'gem'},{day:4,icon:'🪙',amount:2000,type:'coin'},
@@ -517,7 +540,6 @@ window.claimDaily = function(i){
     renderDailyRewards();
 };
 
-/* صندوق */
 function updateChestTimer(){
     const now = Date.now();
     const btn = document.getElementById('openChestBtn');
@@ -556,7 +578,6 @@ window.openChest = function(){
     }, 600);
 };
 
-/* إنجازات */
 const ACH_NAMES = { win1:'🐲 قاهر التنين', win5:'👑 ملك الرقعة', capture10:'⚔️ سفاح' };
 function renderAchievements(){
     const list = document.getElementById('achievementsList');
@@ -579,7 +600,6 @@ window.claimAch = function(k){
     if(a && a.progress>=a.target && !a.claimed){ a.claimed = true; addReward('coin', a.reward, 'إنجاز'); savePlayerData(); renderAchievements(); }
 };
 
-/* مهام */
 const MIS_NAMES = { play1:'🎮 العب مباراة', win1:'🏆 اربح مباراة', capture3:'⚔️ أسر 3 قطع' };
 function renderMissions(){
     const list = document.getElementById('missionsList');
@@ -614,9 +634,6 @@ function updateAchievementProgress(k, amt=1){
     }
 }
 
-/* ==========================================================================
-   [4] تهيئة مشهد Three.js — مع حفظ مراجع المواد
-   ========================================================================== */
 function initGame3D(){
     if(gameInitialized) return;
     gameInitialized = true;
@@ -647,7 +664,6 @@ function initGame3D(){
     controls.maxDistance = 22;
     controls.maxPolarAngle = Math.PI / 2.15;
 
-    // إضاءة
     const hemi = new THREE.HemisphereLight(0xD9C08E, 0x0B1A2E, 1.35);
     scene.add(hemi); sceneMaterials.hemi = hemi;
 
@@ -665,7 +681,6 @@ function initGame3D(){
     fill.position.set(-6, 9, -8);
     scene.add(fill); sceneMaterials.fill = fill;
 
-    // أرضية
     const floor = new THREE.Mesh(
         new THREE.PlaneGeometry(200, 200),
         new THREE.MeshStandardMaterial({ color: 0x0A0B10, roughness: .95 })
@@ -674,7 +689,6 @@ function initGame3D(){
     floor.receiveShadow = true;
     scene.add(floor);
 
-    // قاعدة
     sceneMaterials.base = new THREE.MeshStandardMaterial({ color: 0x141519, roughness: .55, metalness: .3 });
     const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(9.8, .9, 9.8), sceneMaterials.base);
     baseMesh.position.y = -.45; baseMesh.castShadow = true; baseMesh.receiveShadow = true;
@@ -690,7 +704,6 @@ function initGame3D(){
     tabletop.position.y = .03; tabletop.receiveShadow = true;
     scene.add(tabletop);
 
-    // إطار
     sceneMaterials.rail = new THREE.MeshStandardMaterial({ color: 0x2A2C33, roughness: .45, metalness: .45 });
     sceneMaterials.railTop = new THREE.MeshStandardMaterial({ color: 0xC9A96A, roughness: .35, metalness: .7 });
     sceneMaterials.post = new THREE.MeshStandardMaterial({ color: 0x141519, roughness: .35, metalness: .55 });
@@ -743,13 +756,12 @@ function initGame3D(){
     scene.add(board); scene.add(pieces);
 
     makeBoard();
-    applyCustomization(currentCustom, false); // طبق الألوان المحفوظة
+    applyCustomization(currentCustom, false);
     animate();
     attachCanvasEvents();
 }
 
 function makeBoard(){
-    // حذف أي مربعات سابقة
     squares = [];
     for(let rank = 8; rank >= 1; rank--){
         for(let f = 0; f < 8; f++){
@@ -856,9 +868,6 @@ function showMoves(from){
     });
 }
 
-/* ==========================================================================
-   [5] نظام التخصيص — Presets / Colors / Camera
-   ========================================================================== */
 const PRESETS = [
     { id:'marbleGold',      name:'رخامي + ذهبي',       cfg:{ lightSquare:'#EDE5D5', darkSquare:'#1A1A1E', frame:'#0B0B0E', accent:'#D4AF37', base:'#08080A', lightColor:'#FFE4B0' } },
     { id:'ivoryCharcoal',   name:'عاجي + فحمي',         cfg:{ lightSquare:'#F2EAD9', darkSquare:'#1A1A1E', frame:'#2A2C33', accent:'#8A919C', base:'#141519', lightColor:'#F5F5FA' } },
@@ -958,11 +967,9 @@ function applyCustomization(cfg, animate){
     currentCustom = { ...cfg };
     if(!gameInitialized) return;
 
-    // المربعات
     squares.forEach(s => {
         s.material.color.set(s.userData.isDark ? cfg.darkSquare : cfg.lightSquare);
     });
-    // الإطار والقاعدة والحواف
     if(sceneMaterials.frame) sceneMaterials.frame.color.set(cfg.frame);
     if(sceneMaterials.rail) sceneMaterials.rail.color.set(cfg.frame);
     if(sceneMaterials.railTop) sceneMaterials.railTop.color.set(cfg.accent);
@@ -971,12 +978,10 @@ function applyCustomization(cfg, animate){
     if(sceneMaterials.base) sceneMaterials.base.color.set(cfg.base);
     if(sceneMaterials.edge) sceneMaterials.edge.color.set(cfg.base);
     if(sceneMaterials.top) sceneMaterials.top.color.set(cfg.base);
-    // الإضاءة
     if(sceneMaterials.sun) sceneMaterials.sun.color.set(cfg.lightColor);
     if(sceneMaterials.fill) sceneMaterials.fill.color.set(cfg.lightColor);
     if(sceneMaterials.hemi) sceneMaterials.hemi.color.set(cfg.lightColor);
 
-    // تحديث منتقي الألوان إذا كان المودال مفتوحاً
     Object.keys(COLOR_LABELS).forEach(key => {
         const el = document.getElementById('picker-' + key);
         if(el) el.value = cfg[key];
@@ -1003,7 +1008,7 @@ window.startPreview = function(){
     menu.style.display = 'none';
     gameScreen.classList.add('active');
     gameStarted = false;
-    gameOverHandled = true; // منع مكافآت الفوز في وضع المعاينة
+    gameOverHandled = true;
 
     if(!gameInitialized) initGame3D();
     draw();
@@ -1013,9 +1018,6 @@ window.startPreview = function(){
     setTimeout(() => openModal('customization'), 150);
 };
 
-/* ==========================================================================
-   [6] منطق اللعبة
-   ========================================================================== */
 function updateStatus(){
     const status = document.getElementById("status");
     if(chess.isCheckmate()){
@@ -1188,9 +1190,6 @@ function onClick(event){
     }
 }
 
-/* ==========================================================================
-   [7] إجراءات اللعبة العامة
-   ========================================================================== */
 window.startGame = function(level){
     sound();
     closeModal('difficulty');
@@ -1264,9 +1263,6 @@ window.promote = function(piece){
     executePlayerMove(from, to, piece);
 };
 
-/* ==========================================================================
-   [8] حلقة الرسم + الاستجابة + الماوس
-   ========================================================================== */
 function onResize(){
     if(!holder || !renderer || !camera) return;
     const w = holder.clientWidth, h = holder.clientHeight;
@@ -1299,9 +1295,6 @@ function attachCanvasEvents(){
     });
 }
 
-/* ==========================================================================
-   [9] غلاف updateStatus — منح مكافأة الفوز مرة واحدة فقط
-   ========================================================================== */
 const _origUpdateStatus = updateStatus;
 updateStatus = function(){
     const isOver = _origUpdateStatus();
@@ -1320,15 +1313,826 @@ updateStatus = function(){
 
 window.addEventListener("resize", onResize);
 
-/* ==========================================================================
-   [10] التهيئة النهائية — بعد تعريف كل شيء
-   ========================================================================== */
 loadPlayerData();
 setInterval(updateChestTimer, 1000);
 setTimeout(() => {
     const s = document.getElementById("splash");
     if(s){ s.classList.add("hide"); setTimeout(() => s.remove(), 1000); }
 }, 3600);
+</script>
+
+<script type="module">
+import * as THREE from "three";
+import { EffectComposer }  from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass }      from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { OutputPass }      from "three/addons/postprocessing/OutputPass.js";
+
+const CFG = {
+  camPos      : new THREE.Vector3(0, 5.0, 18),
+  camLook     : new THREE.Vector3(0, 6.0, -10),
+  fov         : 58,
+  fogColor    : 0x08141f,
+  fogDensity  : 0.0095,
+  boardSize   : 9.0,
+  castleZ     : -68,
+  castleScale : 1.0
+};
+
+const COL = {
+  gold        : 0xc9a96a,
+  goldBright  : 0xf3dda6,
+  goldDeep    : 0x8a6c34,
+  charcoal    : 0x0a0b0f,
+  stone       : 0x0d1520,
+  stoneDark   : 0x060a11,
+  silver      : 0xc4c9d1,
+  teal        : 0x2ea89b
+};
+
+const bgContainer = document.getElementById('bg3d');
+if (!bgContainer) throw new Error('bg3d container missing');
+
+let bgRenderer;
+try {
+  bgRenderer = new THREE.WebGLRenderer({
+    antialias: true,
+    powerPreference: 'high-performance',
+    alpha: false
+  });
+} catch (e) {
+  console.warn('[Background3D] WebGL init failed, falling back to CSS background', e);
+  throw e;
+}
+
+bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+bgRenderer.setSize(window.innerWidth, window.innerHeight);
+bgRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+bgRenderer.toneMappingExposure = 1.18;
+bgRenderer.outputColorSpace = THREE.SRGBColorSpace;
+bgRenderer.setClearColor(CFG.fogColor, 1);
+bgContainer.appendChild(bgRenderer.domElement);
+
+const bgScene = new THREE.Scene();
+bgScene.fog = new THREE.FogExp2(CFG.fogColor, CFG.fogDensity);
+
+const bgCamera = new THREE.PerspectiveCamera(
+  CFG.fov, window.innerWidth / window.innerHeight, 0.1, 900
+);
+bgCamera.position.copy(CFG.camPos);
+bgCamera.lookAt(CFG.camLook);
+
+const composer = new EffectComposer(bgRenderer);
+composer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+composer.setSize(window.innerWidth, window.innerHeight);
+composer.addPass(new RenderPass(bgScene, bgCamera));
+
+const bloom = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  0.62, 0.78, 0.60
+);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+function makeGlowTexture(size = 256, inner = 'rgba(255,240,205,1)', outer = 'rgba(255,200,120,0)'){
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  const g = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+  g.addColorStop(0, inner);
+  g.addColorStop(0.45, inner.replace(/[\d.]+\)$/, '0.35)'));
+  g.addColorStop(1, outer);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, size, size);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+function makeMarbleTexture(base, vein, size = 512){
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+
+  ctx.fillStyle = base;
+  ctx.fillRect(0, 0, size, size);
+
+  for (let i = 0; i < 30; i++){
+    ctx.beginPath();
+    let x = Math.random() * size;
+    let y = -30;
+    ctx.moveTo(x, y);
+    while (y < size + 30){
+      x += (Math.random() - 0.5) * 70;
+      y += 10 + Math.random() * 26;
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = vein;
+    ctx.globalAlpha = 0.03 + Math.random() * 0.14;
+    ctx.lineWidth = 0.4 + Math.random() * 2.6;
+    ctx.stroke();
+  }
+
+  for (let i = 0; i < 14; i++){
+    const r = 40 + Math.random() * 140;
+    const gx = Math.random() * size, gy = Math.random() * size;
+    const rg = ctx.createRadialGradient(gx, gy, 0, gx, gy, r);
+    rg.addColorStop(0, vein);
+    rg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.globalAlpha = 0.05 + Math.random() * 0.06;
+    ctx.fillStyle = rg;
+    ctx.fillRect(gx - r, gy - r, r * 2, r * 2);
+  }
+  ctx.globalAlpha = 1;
+
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.anisotropy = bgRenderer.capabilities.getMaxAnisotropy();
+  return t;
+}
+
+function makeEnvTexture(){
+  const w = 1024, h = 512;
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+
+  const g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0.00, '#0a2838');
+  g.addColorStop(0.32, '#071725');
+  g.addColorStop(0.55, '#050c16');
+  g.addColorStop(0.72, '#101418');
+  g.addColorStop(1.00, '#04050a');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+
+  const ag = ctx.createRadialGradient(w * 0.5, h * 0.12, 0, w * 0.5, h * 0.12, w * 0.45);
+  ag.addColorStop(0, 'rgba(46,168,155,0.30)');
+  ag.addColorStop(1, 'rgba(46,168,155,0)');
+  ctx.fillStyle = ag;
+  ctx.fillRect(0, 0, w, h);
+
+  const rg = ctx.createRadialGradient(w * 0.5, h * 0.86, 0, w * 0.5, h * 0.86, w * 0.42);
+  rg.addColorStop(0, 'rgba(201,169,106,0.55)');
+  rg.addColorStop(1, 'rgba(201,169,106,0)');
+  ctx.fillStyle = rg;
+  ctx.fillRect(0, 0, w, h);
+
+  const t = new THREE.CanvasTexture(c);
+  t.mapping = THREE.EquirectangularReflectionMapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+bgScene.environment = makeEnvTexture();
+
+const skyUniforms = { uTime: { value: 0 } };
+
+const skyMat = new THREE.ShaderMaterial({
+  uniforms: skyUniforms,
+  side: THREE.BackSide,
+  depthWrite: false,
+  fog: false,
+  vertexShader: `
+    varying vec3 vWorldPos;
+    void main(){
+      vec4 wp = modelMatrix * vec4(position, 1.0);
+      vWorldPos = wp.xyz;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform float uTime;
+    varying vec3 vWorldPos;
+
+    float hash21(vec2 p){
+      p = fract(p * vec2(123.34, 456.21));
+      p += dot(p, p + 45.32);
+      return fract(p.x * p.y);
+    }
+    float vnoise(vec2 p){
+      vec2 i = floor(p), f = fract(p);
+      f = f * f * (3.0 - 2.0 * f);
+      float a = hash21(i);
+      float b = hash21(i + vec2(1.0, 0.0));
+      float c = hash21(i + vec2(0.0, 1.0));
+      float d = hash21(i + vec2(1.0, 1.0));
+      return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+    }
+
+    void main(){
+      vec3 dir = normalize(vWorldPos);
+      float h = clamp(dir.y * 1.15 + 0.07, 0.0, 1.0);
+
+      vec3 cHorizon = vec3(0.030, 0.078, 0.104);
+      vec3 cMid     = vec3(0.010, 0.028, 0.062);
+      vec3 cZenith  = vec3(0.0028, 0.0070, 0.0200);
+
+      vec3 col = mix(cHorizon, cMid,    smoothstep(0.00, 0.34, h));
+      col      = mix(col,      cZenith, smoothstep(0.34, 1.00, h));
+
+      float ux = atan(dir.z, dir.x) / 3.14159265;
+      float t  = uTime * 0.055;
+
+      float band = 0.0;
+      for (int i = 0; i < 4; i++){
+        float fi = float(i);
+        float y0 = 0.24 + fi * 0.088;
+
+        float w1 = sin(ux * 4.0  + t * (2.0 + fi * 0.7) + fi * 1.9) * 0.078;
+        float w2 = sin(ux * 9.5  - t * 1.9 + fi * 2.7)               * 0.040;
+        float w3 = sin(ux * 17.0 + t * 1.1)                          * 0.017;
+
+        float yc = y0 + w1 + w2 + w3;
+        float d  = abs(h - yc);
+        float b  = smoothstep(0.135, 0.0, d);
+        b *= 0.52 + 0.48 * sin(ux * 11.0 + t * 3.0 + fi * 2.0);
+
+        band += b;
+      }
+      band = clamp(band * 0.62, 0.0, 1.35);
+
+      vec3 aurA = vec3(0.09, 0.66, 0.52);
+      vec3 aurB = vec3(0.13, 0.44, 0.86);
+      vec3 aurC = vec3(0.36, 0.88, 0.74);
+
+      vec3 aurCol = mix(aurA, aurB, smoothstep(0.14, 0.58, h));
+      aurCol = mix(aurCol, aurC, (sin(ux * 3.0 + t * 2.2) * 0.5 + 0.5) * 0.4);
+
+      col += aurCol * band * 0.78;
+
+      vec2 sp = vec2(ux * 42.0, h * 30.0);
+      float n = vnoise(sp * 2.0);
+      float star = smoothstep(0.982, 1.0, n);
+      star *= smoothstep(0.10, 0.40, h);
+      float tw = 0.7 + 0.3 * sin(uTime * 2.2 + n * 90.0);
+      col += vec3(0.72, 0.80, 0.96) * star * 1.1 * tw;
+
+      col += vec3(0.085, 0.140, 0.190) * smoothstep(0.18, 0.0, h) * 0.75;
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `
+});
+
+const sky = new THREE.Mesh(new THREE.SphereGeometry(420, 64, 40), skyMat);
+bgScene.add(sky);
+
+const hemi = new THREE.HemisphereLight(0x244a6e, 0x04060b, 0.85);
+bgScene.add(hemi);
+
+const backLight = new THREE.DirectionalLight(0xffcf94, 2.2);
+backLight.position.set(-14, 42, -95);
+bgScene.add(backLight);
+
+const coolLight = new THREE.DirectionalLight(0x5f9cc4, 1.25);
+coolLight.position.set(28, 22, 16);
+bgScene.add(coolLight);
+
+const boardKey = new THREE.SpotLight(0xffd9a0, 260, 46, Math.PI / 4.2, 0.55, 1.9);
+boardKey.position.set(0, 16, 14);
+boardKey.target.position.set(0, 0, 0);
+bgScene.add(boardKey);
+bgScene.add(boardKey.target);
+
+const castleGlowSprite = new THREE.Sprite(new THREE.SpriteMaterial({
+  map: makeGlowTexture(512, 'rgba(255,214,150,1)', 'rgba(255,180,90,0)'),
+  color: 0xffc98a,
+  transparent: true,
+  opacity: 0.50,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
+  fog: false
+}));
+castleGlowSprite.position.set(0, 17, CFG.castleZ + 6);
+castleGlowSprite.scale.set(95, 55, 1);
+bgScene.add(castleGlowSprite);
+
+function buildCastle(){
+  const g = new THREE.Group();
+  g.position.set(0, 0, CFG.castleZ);
+  g.scale.setScalar(CFG.castleScale);
+
+  const stone = new THREE.MeshStandardMaterial({
+    color: COL.stone, roughness: 0.96, metalness: 0.10
+  });
+  const stoneDark = new THREE.MeshStandardMaterial({
+    color: COL.stoneDark, roughness: 1.0, metalness: 0.06
+  });
+  const goldMat = new THREE.MeshStandardMaterial({
+    color: COL.gold, roughness: 0.28, metalness: 1.0,
+    emissive: COL.gold, emissiveIntensity: 0.65
+  });
+  const winMat = new THREE.MeshBasicMaterial({
+    color: 0xffc27a, transparent: true, opacity: 0.85
+  });
+  const winMat2 = new THREE.MeshBasicMaterial({
+    color: 0xffe0b0, transparent: true, opacity: 0.55
+  });
+
+  const add = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0) => {
+    const m = new THREE.Mesh(geo, mat);
+    m.position.set(x, y, z);
+    m.rotation.set(rx, ry, rz);
+    g.add(m);
+    return m;
+  };
+
+  add(new THREE.CylinderGeometry(46, 58, 8, 10), stoneDark, 0, -4, -4);
+
+  add(new THREE.BoxGeometry(15, 30, 11), stone, 0, 15, 0);
+  add(new THREE.BoxGeometry(15.6, 1.0, 11.6), goldMat, 0, 30.2, 0);
+
+  add(new THREE.BoxGeometry(10, 20, 9), stone, -12, 10, 2);
+  add(new THREE.BoxGeometry(10, 20, 9), stone,  12, 10, 2);
+  add(new THREE.BoxGeometry(10.4, 0.8, 9.4), goldMat, -12, 20.2, 2);
+  add(new THREE.BoxGeometry(10.4, 0.8, 9.4), goldMat,  12, 20.2, 2);
+
+  const towerXs = [-20, 20];
+  towerXs.forEach(tx => {
+    add(new THREE.CylinderGeometry(4.2, 5.0, 38, 14), stone, tx, 19, 1);
+    add(new THREE.CylinderGeometry(4.6, 4.6, 0.9, 14), goldMat, tx, 38.2, 1);
+    const roof = add(new THREE.ConeGeometry(5.2, 10, 14), stoneDark, tx, 43.6, 1);
+    roof.material = new THREE.MeshStandardMaterial({
+      color: 0x0a1119, roughness: 0.55, metalness: 0.55
+    });
+    add(new THREE.SphereGeometry(0.55, 12, 10), goldMat, tx, 49.0, 1);
+    for (let i = 0; i < 3; i++){
+      add(new THREE.PlaneGeometry(1.1, 2.0), winMat, tx, 14 + i * 8, 5.05);
+    }
+  });
+
+  add(new THREE.CylinderGeometry(3.4, 3.9, 44, 14), stone, 0, 22, -2);
+  add(new THREE.CylinderGeometry(3.8, 3.8, 0.8, 14), goldMat, 0, 44.3, -2);
+  const spire = add(new THREE.ConeGeometry(4.4, 13, 14), stoneDark, 0, 51.4, -2);
+  spire.material = new THREE.MeshStandardMaterial({
+    color: 0x0a1119, roughness: 0.5, metalness: 0.6
+  });
+  add(new THREE.SphereGeometry(0.7, 12, 10), goldMat, 0, 58.4, -2);
+
+  for (let r = 0; r < 3; r++){
+    for (let c = -1; c <= 1; c++){
+      add(new THREE.PlaneGeometry(0.95, 1.9), winMat,
+          c * 4.2, 8 + r * 7.5, 5.56);
+    }
+  }
+  add(new THREE.PlaneGeometry(3.4, 5.2), winMat2, 0, 5.0, 5.57);
+
+  add(new THREE.BoxGeometry(6.4, 9, 1.2), stoneDark, 0, 4.5, 6.0);
+  add(new THREE.BoxGeometry(6.9, 0.7, 1.6), goldMat, 0, 9.2, 6.0);
+  add(new THREE.PlaneGeometry(4.6, 6.2), winMat, 0, 4.2, 6.65);
+
+  function battlements(cx, cz, w, d, y, count, sw = 1.0, sh = 1.6){
+    for (let i = 0; i < count; i++){
+      const t = (i + 0.5) / count;
+      add(new THREE.BoxGeometry(sw, sh, sw), stone, cx - w/2 + t*w, y, cz + d/2);
+      add(new THREE.BoxGeometry(sw, sh, sw), stone, cx - w/2 + t*w, y, cz - d/2);
+    }
+    for (let i = 0; i < Math.round(count * d / w); i++){
+      const t = (i + 0.5) / Math.round(count * d / w);
+      add(new THREE.BoxGeometry(sw, sh, sw), stone, cx + w/2, y, cz - d/2 + t*d);
+      add(new THREE.BoxGeometry(sw, sh, sw), stone, cx - w/2, y, cz - d/2 + t*d);
+    }
+  }
+  battlements(0, 0, 15, 11, 30.8, 8);
+  battlements(-12, 2, 10, 9, 20.8, 6);
+  battlements( 12, 2, 10, 9, 20.8, 6);
+
+  add(new THREE.BoxGeometry(64, 7, 3.2), stone, 0, 3.5, 14);
+  add(new THREE.BoxGeometry(64.6, 0.6, 3.6), goldMat, 0, 7.2, 14);
+  for (let i = 0; i < 22; i++){
+    add(new THREE.BoxGeometry(1.5, 1.5, 1.5), stone, -31 + i * 2.95, 8.0, 14);
+  }
+
+  [ -20, 20, 0 ].forEach((x, i) => {
+    const y = i === 2 ? 58.8 : 49.6;
+    const z = i === 2 ? -2 : 1;
+    add(new THREE.CylinderGeometry(0.09, 0.09, 4.2, 6), goldMat, x, y + 2.1, z);
+    const flag = add(new THREE.PlaneGeometry(2.0, 1.2), goldMat, x + 1.05, y + 3.3, z);
+    flag.material = new THREE.MeshBasicMaterial({
+      color: 0xd8b878, side: THREE.DoubleSide, transparent: true, opacity: 0.85
+    });
+  });
+
+  return g;
+}
+
+bgScene.add(buildCastle());
+
+(function mountains(){
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0x070d16, roughness: 1.0, metalness: 0.0
+  });
+  const group = new THREE.Group();
+  for (let i = 0; i < 14; i++){
+    const r = 8 + Math.random() * 14;
+    const h = 16 + Math.random() * 26;
+    const cone = new THREE.Mesh(new THREE.ConeGeometry(r, h, 5), mat);
+    cone.position.set(
+      -110 + i * 17 + (Math.random() - 0.5) * 12,
+      h / 2 - 4,
+      -150 - Math.random() * 40
+    );
+    cone.rotation.y = Math.random() * Math.PI;
+    group.add(cone);
+  }
+  bgScene.add(group);
+})();
+
+const BOARD = { size: CFG.boardSize, tiles: 8 };
+BOARD.tile = BOARD.size / BOARD.tiles;
+BOARD.half = BOARD.size / 2;
+
+const boardGroup = new THREE.Group();
+boardGroup.position.set(0, 0, 0);
+bgScene.add(boardGroup);
+
+const marbleDark  = makeMarbleTexture('#0a0a0c', '#6b5a34');
+const marbleLight = makeMarbleTexture('#241c10', '#c9a96a');
+
+const baseMat = new THREE.MeshStandardMaterial({
+  color: 0x0a0b0e, roughness: 0.42, metalness: 0.75, envMapIntensity: 1.1
+});
+const baseMesh = new THREE.Mesh(
+  new THREE.BoxGeometry(BOARD.size + 0.9, 0.62, BOARD.size + 0.9), baseMat
+);
+baseMesh.position.y = -0.31;
+boardGroup.add(baseMesh);
+
+const rimMat = new THREE.MeshStandardMaterial({
+  color: COL.gold, roughness: 0.22, metalness: 1.0,
+  emissive: COL.gold, emissiveIntensity: 0.45, envMapIntensity: 1.4
+});
+const rim = new THREE.Mesh(
+  new THREE.BoxGeometry(BOARD.size + 1.05, 0.10, BOARD.size + 1.05), rimMat
+);
+rim.position.y = 0.005;
+boardGroup.add(rim);
+
+const innerRim = new THREE.Mesh(
+  new THREE.BoxGeometry(BOARD.size + 0.35, 0.13, BOARD.size + 0.35),
+  new THREE.MeshStandardMaterial({ color: 0x050507, roughness: 0.35, metalness: 0.9 })
+);
+innerRim.position.y = 0.045;
+boardGroup.add(innerRim);
+
+const tileGeo = new THREE.BoxGeometry(BOARD.tile - 0.025, 0.12, BOARD.tile - 0.025);
+
+const lightMat = new THREE.MeshPhysicalMaterial({
+  map: marbleLight,
+  color: 0xb89455,
+  roughness: 0.16,
+  metalness: 0.92,
+  clearcoat: 1.0,
+  clearcoatRoughness: 0.10,
+  envMapIntensity: 1.6
+});
+
+const darkMat = new THREE.MeshPhysicalMaterial({
+  map: marbleDark,
+  color: 0x2a2a30,
+  roughness: 0.10,
+  metalness: 0.96,
+  clearcoat: 1.0,
+  clearcoatRoughness: 0.06,
+  envMapIntensity: 1.9
+});
+
+for (let r = 0; r < 8; r++){
+  for (let c = 0; c < 8; c++){
+    const isLight = (r + c) % 2 === 0;
+    const tile = new THREE.Mesh(tileGeo, isLight ? lightMat : darkMat);
+    tile.position.set(
+      -BOARD.half + BOARD.tile * (c + 0.5),
+      0.06,
+      -BOARD.half + BOARD.tile * (r + 0.5)
+    );
+    boardGroup.add(tile);
+  }
+}
+
+const boardGlow = new THREE.Mesh(
+  new THREE.PlaneGeometry(BOARD.size * 1.5, BOARD.size * 1.5),
+  new THREE.MeshBasicMaterial({
+    map: makeGlowTexture(256, 'rgba(201,169,106,1)', 'rgba(201,169,106,0)'),
+    transparent: true,
+    opacity: 0.16,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  })
+);
+boardGlow.rotation.x = -Math.PI / 2;
+boardGlow.position.y = -0.63;
+boardGroup.add(boardGlow);
+
+function v2(arr){ return arr.map(p => new THREE.Vector2(p[0], p[1])); }
+
+function arcPts(cx, cy, r, a0, a1, steps){
+  const out = [];
+  for (let i = 0; i <= steps; i++){
+    const a = a0 + (a1 - a0) * (i / steps);
+    out.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+  }
+  return out;
+}
+
+const P_PAWN = [
+  [0.00,0.00],[0.42,0.00],[0.42,0.06],[0.36,0.10],[0.25,0.15],[0.19,0.23],
+  [0.17,0.31],[0.15,0.39],[0.23,0.45],[0.23,0.51],[0.16,0.54],
+  ...arcPts(0, 0.72, 0.21, -0.55, Math.PI/2, 9)
+];
+
+const P_ROOK = [
+  [0.00,0.00],[0.50,0.00],[0.50,0.08],[0.44,0.13],[0.32,0.19],[0.30,0.30],
+  [0.27,0.44],[0.26,0.58],[0.27,0.68],[0.35,0.73],[0.38,0.78],[0.38,0.94],
+  [0.30,0.94],[0.30,0.84],[0.00,0.84]
+];
+
+const P_BISHOP = [
+  [0.00,0.00],[0.46,0.00],[0.46,0.08],[0.39,0.12],[0.27,0.19],[0.21,0.29],
+  [0.19,0.42],[0.29,0.50],[0.31,0.56],[0.21,0.60],[0.25,0.66],
+  ...arcPts(0, 0.86, 0.20, -0.90, 0.90, 9),
+  [0.09,1.06],[0.00,1.14]
+];
+
+const P_QUEEN = [
+  [0.00,0.00],[0.52,0.00],[0.52,0.09],[0.45,0.14],[0.31,0.21],[0.25,0.34],
+  [0.22,0.50],[0.20,0.64],[0.34,0.72],[0.36,0.78],[0.26,0.82],[0.33,0.90],
+  [0.35,0.96],[0.28,1.00],[0.22,1.06],[0.00,1.14]
+];
+
+const P_KING = [
+  [0.00,0.00],[0.54,0.00],[0.54,0.09],[0.47,0.14],[0.33,0.22],[0.27,0.36],
+  [0.24,0.52],[0.22,0.66],[0.36,0.74],[0.38,0.80],[0.28,0.84],[0.35,0.92],
+  [0.36,1.02],[0.00,1.06]
+];
+
+const pieceDarkMat = new THREE.MeshPhysicalMaterial({
+  color: 0x0d1016,
+  roughness: 0.18,
+  metalness: 0.92,
+  clearcoat: 1.0,
+  clearcoatRoughness: 0.08,
+  envMapIntensity: 2.2
+});
+
+const pieceGoldMat = new THREE.MeshPhysicalMaterial({
+  color: 0x8f7440,
+  roughness: 0.16,
+  metalness: 1.0,
+  clearcoat: 1.0,
+  clearcoatRoughness: 0.05,
+  envMapIntensity: 2.4,
+  emissive: 0x2a1f08,
+  emissiveIntensity: 0.4
+});
+
+const accentGoldMat = new THREE.MeshStandardMaterial({
+  color: COL.gold, roughness: 0.20, metalness: 1.0,
+  emissive: COL.gold, emissiveIntensity: 0.55
+});
+
+function createPiece(profile, opts = {}){
+  const group = new THREE.Group();
+  const bodyMat = opts.mat || pieceDarkMat;
+
+  const geo = new THREE.LatheGeometry(v2(profile), 56);
+  geo.computeVertexNormals();
+  const body = new THREE.Mesh(geo, bodyMat);
+  group.add(body);
+
+  if (opts.ringY !== undefined){
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(opts.ringR || 0.28, 0.028, 10, 40),
+      accentGoldMat
+    );
+    ring.position.y = opts.ringY;
+    ring.rotation.x = Math.PI / 2;
+    group.add(ring);
+  }
+
+  if (opts.crenellations){
+    const n = opts.crenellations;
+    for (let i = 0; i < n; i++){
+      const a = (i / n) * Math.PI * 2;
+      const box = new THREE.Mesh(
+        new THREE.BoxGeometry(0.14, 0.18, 0.14),
+        bodyMat
+      );
+      box.position.set(Math.cos(a) * 0.33, 0.95, Math.sin(a) * 0.33);
+      group.add(box);
+    }
+  }
+
+  if (opts.crownSpikes){
+    const n = opts.crownSpikes;
+    for (let i = 0; i < n; i++){
+      const a = (i / n) * Math.PI * 2;
+      const spike = new THREE.Mesh(
+        new THREE.ConeGeometry(0.045, 0.17, 6),
+        accentGoldMat
+      );
+      spike.position.set(Math.cos(a) * 0.20, 1.11, Math.sin(a) * 0.20);
+      group.add(spike);
+    }
+    const orb = new THREE.Mesh(new THREE.SphereGeometry(0.075, 14, 12), accentGoldMat);
+    orb.position.y = 1.21;
+    group.add(orb);
+  }
+
+  if (opts.cross){
+    const v = new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.30, 0.075), accentGoldMat);
+    v.position.y = 1.20;
+    const h = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.075, 0.075), accentGoldMat);
+    h.position.y = 1.24;
+    group.add(v, h);
+  }
+
+  const shadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.55, 1.55),
+    new THREE.MeshBasicMaterial({
+      map: makeGlowTexture(128, 'rgba(0,0,0,0.85)', 'rgba(0,0,0,0)'),
+      transparent: true, opacity: 0.75, depthWrite: false
+    })
+  );
+  shadow.rotation.x = -Math.PI / 2;
+  shadow.position.y = 0.005;
+  group.add(shadow);
+
+  return group;
+}
+
+const pieceLayout = [
+  [ -3.94, -3.94, 1.55, P_QUEEN,  { mat: pieceDarkMat, ringY: 0.76, ringR: 0.30, crownSpikes: 9 } ],
+  [  3.94, -3.94, 1.42, P_KING,   { mat: pieceDarkMat, ringY: 0.82, ringR: 0.30, cross: true } ],
+  [ -3.94,  2.06, 1.90, P_ROOK,   { mat: pieceGoldMat, crenellations: 8 } ],
+  [  3.94,  2.06, 1.75, P_BISHOP, { mat: pieceDarkMat, ringY: 0.68, ringR: 0.26 } ],
+  [ -1.69, -1.69, 1.10, P_PAWN,   { mat: pieceGoldMat, ringY: 0.46, ringR: 0.20 } ],
+  [  1.69, -1.69, 1.05, P_PAWN,   { mat: pieceDarkMat, ringY: 0.46, ringR: 0.20 } ]
+];
+
+pieceLayout.forEach(([x, z, s, profile, opts]) => {
+  const p = createPiece(profile, opts);
+  p.position.set(x, 0.11, z);
+  p.scale.setScalar(s);
+  p.rotation.y = (Math.random() - 0.5) * 0.5;
+  boardGroup.add(p);
+});
+
+const mistGroup = new THREE.Group();
+bgScene.add(mistGroup);
+
+const mistTex = makeGlowTexture(256, 'rgba(110,180,205,0.85)', 'rgba(110,180,205,0)');
+
+for (let i = 0; i < 5; i++){
+  const m = new THREE.Mesh(
+    new THREE.PlaneGeometry(90 + i * 24, 26 + i * 6),
+    new THREE.MeshBasicMaterial({
+      map: mistTex,
+      transparent: true,
+      opacity: 0.10,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      fog: false
+    })
+  );
+  m.position.set((Math.random() - 0.5) * 20, 2 + i * 1.6, -34 - i * 12);
+  mistGroup.add(m);
+}
+
+const nearMist = new THREE.Mesh(
+  new THREE.PlaneGeometry(34, 14),
+  new THREE.MeshBasicMaterial({
+    map: makeGlowTexture(256, 'rgba(140,190,215,0.6)', 'rgba(140,190,215,0)'),
+    transparent: true,
+    opacity: 0.09,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    fog: false
+  })
+);
+nearMist.position.set(0, 1.6, 9);
+bgScene.add(nearMist);
+
+const P_COUNT = 620;
+const pGeo = new THREE.BufferGeometry();
+const pPos = new Float32Array(P_COUNT * 3);
+const pVel = new Float32Array(P_COUNT * 3);
+const pPhase = new Float32Array(P_COUNT);
+
+for (let i = 0; i < P_COUNT; i++){
+  pPos[i * 3 + 0] = (Math.random() - 0.5) * 78;
+  pPos[i * 3 + 1] = Math.random() * 42 - 2;
+  pPos[i * 3 + 2] = -70 + Math.random() * 90;
+
+  pVel[i * 3 + 0] = (Math.random() - 0.5) * 0.020;
+  pVel[i * 3 + 1] = 0.010 + Math.random() * 0.028;
+  pVel[i * 3 + 2] = (Math.random() - 0.5) * 0.018;
+
+  pPhase[i] = Math.random() * Math.PI * 2;
+}
+
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+
+const pMat = new THREE.PointsMaterial({
+  size: 0.60,
+  map: makeGlowTexture(128, 'rgba(255,236,190,1)', 'rgba(255,200,120,0)'),
+  color: 0xffdca8,
+  transparent: true,
+  opacity: 0.92,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
+  sizeAttenuation: true
+});
+
+const particles = new THREE.Points(pGeo, pMat);
+bgScene.add(particles);
+
+const clock = new THREE.Clock();
+
+function updateParticles(dt, t){
+  const pos = pGeo.attributes.position.array;
+  for (let i = 0; i < P_COUNT; i++){
+    const i3 = i * 3;
+    pos[i3 + 0] += (pVel[i3 + 0] + Math.sin(t * 0.5 + pPhase[i]) * 0.006) * dt * 60;
+    pos[i3 + 1] += pVel[i3 + 1] * dt * 60;
+    pos[i3 + 2] += (pVel[i3 + 2] + Math.cos(t * 0.4 + pPhase[i]) * 0.005) * dt * 60;
+
+    if (pos[i3 + 1] > 42){
+      pos[i3 + 1] = -2;
+      pos[i3 + 0] = (Math.random() - 0.5) * 78;
+      pos[i3 + 2] = -70 + Math.random() * 90;
+    }
+    if (pos[i3 + 0] >  40) pos[i3 + 0] = -40;
+    if (pos[i3 + 0] < -40) pos[i3 + 0] =  40;
+  }
+  pGeo.attributes.position.needsUpdate = true;
+}
+
+let elapsed = 0;
+
+function animateBG(){
+  requestAnimationFrame(animateBG);
+
+  const dt = Math.min(clock.getDelta(), 0.05);
+
+  const gameScreen = document.getElementById('gameScreen');
+  if (gameScreen && gameScreen.classList.contains('active')) return;
+
+  elapsed += dt;
+
+  skyUniforms.uTime.value = elapsed;
+
+  bgCamera.position.x = CFG.camPos.x + Math.sin(elapsed * 0.16) * 0.55;
+  bgCamera.position.y = CFG.camPos.y + Math.sin(elapsed * 0.11 + 1.3) * 0.22;
+  bgCamera.lookAt(CFG.camLook);
+
+  updateParticles(dt, elapsed);
+
+  mistGroup.children.forEach((m, i) => {
+    m.position.x = Math.sin(elapsed * 0.05 + i * 1.7) * 9;
+    m.material.opacity = 0.085 + Math.sin(elapsed * 0.32 + i * 1.1) * 0.030;
+  });
+  nearMist.position.x = Math.sin(elapsed * 0.08) * 4;
+  nearMist.material.opacity = 0.075 + Math.sin(elapsed * 0.4) * 0.022;
+
+  castleGlowSprite.material.opacity = 0.46 + Math.sin(elapsed * 0.55) * 0.09;
+  rimMat.emissiveIntensity = 0.40 + Math.sin(elapsed * 0.9) * 0.12;
+
+  composer.render();
+}
+
+function onResizeBG(){
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const aspect = w / h;
+
+  let fov = CFG.fov;
+  if (aspect < 1.0){
+    fov = CFG.fov + (1 / Math.max(aspect, 0.42) - 1) * 21;
+  } else {
+    fov = CFG.fov - Math.min((aspect - 1) * 5, 9);
+  }
+  fov = Math.min(Math.max(fov, 46), 92);
+
+  bgCamera.fov = fov;
+  bgCamera.aspect = aspect;
+  bgCamera.updateProjectionMatrix();
+
+  bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+  bgRenderer.setSize(w, h);
+
+  composer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+  composer.setSize(w, h);
+  bloom.setSize(w, h);
+}
+
+window.addEventListener("resize", onResizeBG, { passive: true });
+window.addEventListener("orientationchange", () => setTimeout(onResizeBG, 180), { passive: true });
+
+onResizeBG();
+animateBG();
 </script>
 </body>
 </html>
