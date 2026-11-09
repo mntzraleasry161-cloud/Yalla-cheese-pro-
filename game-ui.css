@@ -1,0 +1,44 @@
+#gameScreen{display:none}
+
+.game-panel{
+  width:min(96%,800px);
+  margin:15px auto;
+  padding:13px;
+  background:#211632;
+  border:1px solid #a77bba77;
+  border-radius:18px;
+}
+
+#status{
+  color:#8ee7ff;
+  font-weight:900;
+  font-size:16px;
+  margin:10px;
+}
+
+#moves{
+  max-height:65px;
+  overflow:auto;
+  color:#ddd;
+  font-size:12px;
+  overflow-wrap:anywhere;
+  margin-top:12px;
+}
+
+select{
+  background:#302044;
+  color:white;
+  border:1px solid #d4af37;
+  border-radius:10px;
+  padding:10px;
+  font-family:inherit;
+  font-weight:bold;
+}
+
+#promotion{
+  display:none;
+  padding:12px;
+  background:#37244d;
+  border-radius:12px;
+  margin:10px;
+}
